@@ -1,0 +1,75 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Scenario\Core package.
+ *
+ * (c) Christina Koenig <christina.koenig@looriva.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+// check PHP Version
+if (version_compare(phpversion(), '8.4.0', '>=') === false) {
+    fwrite(
+        STDERR,
+        sprintf(
+            'Required PHP >= 8.4.0.' . PHP_EOL .
+            'PHP %s (%s) used.' . PHP_EOL,
+            phpversion(),
+            PHP_BINARY
+        )
+    );
+    exit(1);
+}
+
+// check loaded extensions
+$neededExtensions = [ 'dom', 'libxml' ];
+$unavailableExtensions = array_filter(
+    $neededExtensions,
+    function ($extension) {
+        return extension_loaded($extension) === false;
+    }
+);
+if (count($unavailableExtensions) > 0) {
+    fwrite(
+        STDERR,
+        sprintf(
+            'needed extensions "%s" are not available, missing: %s' . PHP_EOL,
+            implode(', ', $neededExtensions),
+            implode(', ', $unavailableExtensions)
+        )
+    );
+    exit(1);
+}
+unset($neededExtensions, $unavailableExtensions);
+
+// check composer installed
+$vendorDir = getcwd() . DIRECTORY_SEPARATOR . 'vendor';
+if (is_dir($vendorDir) === false
+    || file_exists($vendorDir . DIRECTORY_SEPARATOR . 'autoload.php') === false) {
+    fwrite(STDERR, 'Dependencies are missing. Please run "composer install".' . PHP_EOL);
+    exit(1);
+}
+
+require($vendorDir . DIRECTORY_SEPARATOR . 'autoload.php');
+unset($vendorDir);
+
+// check if package is installed with composer
+if (strstr(__FILE__, 'vendor/scenario/core') === false) {
+    define('SCENARIO_CLI_DISABLED', true);
+}
+
+try {
+    exit(new Scenario\Core\Console\CliApplication()->run($_SERVER['argv']));
+} catch (\Throwable $e) {
+    fwrite(
+        STDERR,
+        sprintf(
+            'An error occured while running scenario:' . PHP_EOL . '%s' . PHP_EOL . 'Trace:' . PHP_EOL . '%s' . PHP_EOL,
+            $e->getMessage(),
+            $e->getTraceAsString()
+        )
+    );
+}

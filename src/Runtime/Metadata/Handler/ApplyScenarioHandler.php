@@ -1,0 +1,66 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Scenario\Core package.
+ *
+ * (c) Christina Koenig <christina.koenig@looriva.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Scenario\Core\Runtime\Metadata\Handler;
+
+use ReflectionException;
+use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Contract\ScenarioBuilderInterface;
+use Scenario\Core\Runtime\Metadata\AttributeContext;
+use Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
+use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
+use Scenario\Core\Runtime\ScenarioRegistry;
+
+final class ApplyScenarioHandler extends AttributeHandler
+{
+    public function __construct(private ScenarioBuilderInterface $builder)
+    {
+    }
+
+    protected function attributeName(): string
+    {
+        return ApplyScenario::class;
+    }
+
+    protected function execute(AttributeContext $context, object $metaData): void
+    {
+        /** @var ApplyScenario $metaData */
+        $scenario = ScenarioRegistry::getInstance()->resolve($metaData->id);
+
+        $this->attributes($scenario->class, $context->executionType->value, ExecutionType::Up);
+
+        match($context->executionType) {
+            ExecutionType::Up => $this->builder->build($scenario->class)->up(),
+            ExecutionType::Down => $this->builder->build($scenario->class)->down(),
+        };
+
+        $this->attributes($scenario->class, $context->executionType->value, ExecutionType::Down);
+    }
+
+    /**
+     * @param class-string $className
+     * @throws ReflectionException
+     */
+    private function attributes(string $className, string $methodName, ExecutionType $executionType): void
+    {
+        new AttributeProcessor()->process(
+            new AttributeContext($className, null, $executionType),
+            new ClassAttributeParser()->parse($className),
+        );
+
+        new AttributeProcessor()->process(
+            new AttributeContext($className, $methodName, $executionType),
+            new MethodAttributeParser()->parse($className, $methodName),
+        );
+    }
+}

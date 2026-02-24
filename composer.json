@@ -1,0 +1,39 @@
+{
+  "name": "scenario/core",
+  "description": "Core library for declarative, attribute-driven scenario orchestration for reproducible test data states in PHP.",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Christina Koenig",
+      "email": "christina.koenig@looriva.de",
+      "role": "lead"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "ext-dom": "*",
+    "phpunit/phpunit": "^11.0"
+  },
+  "bin": [
+    "bin/scenario"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Scenario\\Core\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Scenario\\Core\\Tests\\Unit\\": "tests/unit/"
+    },
+    "classmap": ["tests/files"]
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require-dev": {
+    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.60",
+    "phpstan/phpstan-strict-rules": "^2.0"
+  }
+}

@@ -1,0 +1,171 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Scenario\Core package.
+ *
+ * (c) Christina Koenig <christina.koenig@looriva.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Scenario\Core\Tests\Unit;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Contract\ScenarioInterface;
+use Scenario\Core\Runtime\Exception\DefinitionException;
+use Scenario\Core\Runtime\Exception\RegistryException;
+use Scenario\Core\Runtime\ScenarioDefinition;
+use Scenario\Core\Runtime\ScenarioRegistry;
+use Scenario\Core\Tests\Files\InvalidScenario;
+use Scenario\Core\Tests\Files\ValidScenario;
+
+#[CoversClass(ScenarioRegistry::class)]
+#[UsesClass(AsScenario::class)]
+#[UsesClass(ValidScenario::class)]
+#[UsesClass(ScenarioDefinition::class)]
+#[UsesClass(RegistryException::class)]
+#[Group('runtime')]
+class ScenarioRegistryTest extends TestCase
+{
+    protected function tearDown(): void
+    {
+        $registryInstance = new ReflectionClass(ScenarioRegistry::getInstance())->getProperty('instance');
+        $registryInstance->setValue(null, null);
+    }
+
+    public function testGetInstanceReturnsSameInstance(): void
+    {
+        $firstInstance = ScenarioRegistry::getInstance();
+        $secondInstance = ScenarioRegistry::getInstance();
+
+        self::assertSame($firstInstance, $secondInstance);
+    }
+
+    public function testRegisterStoresDefinitionByClass(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            new AsScenario(null, null),
+            ValidScenario::class,
+        );
+
+        $registry->register($definition);
+
+        self::assertSame($definition, $registry->resolve(ValidScenario::class));
+    }
+
+    public function testRegisterAlsoStoresDefinitionByNameWhenProvided(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            new AsScenario('my-scenario', null),
+            ValidScenario::class,
+        );
+
+        $registry->register($definition);
+
+        self::assertSame($definition, $registry->resolve(ValidScenario::class));
+        self::assertSame($definition, $registry->resolve('my-scenario'));
+    }
+
+    public function testAllReturnsRegisteredScenariosIncludingAliasByName(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            new AsScenario('my-scenario', null),
+            ValidScenario::class,
+        );
+
+        $registry->register($definition);
+
+        $all = $registry->all();
+
+        self::assertCount(2, $all);
+        self::assertArrayHasKey(ValidScenario::class, $all);
+        self::assertArrayHasKey('my-scenario', $all);
+        self::assertSame($definition, $all[ValidScenario::class]);
+        self::assertSame($definition, $all['my-scenario']);
+    }
+
+    public function testClearRemovesAllRegisteredScenarios(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            new AsScenario('my-scenario', null),
+            ValidScenario::class,
+        );
+
+        $registry->register($definition);
+
+        self::assertCount(2, $registry->all());
+
+        $registry->clear();
+
+        self::assertSame([], $registry->all());
+
+        $this->expectException(RegistryException::class);
+        $registry->resolve(ValidScenario::class);
+    }
+
+    public function testResolveThrowsRegistryExceptionIfNotFound(): void
+    {
+        $this->expectException(RegistryException::class);
+        $this->expectExceptionMessage('scenario does-not-exist is not registered');
+
+        ScenarioRegistry::getInstance()->resolve('does-not-exist');
+    }
+
+    public function testRegisterThrowsDefinitionExceptionIfClassIsNotScenarioInterface(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            new AsScenario('my-scenario', null),
+            InvalidScenario::class,
+        );
+
+        $this->expectException(DefinitionException::class);
+        $this->expectExceptionMessage(InvalidScenario::class . ' is not a subclass of ' . ScenarioInterface::class);
+
+        $registry->register($definition);
+    }
+
+    public function testRegisterOverridesExistingEntryForSameClass(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $firstDefinition = new ScenarioDefinition(
+            'main',
+            new AsScenario('first', null),
+            ValidScenario::class,
+        );
+
+        $secondDefinition = new ScenarioDefinition(
+            'main',
+            new AsScenario('second', null),
+            ValidScenario::class,
+        );
+
+        $registry->register($firstDefinition);
+        $registry->register($secondDefinition);
+
+        self::assertSame($secondDefinition, $registry->resolve(ValidScenario::class));
+        self::assertSame($firstDefinition, $registry->resolve('first'));
+        self::assertSame($secondDefinition, $registry->resolve('second'));
+    }
+}

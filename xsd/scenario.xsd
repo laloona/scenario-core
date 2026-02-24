@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="scenario" type="scenarioType">
+        <xsd:annotation>
+            <xsd:documentation>Root Element</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="scenarioType">
+        <xsd:sequence>
+            <xsd:element name="database" type="databaseType" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="suites" type="suitesType" minOccurs="1" maxOccurs="1" />
+        </xsd:sequence>
+
+        <xsd:attribute name="bootstrap" type="pathType" />
+        <xsd:attribute name="cacheDirectory" type="pathType" />
+    </xsd:complexType>
+
+    <xsd:complexType name="databaseType">
+        <xsd:sequence>
+            <xsd:element name="connection" minOccurs="1" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="pathType">
+                            <xsd:attribute name="name" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="suitesType">
+        <xsd:sequence>
+            <xsd:element name="suite" type="suiteType" minOccurs="1" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="suiteType">
+        <xsd:sequence>
+            <xsd:element name="directory" type="pathType" minOccurs="1" maxOccurs="1" />
+        </xsd:sequence>
+
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:simpleType name="pathType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[^ \t\r\n]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

@@ -1,0 +1,50 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Scenario\Core package.
+ *
+ * (c) Christina Koenig <christina.koenig@looriva.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Scenario\Core\Runtime\Application\Configuration;
+
+use DOMDocument;
+use InvalidArgumentException;
+use Scenario\Core\Runtime\Exception\XMLParserException;
+use SplFileInfo;
+
+final class XMLParser
+{
+    public function __construct(private string $xsdPath)
+    {
+        $this->xsdPath = getcwd() . DIRECTORY_SEPARATOR. $this->xsdPath;
+        if (!is_file($this->xsdPath)) {
+            throw new InvalidArgumentException('unable to find xsd file: ' . $this->xsdPath);
+        }
+    }
+
+    public function parse(SplFileInfo $file): DOMDocument
+    {
+        libxml_use_internal_errors(true);
+
+        $doc = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput = false;
+
+        if ($doc->load($file->getFilename(), LIBXML_NONET) === false) {
+            libxml_clear_errors();
+            throw new XMLParserException('unable to load configuration xml');
+        }
+
+        if (!$doc->schemaValidate($this->xsdPath)) {
+            libxml_clear_errors();
+            throw new XMLParserException('configuration xml does not validate');
+        }
+
+        libxml_use_internal_errors(false);
+        return $doc;
+    }
+}

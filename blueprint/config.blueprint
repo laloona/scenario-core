@@ -1,0 +1,15 @@
+<scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="/vendor/scenario/core/xsd/scenario.xsd"
+    bootstrap="scenario/boostrap.php"
+    cacheDirectory=".scenario.cache"
+>
+    <database>
+        <connection>migration.php</connection>
+    </database>
+
+    <suites>
+        <suite name="Main Scenario Suite">
+            <directory>scenario/main</directory>
+        </suite>
+    </suites>
+</scenario>
