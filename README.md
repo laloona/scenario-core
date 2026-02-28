@@ -16,9 +16,9 @@ Scenario Core requires the following:
 
 Install it via Composer as a development dependency. 
 
-<pre>
+<pre><code>
 composer require --dev scenario/core
-</pre>
+</code></pre>
 
 ## PHPUnit Integration
 
@@ -45,7 +45,7 @@ Scenarios:
 * Are marked with ```#[AsScenario]```
 * Are automatically discovered and registered
 
-<pre><code type="php">&lg;?php
+<pre><code type="php">&lt;?php
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Contract\ScenarioInterface;
 
@@ -70,7 +70,7 @@ No manual registry interaction is required.
 
 Scenarios can be applied declaratively using the ```#[ApplyScenario]``` attribute:
 
-<pre><code type="php">&lg;?php
+<pre><code type="php">&lt;?php
 use Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('my-scenario')]
@@ -90,7 +90,7 @@ Multiple scenarios may be applied at class or method level. A scenario class can
 
 Use the ```#[RefreshDatabase]``` attribute to reset the database before scenario execution:
 
-<pre><code type="php">&lg;?php
+<pre><code type="php">&lt;?php
 use Scenario\Core\Attribute\RefreshDatabase;
 
 #[RefreshDatabase]
