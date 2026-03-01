@@ -28,6 +28,10 @@ final class CliApplication
     {
         new Application()->bootstrap();
 
+        if (Application::isBooted() === false) {
+            define('SCENARIO_CLI_DISABLED', true);
+        }
+
         if (defined('SCENARIO_CLI_DISABLED') === false) {
             define('SCENARIO_CLI_DISABLED', false);
         }
