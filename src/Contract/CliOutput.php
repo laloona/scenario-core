@@ -19,6 +19,8 @@ interface CliOutput
 
     public function success(string $text): void;
 
+    public function warn(string $text): void;
+
     public function error(string $text): void;
 
     /**

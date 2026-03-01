@@ -20,6 +20,10 @@ final class ListScenarios
     public function render(CliInput $input, CliOutput $output): void
     {
         $scenarios = ScenarioRegistry::getInstance()->all();
+        if (count($scenarios) === 0) {
+            $output->warn('No scenarios found. Please create one.');
+        }
+
         $filtered = [];
         if ($input->option('suite') !== null) {
             foreach ($scenarios as $name => $scenario) {
