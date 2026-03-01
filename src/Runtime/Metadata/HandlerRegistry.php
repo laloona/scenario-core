@@ -20,7 +20,7 @@ final class HandlerRegistry extends Registry
 {
     protected static ?HandlerRegistry $instance = null;
 
-    public static function getInstance(): HandlerRegistry
+    public static function getInstance(): self
     {
         static::$instance = static::$instance ?? new static();
         return static::$instance;

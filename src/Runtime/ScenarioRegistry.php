@@ -19,7 +19,7 @@ final class ScenarioRegistry extends Registry
 {
     protected static ?ScenarioRegistry $instance = null;
 
-    public static function getInstance(): ScenarioRegistry
+    public static function getInstance(): self
     {
         static::$instance = static::$instance ?? new static();
         return static::$instance;

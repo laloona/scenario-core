@@ -51,22 +51,24 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         $executionType = ExecutionType::Up;
-        try {
-            $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
-            $this->executeScenario(
-                (string)$scenario,
-                $executionType,
-            );
+        if (is_string($scenario) === true) {
+            try {
+                $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
+                $this->applyScenario(
+                    $scenario,
+                    $executionType,
+                );
 
-            new TestMethodState()->throw(__CLASS__, __METHOD__);
+                new TestMethodState()->throw(__CLASS__, __METHOD__);
 
-            $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was executed successfully.');
-            return Command::Success;
-        } catch (RegistryException $exception) {
-            $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
+                $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was executed successfully.');
+                return Command::Success;
+            } catch (RegistryException $exception) {
+                $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
 
-            if ($input->option('quiet') === true) {
-                return Command::Error;
+                if ($input->option('quiet') === true) {
+                    return Command::Error;
+                }
             }
         }
 
@@ -76,19 +78,19 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         $options = array_values(array_unique(array_keys($scenarios)));
-        $choosen = (int)$output->choice('Which scenario would you like to execute?', $options);
-        $this->executeScenario(
+        $choosen = (int)$output->choice('Which scenario would you like to apply?', $options);
+        $this->applyScenario(
             $scenarios[$options[$choosen]]->class,
             $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up,
         );
 
         new TestMethodState()->throw(__CLASS__, __METHOD__);
 
-        $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was executed successfully.');
+        $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
         return Command::Success;
     }
 
-    private function executeScenario(string $name, ExecutionType $executionType): void
+    private function applyScenario(string $name, ExecutionType $executionType): void
     {
         $scenario = ScenarioRegistry::getInstance()->resolve($name);
         HandlerRegistry::getInstance()

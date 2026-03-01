@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime\Exception;
 
 use Throwable;
 
-class ApplicationFailureException extends FailureException
+final class ApplicationFailureException extends FailureException
 {
     public function __construct(Throwable $throwable)
     {

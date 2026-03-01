@@ -31,7 +31,7 @@ use Scenario\Core\Tests\Files\ValidScenario;
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(RegistryException::class)]
 #[Group('runtime')]
-class ScenarioRegistryTest extends TestCase
+final class ScenarioRegistryTest extends TestCase
 {
     protected function tearDown(): void
     {

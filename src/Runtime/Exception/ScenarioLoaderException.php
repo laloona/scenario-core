@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime\Exception;
 
 use Throwable;
 
-class ScenarioLoaderException extends Exception
+final class ScenarioLoaderException extends Exception
 {
     public function __construct(string $directory, Throwable $throwable)
     {

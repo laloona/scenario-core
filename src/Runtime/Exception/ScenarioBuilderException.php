@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime\Exception;
 
 use Scenario\Core\Contract\ScenarioInterface;
 
-class ScenarioBuilderException extends Exception
+final class ScenarioBuilderException extends Exception
 {
     public function __construct(string $className)
     {

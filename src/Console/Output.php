@@ -27,7 +27,7 @@ use function strtolower;
 
 final class Output implements CliOutput
 {
-    public function __construct(protected AnsiStyler $ansiStyler)
+    public function __construct(private AnsiStyler $ansiStyler)
     {
     }
 

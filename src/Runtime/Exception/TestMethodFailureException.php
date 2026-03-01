@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime\Exception;
 
 use Throwable;
 
-class TestMethodFailureException extends FailureException
+final class TestMethodFailureException extends FailureException
 {
     public function __construct(string $method, Throwable $throwable)
     {

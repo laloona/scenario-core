@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime;
 
 abstract class Registry
 {
-    abstract public static function getInstance(): Registry;
+    abstract public static function getInstance(): self;
 
     protected function __construct()
     {
