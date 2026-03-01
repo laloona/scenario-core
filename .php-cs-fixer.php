@@ -41,8 +41,14 @@ return (new Config())
         'single_quote' => true,
 
         'final_class' => true,
+        'protected_to_private' => true,
+        'no_unneeded_final_method' => true,
+        'self_accessor' => true,
+        'strict_comparison' => true,
         'strict_param' => true,
         'native_function_invocation' => false,
+        'ternary_to_null_coalescing' => true,
+        'visibility_required' => ['elements' => ['method', 'property']],
 
         'ordered_imports' => [
             'sort_algorithm' => 'alpha',

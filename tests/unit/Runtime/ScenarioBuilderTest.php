@@ -35,6 +35,6 @@ final class ScenarioBuilderTest extends TestCase
     {
         self::expectException(ScenarioBuilderException::class);
 
-        $scenarioObject = new ScenarioBuilder()->build(InvalidScenario::class);
+        new ScenarioBuilder()->build(InvalidScenario::class);
     }
 }
