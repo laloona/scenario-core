@@ -16,6 +16,7 @@ use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
+use Scenario\Core\Runtime\Metadata\Audit\MethodAttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 
@@ -35,6 +36,7 @@ final class RefreshDatabaseCommand extends CliCommand
                     __CLASS__,
                     __METHOD__,
                     ExecutionType::Up,
+                    MethodAttributeAudit::getInstance(__CLASS__, __METHOD__, ExecutionType::Up),
                 ),
                 new RefreshDatabase((string)$input->option('connection')),
             );

@@ -16,6 +16,7 @@ use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Scenario\Core\Runtime\Metadata\Audit\AttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
@@ -37,29 +38,29 @@ final class ApplyScenarioHandler extends AttributeHandler
         /** @var ApplyScenario $metaData */
         $scenario = ScenarioRegistry::getInstance()->resolve($metaData->id);
 
-        $this->attributes($scenario->class, $context->executionType->value, ExecutionType::Up);
+        $this->attributes($context->audit, $scenario->class, $context->executionType->value, ExecutionType::Up);
 
         match($context->executionType) {
             ExecutionType::Up => $this->builder->build($scenario->class)->up(),
             ExecutionType::Down => $this->builder->build($scenario->class)->down(),
         };
 
-        $this->attributes($scenario->class, $context->executionType->value, ExecutionType::Down);
+        $this->attributes($context->audit, $scenario->class, $context->executionType->value, ExecutionType::Down);
     }
 
     /**
      * @param class-string $className
      * @throws ReflectionException
      */
-    private function attributes(string $className, string $methodName, ExecutionType $executionType): void
+    private function attributes(AttributeAudit $audit, string $className, string $methodName, ExecutionType $executionType): void
     {
         new AttributeProcessor()->process(
-            new AttributeContext($className, null, $executionType),
+            new AttributeContext($className, null, $executionType, $audit),
             new ClassAttributeParser()->parse($className),
         );
 
         new AttributeProcessor()->process(
-            new AttributeContext($className, $methodName, $executionType),
+            new AttributeContext($className, $methodName, $executionType, $audit),
             new MethodAttributeParser()->parse($className, $methodName),
         );
     }

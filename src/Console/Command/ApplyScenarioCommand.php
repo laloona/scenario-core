@@ -17,6 +17,7 @@ use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
+use Scenario\Core\Runtime\Metadata\Audit\MethodAttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -25,7 +26,7 @@ final class ApplyScenarioCommand extends CliCommand
 {
     public function description(): string
     {
-        return 'Executes a given scenario, use --up or --down to choose how the scenario should be executed.';
+        return 'Applies a given scenario, use --up or --down to choose how the scenario should be applied.';
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command
@@ -46,7 +47,7 @@ final class ApplyScenarioCommand extends CliCommand
         $scenario = $input->argument('0');
         if ($scenario === null
             && $input->option('quiet') === true) {
-            $output->error('No scenario was given to execute.');
+            $output->error('No scenario was given to apply.');
             return Command::Error;
         }
 
@@ -100,6 +101,7 @@ final class ApplyScenarioCommand extends CliCommand
                     __CLASS__,
                     __METHOD__,
                     $executionType,
+                    MethodAttributeAudit::getInstance(__CLASS__, __METHOD__, $executionType),
                 ),
                 $scenario->attribute,
             );

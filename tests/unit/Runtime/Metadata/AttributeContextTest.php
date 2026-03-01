@@ -15,6 +15,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
+use Scenario\Core\Runtime\Metadata\Audit\ClassAttributeAudit;
+use Scenario\Core\Runtime\Metadata\Audit\MethodAttributeAudit;
 use Scenario\Core\Runtime\Metadata\ContextTarget;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use stdClass;
@@ -29,6 +31,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             null,
             ExecutionType::Up,
+            ClassAttributeAudit::getInstance(stdClass::class, ExecutionType::Up),
         );
 
         self::assertSame(ContextTarget::OnClass, $context->target());
@@ -42,6 +45,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             'myMethod',
             ExecutionType::Up,
+            MethodAttributeAudit::getInstance(stdClass::class, 'myMethod', ExecutionType::Up),
         );
 
         self::assertSame(ContextTarget::OnMethod, $context->target());
@@ -55,6 +59,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             'myMethod',
             ExecutionType::Down,
+            MethodAttributeAudit::getInstance(stdClass::class, 'myMethod', ExecutionType::Up),
         );
 
         self::assertSame(stdClass::class, $context->class);

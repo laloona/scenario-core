@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Metadata;
 
+use Scenario\Core\Runtime\Metadata\Audit\AttributeAudit;
+
 final class AttributeContext
 {
     /**
@@ -20,6 +22,7 @@ final class AttributeContext
         public readonly string $class,
         public readonly ?string $method,
         public readonly ExecutionType $executionType,
+        public readonly AttributeAudit $audit,
     ) {
     }
 

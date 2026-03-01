@@ -15,6 +15,7 @@ use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Code\TestMethod;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Scenario\Core\Runtime\Metadata\Audit\MethodAttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 
@@ -24,7 +25,12 @@ abstract class TestMethodSubscriber
     {
         if ($test instanceof TestMethod) {
             new AttributeProcessor()->process(
-                new AttributeContext($test->className(), $test->methodName(), $executionType),
+                new AttributeContext(
+                    $test->className(),
+                    $test->methodName(),
+                    $executionType,
+                    MethodAttributeAudit::getInstance($test->className(), $test->methodName(), $executionType),
+                ),
                 new MethodAttributeParser()->parse($test->className(), $test->methodName()),
             );
         }
