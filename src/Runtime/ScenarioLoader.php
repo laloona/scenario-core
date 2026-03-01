@@ -14,6 +14,7 @@ namespace Scenario\Core\Runtime;
 use DirectoryIterator;
 use RecursiveDirectoryIterator;
 use ReflectionClass;
+use Scenario\Core\Application;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
@@ -184,7 +185,7 @@ final class ScenarioLoader
         foreach ($configuration->getSuites() as $suite) {
             try {
                 $declaredClasses = get_declared_classes();
-                $directory = new RecursiveDirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $suite->directory);
+                $directory = new RecursiveDirectoryIterator(Application::getRootDir() . DIRECTORY_SEPARATOR . $suite->directory);
                 foreach ($directory as $file) {
                     if (!$file instanceof SplFileInfo) {
                         continue;

@@ -12,6 +12,7 @@
 namespace Scenario\Core\Runtime\Application\Configuration;
 
 use DirectoryIterator;
+use Scenario\Core\Application;
 use SplFileInfo;
 use UnexpectedValueException;
 
@@ -20,7 +21,7 @@ final class ConfigurationFinder
     public function find(): ?SplFileInfo
     {
         try {
-            $directory = new DirectoryIterator((string)getcwd());
+            $directory = new DirectoryIterator(Application::getRootDir());
             foreach ($directory as $file) {
                 if ($file->isFile()
                     && in_array($file->getFilename(), [ 'scenario.dist.xml', 'scenario.xml' ], true)) {

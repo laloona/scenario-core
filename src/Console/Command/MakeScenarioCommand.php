@@ -66,7 +66,7 @@ final class MakeScenarioCommand extends CliCommand
             },
         );
 
-        $scenario = getcwd() . $suite->directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
+        $scenario = Application::getRootDir() . DIRECTORY_SEPARATOR . $suite->directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
         if (is_file($scenario) === true) {
             $output->error('Scenario already exists.');
             return Command::Error;
@@ -107,7 +107,7 @@ final class MakeScenarioCommand extends CliCommand
             return Command::Error;
         }
 
-        $configFile = getcwd() . DIRECTORY_SEPARATOR . 'scenario.dist.xml';
+        $configFile = Application::getRootDir() . DIRECTORY_SEPARATOR . 'scenario.dist.xml';
         file_put_contents($configFile, file_get_contents($file));
 
         if (is_file($configFile) === false) {
@@ -121,7 +121,7 @@ final class MakeScenarioCommand extends CliCommand
 
     private function getBlueprint(string $name): string
     {
-        return getcwd() . DIRECTORY_SEPARATOR .
+        return Application::getRootDir() . DIRECTORY_SEPARATOR .
             'vendor' . DIRECTORY_SEPARATOR .
             'scenario' . DIRECTORY_SEPARATOR .
             'core' . DIRECTORY_SEPARATOR .

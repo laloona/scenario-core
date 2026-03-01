@@ -45,19 +45,24 @@ if (count($unavailableExtensions) > 0) {
 }
 unset($neededExtensions, $unavailableExtensions);
 
-// check composer installed
-$vendorDir = getcwd() . DIRECTORY_SEPARATOR . 'vendor';
+// find vendor dir
+$dirs = explode(DIRECTORY_SEPARATOR, __DIR__);
+$vendor = array_search('vendor', $dirs, true);
+$vendorDir = $vendor === false
+    ? __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor'
+    : implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $vendor+1));
 if (is_dir($vendorDir) === false
     || file_exists($vendorDir . DIRECTORY_SEPARATOR . 'autoload.php') === false) {
     fwrite(STDERR, 'Dependencies are missing. Please run "composer install".' . PHP_EOL);
     exit(1);
 }
 
+// require autoloader
 require($vendorDir . DIRECTORY_SEPARATOR . 'autoload.php');
 unset($vendorDir);
 
 // check if package is installed with composer
-if (strstr(__FILE__, 'vendor/scenario/core') === false) {
+if (strstr(__FILE__, 'vendor') === false) {
     define('SCENARIO_CLI_DISABLED', true);
 }
 

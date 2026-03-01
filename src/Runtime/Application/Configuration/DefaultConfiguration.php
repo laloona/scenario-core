@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Runtime\Application\Configuration;
 
+use Scenario\Core\Application;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 
@@ -23,7 +24,7 @@ final class DefaultConfiguration implements Configuration
 
     public function getCacheDirectory(): string
     {
-        return getcwd() . DIRECTORY_SEPARATOR .'.scenario.cache';
+        return Application::getRootDir() . DIRECTORY_SEPARATOR .'.scenario.cache';
     }
 
     public function getCacheKey(): string
@@ -41,7 +42,7 @@ final class DefaultConfiguration implements Configuration
     public function getSuites(): array
     {
         return [
-            'main' => new SuiteValue('main', getcwd() . DIRECTORY_SEPARATOR .'scenario'),
+            'main' => new SuiteValue('main', Application::getRootDir() . DIRECTORY_SEPARATOR .'scenario'),
         ];
     }
 

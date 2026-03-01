@@ -45,6 +45,18 @@ final class ApplicationStateTest extends TestCase
         $state->throw(null);
     }
 
+    public function testWhenStateIsSuccessWithRegisteredClassAndThrowDoesNothingWhenNoFailure(): void
+    {
+        $state = new ApplicationState();
+        $state->addClass('SomeClass');
+
+        self::assertTrue($state->isSuccess());
+        self::assertFalse($state->isFailed());
+        self::assertNull($state->failure('SomeClass'));
+
+        $state->throw('SomeClass');
+    }
+
     public function testFailMarksStateAsFailed(): void
     {
         $state = new ApplicationState();

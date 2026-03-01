@@ -27,31 +27,40 @@ use Throwable;
 
 final class Application
 {
+    private static ?string $rootDir = null;
+
     private static ?Configuration $configuration = null;
 
     private static bool $isBooted = false;
 
     public function prepare(): void
     {
-        self::$configuration = new ConfigurationBuilder(
-            new ConfigurationFinder(),
-            new XMLParser('vendor' . DIRECTORY_SEPARATOR . 'scenario' . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd'),
-        )->build();
+        if (self::$configuration === null) {
+            self::$configuration = new ConfigurationBuilder(
+                new ConfigurationFinder(),
+                new XMLParser(
+                    self::getRootDir() .DIRECTORY_SEPARATOR .
+                    'vendor' . DIRECTORY_SEPARATOR .
+                    'scenario' . DIRECTORY_SEPARATOR .
+                    'core' . DIRECTORY_SEPARATOR .
+                    'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd',
+                ),
+            )->build();
 
-        new ScenarioLoader(ScenarioRegistry::getInstance())->loadScenarios(self::$configuration);
+            new ScenarioLoader(ScenarioRegistry::getInstance())->loadScenarios(self::$configuration);
+        }
     }
 
     public function bootstrap(): void
     {
-        self::$isBooted = true;
         $applicationState = new ApplicationState();
 
         try {
             $this->prepare();
 
             if (self::config() !== null
-                && is_file(getcwd() . DIRECTORY_SEPARATOR . self::config()->getBootstrap())) {
-                include(getcwd() . DIRECTORY_SEPARATOR . self::config()->getBootstrap());
+                && is_file(self::getRootDir() . DIRECTORY_SEPARATOR . self::config()->getBootstrap())) {
+                include(self::getRootDir() . DIRECTORY_SEPARATOR . self::config()->getBootstrap());
             }
         } catch (Throwable $throwable) {
             $applicationState->fail($throwable);
@@ -64,6 +73,24 @@ final class Application
         } catch (HandlerRegistryException $exception) {
             // default handlers can be overwritten, this exception is ok
         }
+
+        self::$isBooted = true;
+    }
+
+    public static function getRootDir(): string
+    {
+        if (self::$rootDir === null) {
+            $dirs = explode(DIRECTORY_SEPARATOR, __DIR__);
+            $vendor = array_search('vendor', $dirs, true);
+            if ($vendor === false
+                || is_int($vendor) === false) {
+                $vendor = -1;
+            }
+
+            self::$rootDir = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $vendor));
+        }
+
+        return self::$rootDir;
     }
 
     public static function config(): ?Configuration

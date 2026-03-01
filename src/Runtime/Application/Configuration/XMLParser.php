@@ -20,7 +20,6 @@ final class XMLParser
 {
     public function __construct(private string $xsdPath)
     {
-        $this->xsdPath = getcwd() . DIRECTORY_SEPARATOR. $this->xsdPath;
         if (!is_file($this->xsdPath)) {
             throw new InvalidArgumentException('unable to find xsd file: ' . $this->xsdPath);
         }
