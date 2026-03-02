@@ -48,11 +48,10 @@ final class AttributeContext
     public function audit(string $scenario): void
     {
         if (in_array($scenario, $this->audits, true) === true) {
-            $this->audits[] = $scenario;
             throw new CycleException(
                 $this->class . ($this->method === null ? '' : '::' . $this->method),
                 $scenario,
-                $this->audits,
+                [...$this->audits, $scenario],
                 $this->executionType
             );
         }
