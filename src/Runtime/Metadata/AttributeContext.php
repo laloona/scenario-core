@@ -52,7 +52,7 @@ final class AttributeContext
                 $this->class . ($this->method === null ? '' : '::' . $this->method),
                 $scenario,
                 [...$this->audits, $scenario],
-                $this->executionType
+                $this->executionType,
             );
         }
 
