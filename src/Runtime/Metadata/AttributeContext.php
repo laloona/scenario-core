@@ -51,8 +51,8 @@ final class AttributeContext
             throw new CycleException(
                 $this->class . ($this->method === null ? '' : '::' . $this->method),
                 $scenario,
-                array_reverse($this->audits, false),
-                $this->executionType,
+                $this->audits,
+                $this->executionType
             );
         }
 
