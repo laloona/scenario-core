@@ -41,7 +41,7 @@ final class MethodAttributeAudit extends AttributeAudit
         return $this->className . '::' . $this->method;
     }
 
-    protected function getType(): ExecutionType
+    public function getType(): ExecutionType
     {
         return $this->executionType;
     }

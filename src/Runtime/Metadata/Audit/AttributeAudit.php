@@ -39,5 +39,5 @@ abstract class AttributeAudit
 
     abstract protected function getSignature(): string;
 
-    abstract protected function getType(): ExecutionType;
+    abstract public function getType(): ExecutionType;
 }

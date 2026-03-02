@@ -38,30 +38,30 @@ final class ApplyScenarioHandler extends AttributeHandler
         /** @var ApplyScenario $metaData */
         $scenario = ScenarioRegistry::getInstance()->resolve($metaData->id);
 
-        $this->attributes($context->audit, $scenario->class, $context->executionType->value, ExecutionType::Up);
+        $context->audit->audit($scenario->class);
+
+        $this->attributes($context, $scenario->class);
 
         match($context->executionType) {
             ExecutionType::Up => $this->builder->build($scenario->class)->up(),
             ExecutionType::Down => $this->builder->build($scenario->class)->down(),
         };
-
-        $this->attributes($context->audit, $scenario->class, $context->executionType->value, ExecutionType::Down);
     }
 
     /**
      * @param class-string $className
      * @throws ReflectionException
      */
-    private function attributes(AttributeAudit $audit, string $className, string $methodName, ExecutionType $executionType): void
+    private function attributes(AttributeContext $context, string $className): void
     {
         new AttributeProcessor()->process(
-            new AttributeContext($className, null, $executionType, $audit),
+            $context,
             new ClassAttributeParser()->parse($className),
         );
 
         new AttributeProcessor()->process(
-            new AttributeContext($className, $methodName, $executionType, $audit),
-            new MethodAttributeParser()->parse($className, $methodName),
+            $context,
+            new MethodAttributeParser()->parse($className, $context->executionType->value),
         );
     }
 }

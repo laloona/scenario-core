@@ -39,7 +39,7 @@ final class ClassAttributeAudit extends AttributeAudit
         return $this->className;
     }
 
-    protected function getType(): ExecutionType
+    public function getType(): ExecutionType
     {
         return $this->executionType;
     }
