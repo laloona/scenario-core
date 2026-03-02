@@ -14,7 +14,6 @@ namespace Scenario\Core\PHPUnit\Subscriber;
 use PHPUnit\Event\TestSuite\TestSuite;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
-use Scenario\Core\Runtime\Metadata\Audit\ClassAttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 
@@ -30,7 +29,6 @@ abstract class TestClassSubscriber
                     $className,
                     null,
                     $executionType,
-                    ClassAttributeAudit::getInstance($className, $executionType),
                 ),
                 new ClassAttributeParser()->parse($className),
             );

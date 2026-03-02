@@ -16,7 +16,6 @@ use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
-use Scenario\Core\Runtime\Metadata\Audit\AttributeAudit;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
@@ -38,7 +37,7 @@ final class ApplyScenarioHandler extends AttributeHandler
         /** @var ApplyScenario $metaData */
         $scenario = ScenarioRegistry::getInstance()->resolve($metaData->id);
 
-        $context->audit->audit($scenario->class);
+        $context->audit($scenario->class);
 
         $this->attributes($context, $scenario->class);
 

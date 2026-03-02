@@ -11,10 +11,13 @@
 
 namespace Scenario\Core\Runtime\Metadata;
 
-use Scenario\Core\Runtime\Metadata\Audit\AttributeAudit;
+use Scenario\Core\Runtime\Exception\CycleException;
 
 final class AttributeContext
 {
+    /** @var list<string> */
+    private array $audits = [];
+
     /**
      * @param class-string $class
      */
@@ -22,7 +25,6 @@ final class AttributeContext
         public readonly string $class,
         public readonly ?string $method,
         public readonly ExecutionType $executionType,
-        public readonly AttributeAudit $audit,
     ) {
     }
 
@@ -41,5 +43,27 @@ final class AttributeContext
     public function onMethod(): bool
     {
         return $this->target() === ContextTarget::OnMethod;
+    }
+
+    public function audit(string $scenario): void
+    {
+        if (in_array($scenario, $this->audits, true) === true) {
+            throw new CycleException(
+                $this->class . ($this->method === null ? '' : '::' . $this->method),
+                $scenario,
+                array_reverse($this->audits, false),
+                $this->executionType,
+            );
+        }
+
+        $this->audits[] = $scenario;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getAudits(): array
+    {
+        return $this->audits;
     }
 }
