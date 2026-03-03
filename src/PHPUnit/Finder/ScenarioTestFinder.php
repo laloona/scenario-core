@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit;
+namespace Scenario\Core\PHPUnit\Finder;
 
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
