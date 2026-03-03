@@ -14,10 +14,12 @@ namespace Scenario\Core\Console;
 use Scenario\Core\Application;
 use Scenario\Core\Console\Command\ApplyScenarioCommand;
 use Scenario\Core\Console\Command\Command;
+use Scenario\Core\Console\Command\DebugCommand;
 use Scenario\Core\Console\Command\ListCommands;
 use Scenario\Core\Console\Command\ListScenariosCommand;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
 use Scenario\Core\Console\Command\RefreshDatabaseCommand;
+use Scenario\Core\PHPUnit\ScenarioTestFinder;
 
 final class CliApplication
 {
@@ -28,7 +30,8 @@ final class CliApplication
     {
         new Application()->bootstrap();
 
-        if (Application::isBooted() === false) {
+        if (Application::isBooted() === false
+            && defined('SCENARIO_CLI_DISABLED') === false) {
             define('SCENARIO_CLI_DISABLED', true);
         }
 
@@ -45,8 +48,9 @@ final class CliApplication
         }
 
         $commands = [
+            'debug' => new DebugCommand(new ScenarioTestFinder()),
+            'apply' => new ApplyScenarioCommand(),
             'list' => new ListScenariosCommand(),
-            'execute' => new ApplyScenarioCommand(),
             'make' => new MakeScenarioCommand(),
             'refresh' => new RefreshDatabaseCommand(),
         ];

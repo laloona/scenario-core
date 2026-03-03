@@ -39,5 +39,8 @@ interface CliOutput
 
     public function ask(string $question, ?string $default = null, ?callable $validator = null): string;
 
-    public function writeln(string $string): void;
+    /**
+     * @param string|list<string> $string
+     */
+    public function writeln(string|array $string): void;
 }

@@ -161,7 +161,7 @@ final class Output implements CliOutput
                 return $default;
             }
 
-            if (in_array($input, array_keys($choices), true)) {
+            if (in_array((int)$input, array_keys($choices), true)) {
                 return $input;
             }
 
