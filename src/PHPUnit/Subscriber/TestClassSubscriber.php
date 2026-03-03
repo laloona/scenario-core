@@ -29,6 +29,7 @@ abstract class TestClassSubscriber
                     $className,
                     null,
                     $executionType,
+                    false,
                 ),
                 new ClassAttributeParser()->parse($className),
             );

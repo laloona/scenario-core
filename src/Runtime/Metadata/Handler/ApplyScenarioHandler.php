@@ -41,6 +41,10 @@ final class ApplyScenarioHandler extends AttributeHandler
 
         $this->attributes($context, $scenario->class);
 
+        if ($context->dryRun === true) {
+            return;
+        }
+
         match($context->executionType) {
             ExecutionType::Up => $this->builder->build($scenario->class)->up(),
             ExecutionType::Down => $this->builder->build($scenario->class)->down(),

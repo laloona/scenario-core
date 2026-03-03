@@ -29,6 +29,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             null,
             ExecutionType::Up,
+            false,
         );
 
         self::assertSame(ContextTarget::OnClass, $context->target());
@@ -42,6 +43,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             'myMethod',
             ExecutionType::Up,
+            false,
         );
 
         self::assertSame(ContextTarget::OnMethod, $context->target());
@@ -55,6 +57,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             'myMethod',
             ExecutionType::Down,
+            false,
         );
 
         self::assertSame(stdClass::class, $context->class);

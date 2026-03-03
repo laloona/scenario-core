@@ -30,6 +30,10 @@ final class RefreshDatabaseHandler extends AttributeHandler
         if ($context->executionType === ExecutionType::Up) {
             $context->audit(get_class($metaData));
 
+            if ($context->dryRun === true) {
+                return;
+            }
+
             $connections = Application::config()?->getConnections() ?? [];
             if (isset($connections[$metaData->connection]) === true
                 && is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection]->config) === true) {

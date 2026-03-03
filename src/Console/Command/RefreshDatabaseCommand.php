@@ -35,6 +35,7 @@ final class RefreshDatabaseCommand extends CliCommand
                     __CLASS__,
                     __METHOD__,
                     ExecutionType::Up,
+                    false,
                 ),
                 new RefreshDatabase((string)$input->option('connection')),
             );

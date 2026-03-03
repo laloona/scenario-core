@@ -100,6 +100,7 @@ final class ApplyScenarioCommand extends CliCommand
                     __CLASS__,
                     __METHOD__,
                     $executionType,
+                    false,
                 ),
                 $scenario->attribute,
             );

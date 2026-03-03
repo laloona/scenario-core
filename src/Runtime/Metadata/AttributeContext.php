@@ -25,6 +25,7 @@ final class AttributeContext
         public readonly string $class,
         public readonly ?string $method,
         public readonly ExecutionType $executionType,
+        public readonly bool $dryRun,
     ) {
     }
 
