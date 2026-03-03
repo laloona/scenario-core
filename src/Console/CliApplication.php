@@ -19,7 +19,7 @@ use Scenario\Core\Console\Command\ListCommands;
 use Scenario\Core\Console\Command\ListScenariosCommand;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
 use Scenario\Core\Console\Command\RefreshDatabaseCommand;
-use Scenario\Core\PHPUnit\ScenarioTestFinder;
+use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 
 final class CliApplication
 {

@@ -13,7 +13,7 @@ namespace Scenario\Core\Console\Command;
 
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\PHPUnit\ScenarioTestFinder;
+use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
