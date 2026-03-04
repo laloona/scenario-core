@@ -37,10 +37,7 @@ final class DebugCommand extends CliCommand
 
     protected function execute(CliInput $input, CliOutput $output): Command
     {
-        /** @var list<ScenarioDefinition> $scenarioDefinitions */
         $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
-
-        /** @var array<class-string, list<non-empty-string>> $testClasses */
         $testClasses = $this->finder->all();
 
         $type = $this->getSelectedType($output, $scenarioDefinitions, $testClasses);
@@ -56,7 +53,7 @@ final class DebugCommand extends CliCommand
     }
 
     /**
-     * @param list<ScenarioDefinition> $scenarioDefinitions
+     * @param array<class-string|string, ScenarioDefinition> $scenarioDefinitions
      * @param array<class-string, list<non-empty-string>> $testClasses
      * @return 'Scenario'|'Unit Test'|false
      */
@@ -81,7 +78,7 @@ final class DebugCommand extends CliCommand
     }
 
     /**
-     * @param list<ScenarioDefinition> $scenarioDefinitions
+     * @param array<class-string|string, ScenarioDefinition> $scenarioDefinitions
      */
     private function debugScenario(array $scenarioDefinitions, CliOutput $output): Command
     {

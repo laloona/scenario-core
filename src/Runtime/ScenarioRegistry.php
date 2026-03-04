@@ -26,7 +26,7 @@ final class ScenarioRegistry extends Registry
     }
 
     /**
-     * @var ScenarioDefinition[]
+     * @var array<class-string|string, ScenarioDefinition>
      */
     private array $registeredScenarios = [];
 
@@ -48,13 +48,16 @@ final class ScenarioRegistry extends Registry
     }
 
     /**
-     * @return ScenarioDefinition[]
+     * @return array<class-string|string, ScenarioDefinition>
      */
     public function all(): array
     {
         return $this->registeredScenarios;
     }
 
+    /**
+     * @param class-string|string $id
+     */
     public function resolve(string $id): ScenarioDefinition
     {
         if (isset($this->registeredScenarios[$id])) {

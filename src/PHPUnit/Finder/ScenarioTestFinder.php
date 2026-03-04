@@ -19,7 +19,6 @@ use ReflectionClass;
 use ReflectionMethod;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
 use SplFileInfo;
 
 final class ScenarioTestFinder
