@@ -45,7 +45,7 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         $scenario = $input->argument('0');
-        $executionType = ExecutionType::Up;
+        $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
             $scenarioClass = null;
             foreach ($scenarioDefinitions as $scenarioDefinition) {
@@ -78,10 +78,7 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         /** @var class-string $scenario */
-        $this->applyScenario(
-            $scenario,
-            $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up,
-        );
+        $this->applyScenario($scenario, $executionType);
 
         (new TestClassState())->throw(__CLASS__);
         (new TestMethodState())->throw(__CLASS__, __METHOD__);
