@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Command\Renderer;
+namespace Scenario\Core\Console\Output\Renderer;
 
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;

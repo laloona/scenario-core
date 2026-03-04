@@ -11,7 +11,7 @@
 
 namespace Scenario\Core\Console\Command;
 
-use Scenario\Core\Console\Command\Renderer\ListScenarios;
+use Scenario\Core\Console\Output\Renderer\ListScenarios;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 
