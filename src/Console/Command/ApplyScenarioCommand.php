@@ -45,12 +45,6 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         $scenario = $input->argument('0');
-        if ($scenario === null
-            && $input->option('quiet') === true) {
-            $output->error('No scenario was given to apply.');
-            return Command::Error;
-        }
-
         $executionType = ExecutionType::Up;
         if (is_string($scenario) === true) {
             $scenarioClass = null;
@@ -64,10 +58,6 @@ final class ApplyScenarioCommand extends CliCommand
             if ($scenarioClass === null) {
                 $scenario = null;
                 $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
-
-                if ($input->option('quiet') === true) {
-                    return Command::Error;
-                }
             }
         }
 

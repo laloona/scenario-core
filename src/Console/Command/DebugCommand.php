@@ -94,9 +94,9 @@ final class DebugCommand extends CliCommand
         /** @var class-string $scenarioClass */
         $scenarioClass = $scenarios[$options[$choosen]]->class;
         $this->runDebugClass($output, $scenarioClass, ExecutionType::Up);
-        $this->runDebugMethod($output, $scenarioClass, 'up', ExecutionType::Up);
+        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Up->value, ExecutionType::Up);
         $this->runDebugClass($output, $scenarioClass, ExecutionType::Down);
-        $this->runDebugMethod($output, $scenarioClass, 'down', ExecutionType::Down);
+        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Down->value, ExecutionType::Down);
 
         return Command::Success;
     }
@@ -113,7 +113,7 @@ final class DebugCommand extends CliCommand
             $testClass = array_shift($testClasses);
         } else {
             /** @var class-string $testClass */
-            $testClass = $output->choice('Which class would you like to debug?', $testClasses);
+            $testClass = $testClasses[(int)$output->choice('Which class would you like to debug?', $testClasses)];
         }
 
         /** @var list<non-empty-string> $methods */
