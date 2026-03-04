@@ -23,14 +23,14 @@ abstract class TestMethodSubscriber
     final protected function doNotify(Test $test, ExecutionType $executionType): void
     {
         if ($test instanceof TestMethod) {
-            new AttributeProcessor()->process(
+            (new AttributeProcessor())->process(
                 new AttributeContext(
                     $test->className(),
                     $test->methodName(),
                     $executionType,
                     false,
                 ),
-                new MethodAttributeParser()->parse($test->className(), $test->methodName()),
+                (new MethodAttributeParser())->parse($test->className(), $test->methodName()),
             );
         }
     }

@@ -83,8 +83,8 @@ final class ApplyScenarioCommand extends CliCommand
             $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up,
         );
 
-        new TestClassState()->throw(__CLASS__);
-        new TestMethodState()->throw(__CLASS__, __METHOD__);
+        (new TestClassState())->throw(__CLASS__);
+        (new TestMethodState())->throw(__CLASS__, __METHOD__);
 
         $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
         return Command::Success;
@@ -95,24 +95,24 @@ final class ApplyScenarioCommand extends CliCommand
      */
     private function applyScenario(string $className, ExecutionType $executionType): void
     {
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             new AttributeContext(
                 __CLASS__,
                 null,
                 $executionType,
                 false,
             ),
-            new ClassAttributeParser()->parse($className),
+            (new ClassAttributeParser())->parse($className),
         );
 
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             new AttributeContext(
                 __CLASS__,
                 __METHOD__,
                 $executionType,
                 false,
             ),
-            new MethodAttributeParser()->parse($className, $executionType->value),
+            (new MethodAttributeParser())->parse($className, $executionType->value),
         );
     }
 }

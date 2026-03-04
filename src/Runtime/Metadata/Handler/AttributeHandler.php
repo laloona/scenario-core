@@ -32,8 +32,8 @@ abstract class AttributeHandler
                 $this->execute($context, $metaData);
             } catch (Throwable $throwable) {
                 match (true) {
-                    $context->onClass() => new TestClassState()->fail($context->class, $throwable),
-                    $context->onMethod() => new TestMethodState()->fail($context->class, $context->method ?? '', $throwable),
+                    $context->onClass() => (new TestClassState())->fail($context->class, $throwable),
+                    $context->onMethod() => (new TestMethodState())->fail($context->class, $context->method ?? '', $throwable),
                 };
             }
         }

@@ -24,7 +24,7 @@ final class Extension implements ExtensionInterface
         Facade $facade,
         ParameterCollection $parameters,
     ): void {
-        new Application()->bootstrap();
-        new SubscriberLoader()->load($facade);
+        (new Application())->bootstrap();
+        (new SubscriberLoader())->load($facade);
     }
 }

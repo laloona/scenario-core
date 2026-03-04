@@ -57,14 +57,14 @@ final class ApplyScenarioHandler extends AttributeHandler
      */
     private function attributes(AttributeContext $context, string $className): void
     {
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             $context,
-            new ClassAttributeParser()->parse($className),
+            (new ClassAttributeParser())->parse($className),
         );
 
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             $context,
-            new MethodAttributeParser()->parse($className, $context->executionType->value),
+            (new MethodAttributeParser())->parse($className, $context->executionType->value),
         );
     }
 }

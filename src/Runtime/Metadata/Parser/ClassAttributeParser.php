@@ -24,6 +24,6 @@ final class ClassAttributeParser
      */
     public function parse(string $className): array
     {
-        return new ReflectionClass($className)->getAttributes();
+        return (new ReflectionClass($className))->getAttributes();
     }
 }

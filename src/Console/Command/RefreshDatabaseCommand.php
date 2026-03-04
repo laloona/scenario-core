@@ -40,7 +40,7 @@ final class RefreshDatabaseCommand extends CliCommand
                 new RefreshDatabase((string)$input->option('connection')),
             );
 
-        new TestMethodState()->throw(__CLASS__, __METHOD__);
+        (new TestMethodState())->throw(__CLASS__, __METHOD__);
 
         $output->success('Refresh executed.');
         return Command::Success;

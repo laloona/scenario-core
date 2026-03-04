@@ -24,14 +24,14 @@ abstract class TestClassSubscriber
         if ($suite->isForTestClass() === true) {
             /** @var class-string $className */
             $className = $suite->name();
-            new AttributeProcessor()->process(
+            (new AttributeProcessor())->process(
                 new AttributeContext(
                     $className,
                     null,
                     $executionType,
                     false,
                 ),
-                new ClassAttributeParser()->parse($className),
+                (new ClassAttributeParser())->parse($className),
             );
         }
     }

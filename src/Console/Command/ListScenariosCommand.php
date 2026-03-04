@@ -11,9 +11,9 @@
 
 namespace Scenario\Core\Console\Command;
 
-use Scenario\Core\Console\Output\Renderer\ListScenarios;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
+use Scenario\Core\Runtime\ScenarioRegistry;
 
 final class ListScenariosCommand extends CliCommand
 {
@@ -24,7 +24,45 @@ final class ListScenariosCommand extends CliCommand
 
     protected function execute(CliInput $input, CliOutput $output): Command
     {
-        new ListScenarios()->render($input, $output);
+        $scenarios = ScenarioRegistry::getInstance()->all();
+        if (count($scenarios) === 0) {
+            $output->warn('No scenarios found. Please create one.');
+        }
+
+        $filtered = [];
+        if ($input->option('suite') !== null) {
+            foreach ($scenarios as $name => $scenario) {
+                if ($scenario->suite === $input->option('suite')) {
+                    $filtered[$name] = $scenario;
+                }
+            }
+            $scenarios = $filtered;
+            unset($filtered);
+        }
+
+        $tables = [];
+        foreach ($scenarios as $scenario) {
+            if (isset($tables[$scenario->suite]) === false) {
+                $tables[$scenario->suite] = [];
+            }
+            $tables[$scenario->suite][$scenario->class] = [
+                $scenario->class,
+                $scenario->attribute->name,
+                $scenario->attribute->description,
+            ];
+        }
+
+        foreach ($tables as $suite => $table) {
+            $tables[$suite] = array_values($table);
+        }
+
+        foreach ($tables as $suite => $definitions) {
+            $output->headline($suite);
+            $output->table(
+                ['class', 'name', 'description'],
+                $definitions,
+            );
+        }
         return Command::Success;
     }
 }

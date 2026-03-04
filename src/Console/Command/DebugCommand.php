@@ -150,9 +150,9 @@ final class DebugCommand extends CliCommand
             $executionType,
             true,
         );
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             $context,
-            new ClassAttributeParser()->parse($className),
+            (new ClassAttributeParser())->parse($className),
         );
 
         $output->headline(sprintf('Audits from %s with execution %s', $className, $executionType->value));
@@ -170,9 +170,9 @@ final class DebugCommand extends CliCommand
             $executionType,
             true,
         );
-        new AttributeProcessor()->process(
+        (new AttributeProcessor())->process(
             $context,
-            new MethodAttributeParser()->parse($className, $method),
+            (new MethodAttributeParser())->parse($className, $method),
         );
 
         $output->headline(sprintf('Audits from %s::%s with execution %s', $className, $method, $executionType->value));

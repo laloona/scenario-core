@@ -30,7 +30,7 @@ final class ScenarioTestFinder
     {
         /** @var array<class-string, list<non-empty-string>> $classes */
         $classes = [];
-        $directories = new DirectoryFinder()->all();
+        $directories = (new DirectoryFinder())->all();
         foreach ($directories as $directory) {
             $classes = array_merge($classes, $this->findTestCLassesUsingScenario($directory));
         }

@@ -47,7 +47,7 @@ final class Application
                 ),
             )->build();
 
-            new ScenarioLoader(ScenarioRegistry::getInstance())->loadScenarios(self::$configuration);
+            (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios(self::$configuration);
         }
     }
 

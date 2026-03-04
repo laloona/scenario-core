@@ -26,9 +26,9 @@ final class FailureSubscriber implements FinishedSubscriber
     public function notify(Finished $event): void
     {
         if ($event->test()->isTestMethod() === true) {
-            $this->state($event->test(), new ApplicationState()->failure($event->test()->className()));
-            $this->state($event->test(), new TestClassState()->failure($event->test()->className()));
-            $this->state($event->test(), new TestMethodState()->failure($event->test()->className(), $event->test()));
+            $this->state($event->test(), (new ApplicationState())->failure($event->test()->className()));
+            $this->state($event->test(), (new TestClassState())->failure($event->test()->className()));
+            $this->state($event->test(), (new TestMethodState())->failure($event->test()->className(), $event->test()));
         }
     }
 

@@ -24,6 +24,6 @@ final class MethodAttributeParser
      */
     public function parse(string $className, string $methodName): array
     {
-        return new ReflectionClass($className)->getMethod($methodName)->getAttributes();
+        return (new ReflectionClass($className))->getMethod($methodName)->getAttributes();
     }
 }

@@ -28,7 +28,7 @@ final class CliApplication
      */
     public function run(array $inputArgs): int
     {
-        new Application()->bootstrap();
+        (new Application())->bootstrap();
 
         if (Application::isBooted() === false
             && defined('SCENARIO_CLI_DISABLED') === false) {
