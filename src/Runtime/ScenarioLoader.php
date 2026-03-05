@@ -194,7 +194,8 @@ final class ScenarioLoader
                         continue;
                     }
 
-                    if ($file->isFile() === true) {
+                    if ($file->isFile() === true
+                        && $file->getExtension() === 'php') {
                         $cacheKey .= $file->getMTime() . $suite->name;
                         include_once($file->getPathname());
                     }

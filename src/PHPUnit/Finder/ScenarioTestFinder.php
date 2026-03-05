@@ -53,7 +53,8 @@ final class ScenarioTestFinder
                 continue;
             }
 
-            if ($file->isFile() === true) {
+            if ($file->isFile() === true
+                && $file->getExtension() === 'php') {
                 include_once($file->getPathname());
             }
         }

@@ -35,7 +35,7 @@ final class Confirm extends AnsiString
 
     public function error(bool $default = true): string
     {
-        return new Text($this->ansiStyler)->text('Please answer with: ', ForegroundColor::Red) .
+        return (new Text($this->ansiStyler))->text('Please answer with: ', ForegroundColor::Red) .
             $this->options($default);
     }
 }

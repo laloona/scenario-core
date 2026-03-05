@@ -11,11 +11,11 @@
  */
 
 // check PHP Version
-if (version_compare(phpversion(), '8.4.0', '>=') === false) {
+if (version_compare(phpversion(), '8.2.0', '>=') === false) {
     fwrite(
         STDERR,
         sprintf(
-            'Required PHP >= 8.4.0.' . PHP_EOL .
+            'Required PHP >= 8.2.0.' . PHP_EOL .
             'PHP %s (%s) used.' . PHP_EOL,
             phpversion(),
             PHP_BINARY
@@ -67,7 +67,7 @@ if (strstr(__FILE__, 'vendor') === false) {
 }
 
 try {
-    exit(new Scenario\Core\Console\CliApplication()->run($_SERVER['argv']));
+    exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 } catch (\Throwable $e) {
     fwrite(
         STDERR,

@@ -36,7 +36,7 @@ final class Application
     public function prepare(): void
     {
         if (self::$configuration === null) {
-            self::$configuration = new ConfigurationBuilder(
+            self::$configuration = (new ConfigurationBuilder(
                 new ConfigurationFinder(),
                 new XMLParser(
                     self::getRootDir() .DIRECTORY_SEPARATOR .
@@ -45,7 +45,7 @@ final class Application
                     'core' . DIRECTORY_SEPARATOR .
                     'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd',
                 ),
-            )->build();
+            ))->build();
 
             (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios(self::$configuration);
         }

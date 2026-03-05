@@ -103,7 +103,7 @@ final class Output implements CliOutput
     {
         $text = new Text($this->ansiStyler);
         while (true) {
-            $this->writeln(new Confirm($this->ansiStyler)->question($question, $default));
+            $this->writeln((new Confirm($this->ansiStyler))->question($question, $default));
             $this->write($text->info('> '));
 
             $input = strtolower($this->readln());
@@ -115,7 +115,7 @@ final class Output implements CliOutput
             };
 
             if ($result === null) {
-                $this->writeln(new Confirm($this->ansiStyler)->error($default));
+                $this->writeln((new Confirm($this->ansiStyler))->error($default));
                 continue;
             }
 
@@ -176,14 +176,14 @@ final class Output implements CliOutput
 
     public function text(string $text): void
     {
-        $this->writeln(new Text($this->ansiStyler)->text($text, null));
+        $this->writeln((new Text($this->ansiStyler))->text($text, null));
     }
 
     public function headline(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Text($this->ansiStyler)->text($text, ForegroundColor::Yellow));
-        $this->writeln(new Text($this->ansiStyler)->text(str_repeat('-', strlen($text)), ForegroundColor::Yellow));
+        $this->writeln((new Text($this->ansiStyler))->text($text, ForegroundColor::Yellow));
+        $this->writeln((new Text($this->ansiStyler))->text(str_repeat('-', strlen($text)), ForegroundColor::Yellow));
         $this->writeln('');
     }
 
@@ -195,42 +195,42 @@ final class Output implements CliOutput
     public function table(?array $headers, array $rows, ?array $align = null, bool $showBorder = true): void
     {
         $this->writeln('');
-        $this->writeln(new Table($this->ansiStyler)->generate($headers, $rows, $align, $showBorder) ?? '');
+        $this->writeln((new Table($this->ansiStyler))->generate($headers, $rows, $align, $showBorder) ?? '');
         $this->writeln('');
     }
 
     public function info(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Text($this->ansiStyler)->info($text));
+        $this->writeln((new Text($this->ansiStyler))->info($text));
         $this->writeln('');
     }
 
     public function success(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Box($this->ansiStyler)->success($text));
+        $this->writeln((new Box($this->ansiStyler))->success($text));
         $this->writeln('');
     }
 
     public function warn(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Box($this->ansiStyler)->warn($text));
+        $this->writeln((new Box($this->ansiStyler))->warn($text));
         $this->writeln('');
     }
 
     public function error(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Box($this->ansiStyler)->error($text));
+        $this->writeln((new Box($this->ansiStyler))->error($text));
         $this->writeln('');
     }
 
     public function question(string $text): void
     {
         $this->writeln('');
-        $this->writeln(new Box($this->ansiStyler)->question($text));
+        $this->writeln((new Box($this->ansiStyler))->question($text));
         $this->writeln('');
     }
 }

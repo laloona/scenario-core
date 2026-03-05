@@ -25,10 +25,7 @@ abstract class CliCommand
         $output = new Output(new AnsiStyler());
 
         try {
-            $applicationState = new ApplicationState();
-            $applicationState->throw(null);
-
-            $output = new Output(new AnsiStyler());
+            (new ApplicationState())->throw(null);
 
             if ($input->option('quiet') === true) {
                 return $this->execute($input, $output);
