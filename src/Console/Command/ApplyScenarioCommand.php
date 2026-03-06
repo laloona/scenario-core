@@ -34,13 +34,14 @@ final class ApplyScenarioCommand extends CliCommand
         if ($input->option('up') !== null
             && $input->option('down') !== null) {
             $output->error('You can just use either up or down scenarios.');
-
             return Command::Error;
         }
 
         $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
         if (count($scenarioDefinitions) === 0) {
-            $output->error('No scenarios were found, please create one.');
+            if ($input->option('quiet') !== true) {
+                $output->error('No scenarios were found, please create one.');
+            }
             return Command::Error;
         }
 
@@ -57,7 +58,9 @@ final class ApplyScenarioCommand extends CliCommand
 
             if ($scenarioClass === null) {
                 $scenario = null;
-                $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
+                if ($input->option('quiet') !== true) {
+                    $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
+                }
             }
         }
 
@@ -70,7 +73,9 @@ final class ApplyScenarioCommand extends CliCommand
             $options = array_keys($scenarios);
             $choosen = (int)$output->choice('Which scenario would you like to apply?', $options);
             if (isset($options[$choosen]) === false) {
-                $output->error('Invalid scenario selection.');
+                if ($input->option('quiet') !== true) {
+                    $output->error('Invalid scenario selection.');
+                }
                 return Command::Error;
             }
 
@@ -83,7 +88,9 @@ final class ApplyScenarioCommand extends CliCommand
         (new TestClassState())->throw(__CLASS__);
         (new TestMethodState())->throw(__CLASS__, __METHOD__);
 
-        $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
+        if ($input->option('quiet') !== true) {
+            $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
+        }
         return Command::Success;
     }
 
