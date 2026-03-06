@@ -243,7 +243,7 @@ final class DebugCommand extends CliCommand
 
     private function renderContextAudit(AttributeContext $context, CliOutput $output): void
     {
-        $output->writeln(array_reverse($context->getAudits()));
+        $output->writeln($context->getAudits());
 
         $classState = new TestClassState();
         $methodState = new TestMethodState();

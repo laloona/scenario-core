@@ -37,9 +37,9 @@ final class ApplyScenarioHandler extends AttributeHandler
         /** @var ApplyScenario $metaData */
         $scenario = ScenarioRegistry::getInstance()->resolve($metaData->id);
 
-        $context->audit($scenario->class);
-
         $this->attributes($context, $scenario->class);
+
+        $context->audit($scenario->class);
 
         if ($context->dryRun === true) {
             return;
