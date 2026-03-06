@@ -15,18 +15,59 @@ use Scenario\Core\Runtime\Exception\CycleException;
 
 final class AttributeContext
 {
-    /** @var list<string> */
+    /**
+     * @var class-string|null
+     */
+    private static ?string $currentClass = null;
+
+    /**
+     * @var array<string, self>
+     */
+    private static array $instances = [];
+
+    /**
+     * @param class-string $class
+     */
+    public static function getInstance(
+        string $class,
+        ?string $method,
+        ExecutionType $executionType,
+        bool $dryRun,
+    ): self {
+        if (self::$currentClass !== $class) {
+            self::$currentClass = $class;
+            self::$instances = [];
+        }
+
+        if ($method === null) {
+            if (isset(self::$instances[$executionType->value]) === false) {
+                self::$instances[$executionType->value] = new self($class, $method, $executionType, $dryRun);
+            }
+            return self::$instances[$executionType->value];
+        }
+
+        if (isset(self::$instances[$method . '::' . $executionType->value]) === false) {
+            self::$instances[$method . '::' . $executionType->value] = new self($class, $method, $executionType, $dryRun);
+        }
+        return self::$instances[$method . '::' . $executionType->value];
+    }
+
+    /** @var list<class-string> */
     private array $audits = [];
 
     /**
      * @param class-string $class
      */
-    public function __construct(
+    private function __construct(
         public readonly string $class,
         public readonly ?string $method,
         public readonly ExecutionType $executionType,
         public readonly bool $dryRun,
     ) {
+    }
+
+    private function __clone()
+    {
     }
 
     public function target(): ContextTarget
@@ -46,6 +87,10 @@ final class AttributeContext
         return $this->target() === ContextTarget::OnMethod;
     }
 
+    /**
+     * @param class-string $scenario
+     * @throws CycleException
+     */
     public function audit(string $scenario): void
     {
         if (in_array($scenario, $this->audits, true) === true) {
@@ -61,7 +106,7 @@ final class AttributeContext
     }
 
     /**
-     * @return list<string>
+     * @return list<class-string>
      */
     public function getAudits(): array
     {

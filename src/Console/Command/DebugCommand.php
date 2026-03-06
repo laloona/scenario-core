@@ -206,7 +206,7 @@ final class DebugCommand extends CliCommand
      */
     private function runDebugClass(CliOutput $output, string $className, ExecutionType $executionType): void
     {
-        $context = new AttributeContext(
+        $context = AttributeContext::getInstance(
             TestClassState::class,
             null,
             $executionType,
@@ -226,7 +226,7 @@ final class DebugCommand extends CliCommand
      */
     private function runDebugMethod(CliOutput $output, string $className, string $method, ExecutionType $executionType): void
     {
-        $context = new AttributeContext(
+        $context = AttributeContext::getInstance(
             TestMethodState::class,
             $method,
             $executionType,

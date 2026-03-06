@@ -25,7 +25,7 @@ final class AttributeContextTest extends TestCase
 {
     public function testOnClassContext(): void
     {
-        $context = new AttributeContext(
+        $context = AttributeContext::getInstance(
             stdClass::class,
             null,
             ExecutionType::Up,
@@ -39,7 +39,7 @@ final class AttributeContextTest extends TestCase
 
     public function testOnMethodContext(): void
     {
-        $context = new AttributeContext(
+        $context = AttributeContext::getInstance(
             stdClass::class,
             'myMethod',
             ExecutionType::Up,
@@ -53,7 +53,7 @@ final class AttributeContextTest extends TestCase
 
     public function testReadonlyPropertiesAreExposed(): void
     {
-        $context = new AttributeContext(
+        $context = AttributeContext::getInstance(
             stdClass::class,
             'myMethod',
             ExecutionType::Down,

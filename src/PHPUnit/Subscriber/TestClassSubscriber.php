@@ -25,7 +25,7 @@ abstract class TestClassSubscriber
             /** @var class-string $className */
             $className = $suite->name();
             (new AttributeProcessor())->process(
-                new AttributeContext(
+                AttributeContext::getInstance(
                     $className,
                     null,
                     $executionType,

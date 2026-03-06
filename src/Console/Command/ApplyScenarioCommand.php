@@ -100,7 +100,7 @@ final class ApplyScenarioCommand extends CliCommand
     private function applyScenario(string $className, ExecutionType $executionType): void
     {
         (new AttributeProcessor())->process(
-            new AttributeContext(
+            AttributeContext::getInstance(
                 __CLASS__,
                 null,
                 $executionType,
@@ -110,7 +110,7 @@ final class ApplyScenarioCommand extends CliCommand
         );
 
         (new AttributeProcessor())->process(
-            new AttributeContext(
+            AttributeContext::getInstance(
                 __CLASS__,
                 __METHOD__,
                 $executionType,

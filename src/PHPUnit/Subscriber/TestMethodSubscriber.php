@@ -24,7 +24,7 @@ abstract class TestMethodSubscriber
     {
         if ($test instanceof TestMethod) {
             (new AttributeProcessor())->process(
-                new AttributeContext(
+                AttributeContext::getInstance(
                     $test->className(),
                     $test->methodName(),
                     $executionType,

@@ -31,7 +31,7 @@ final class RefreshDatabaseCommand extends CliCommand
         HandlerRegistry::getInstance()
             ->attributeHandler(RefreshDatabase::class)
             ->handle(
-                new AttributeContext(
+                AttributeContext::getInstance(
                     __CLASS__,
                     __METHOD__,
                     ExecutionType::Up,
