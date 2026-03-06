@@ -185,9 +185,14 @@ final class ScenarioLoader
         $suites = [];
         foreach ($configuration->getSuites() as $suite) {
             try {
+                $path = realpath(Application::getRootDir() . DIRECTORY_SEPARATOR . $suite->directory);
+                if ($path === false) {
+                    throw new UnexpectedValueException(sprintf('directory "%s" doesn\'t exist', $suite->directory));
+                }
+
                 $declaredClasses = get_declared_classes();
                 $directory = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator(Application::getRootDir() . DIRECTORY_SEPARATOR . $suite->directory),
+                    new RecursiveDirectoryIterator($path),
                 );
                 foreach ($directory as $file) {
                     if (!$file instanceof SplFileInfo) {
