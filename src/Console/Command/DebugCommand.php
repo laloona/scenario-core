@@ -40,6 +40,13 @@ final class DebugCommand extends CliCommand
         $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
         $testClasses = $this->finder->all();
 
+        $directDebug = $this->handleInput($input, $output, $scenarioDefinitions, $testClasses);
+        if ($directDebug !== null) {
+            return $directDebug === true
+                ? Command::Success
+                : Command::Error;
+        }
+
         $type = $this->getSelectedType($output, $scenarioDefinitions, $testClasses);
         if ($type === false) {
             $output->error('No scenarios or unit tests were found, please create one.');
@@ -50,6 +57,43 @@ final class DebugCommand extends CliCommand
             'Scenario' => $this->debugScenario($scenarioDefinitions, $output),
             'Unit Test' => $this->debugTest($testClasses, $output),
         };
+    }
+
+    /**
+     * @param array<class-string|string, ScenarioDefinition> $scenarioDefinitions
+     * @param array<class-string, list<non-empty-string>> $classesMethods
+     */
+    public function handleInput(CliInput $input, CliOutput $output, array $scenarioDefinitions, array $classesMethods): bool|null
+    {
+        $className = $input->argument('0');
+        $method = $input->argument('1');
+
+        if ($className === null
+            && $method === null) {
+            return null;
+        }
+
+        if (is_string($className) === true) {
+            if (isset($scenarioDefinitions[$className]) === true) {
+                /** @var class-string $className */
+                $this->runDebugScenario($output, $className);
+                return true;
+            }
+
+            if (isset($classesMethods[$className]) === true) {
+                $testMethod = null;
+                if (is_string($method) === true) {
+                    $testMethod = $method;
+                }
+
+                /** @var class-string $className */
+                $this->runDebugTest($output, $className, $testMethod);
+            }
+
+            return false;
+        }
+
+        return null;
     }
 
     /**
@@ -93,10 +137,7 @@ final class DebugCommand extends CliCommand
 
         /** @var class-string $scenarioClass */
         $scenarioClass = $scenarios[$options[$choosen]]->class;
-        $this->runDebugClass($output, $scenarioClass, ExecutionType::Up);
-        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Up->value, ExecutionType::Up);
-        $this->runDebugClass($output, $scenarioClass, ExecutionType::Down);
-        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Down->value, ExecutionType::Down);
+        $this->runDebugScenario($output, $scenarioClass);
 
         return Command::Success;
     }
@@ -120,8 +161,7 @@ final class DebugCommand extends CliCommand
         $methods = $classesMethods[$testClass];
 
         if (count($methods) === 0) {
-            $this->runDebugClass($output, $testClass, ExecutionType::Up);
-            $this->runDebugClass($output, $testClass, ExecutionType::Down);
+            $this->runDebugTest($output, $testClass, null);
             return Command::Success;
         }
 
@@ -131,12 +171,34 @@ final class DebugCommand extends CliCommand
             $method = $output->choice(sprintf('Which method would you like to debug from %s?', $testClass), $methods);
         }
 
-        $this->runDebugClass($output, $testClass, ExecutionType::Up);
-        $this->runDebugMethod($output, $testClass, $method, ExecutionType::Up);
-        $this->runDebugClass($output, $testClass, ExecutionType::Down);
-        $this->runDebugMethod($output, $testClass, $method, ExecutionType::Down);
-
+        $this->runDebugTest($output, $testClass, $method);
         return Command::Success;
+    }
+
+    /**
+     * @param class-string $scenarioClass
+     */
+    private function runDebugScenario(CliOutput $output, string $scenarioClass): void
+    {
+        $this->runDebugClass($output, $scenarioClass, ExecutionType::Up);
+        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Up->value, ExecutionType::Up);
+        $this->runDebugClass($output, $scenarioClass, ExecutionType::Down);
+        $this->runDebugMethod($output, $scenarioClass, ExecutionType::Down->value, ExecutionType::Down);
+    }
+
+    /**
+     * @param class-string $testClass
+     */
+    private function runDebugTest(CliOutput $output, string $testClass, ?string $method): void
+    {
+        $this->runDebugClass($output, $testClass, ExecutionType::Up);
+        if ($method !== null) {
+            $this->runDebugMethod($output, $testClass, $method, ExecutionType::Up);
+        }
+        $this->runDebugClass($output, $testClass, ExecutionType::Down);
+        if ($method !== null) {
+            $this->runDebugMethod($output, $testClass, $method, ExecutionType::Down);
+        }
     }
 
     /**
