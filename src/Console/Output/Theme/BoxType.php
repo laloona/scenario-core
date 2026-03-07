@@ -45,7 +45,7 @@ enum BoxType: string
     {
         return match($this) {
             self::Error => ForegroundColor::White,
-            self::Success => ForegroundColor::Black,
+            self::Success => ForegroundColor::White,
             self::Warn => ForegroundColor::Black,
             self::Question => ForegroundColor::White,
             self::Note => null,

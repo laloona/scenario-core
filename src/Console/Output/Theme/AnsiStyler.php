@@ -74,7 +74,7 @@ final class AnsiStyler
             }
         }
 
-        return max(80, min(200, $width));
+        return max(150, min(200, $width));
     }
 
     public function scaleWidth(float $widthFactor = 0.66): int

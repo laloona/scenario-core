@@ -70,10 +70,10 @@ abstract class AnsiString
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     final protected function wrap(string $string, int $maxLength): array
     {
-        return explode(PHP_EOL, wordwrap($this->ansiStrip($string), $maxLength, PHP_EOL, true));
+        return explode("\n", wordwrap(str_replace(["\r\n", "\r"], "\n", $this->ansiStrip($string)), $maxLength, "\n", true));
     }
 }

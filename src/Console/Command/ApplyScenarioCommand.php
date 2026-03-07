@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Console\Command;
 
+use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestClassState;
@@ -18,6 +19,7 @@ use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -86,7 +88,7 @@ final class ApplyScenarioCommand extends CliCommand
         $this->applyScenario($scenario, $executionType);
 
         (new TestClassState())->throw(__CLASS__);
-        (new TestMethodState())->throw(__CLASS__, __METHOD__);
+        (new TestMethodState())->throw(__CLASS__, $executionType->value);
 
         if ($input->option('quiet') !== true) {
             $output->success('Scenario "' . $scenario . '::' . $executionType->value . '" was applied successfully.');
@@ -109,14 +111,19 @@ final class ApplyScenarioCommand extends CliCommand
             (new ClassAttributeParser())->parse($className),
         );
 
+        $context = AttributeContext::getInstance(
+            __CLASS__,
+            $executionType->value,
+            $executionType,
+            false,
+        );
         (new AttributeProcessor())->process(
-            AttributeContext::getInstance(
-                __CLASS__,
-                __METHOD__,
-                $executionType,
-                false,
-            ),
+            $context,
             (new MethodAttributeParser())->parse($className, $executionType->value),
         );
+
+        HandlerRegistry::getInstance()
+            ->attributeHandler(ApplyScenario::class)
+            ->handle($context, new ApplyScenario($className));
     }
 }

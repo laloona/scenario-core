@@ -17,7 +17,7 @@ enum BackgroundColor: int
     case Red = 41;
     case Green = 42;
     case Yellow = 103;
-    case Blue = 104;
+    case Blue = 44;
     case Magenta = 45;
     case Cyan = 46;
     case White = 47;
