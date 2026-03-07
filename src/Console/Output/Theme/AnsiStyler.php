@@ -57,16 +57,24 @@ final class AnsiStyler
         $cols = getenv('COLUMNS');
         if (is_string($cols)
             && ctype_digit($cols)) {
-            $width = (int) $cols;
-        } else {
-            $out = @shell_exec('stty size 2>/dev/null');
-            if (is_string($out) === true
-                && preg_match('/\d+\s+(\d+)/', trim($out), $m) === 1) {
-                $width = (int) $m[1];
+            $width = (int)$cols;
+        } elseif (function_exists('shell_exec')) {
+            if (PHP_OS_FAMILY === 'Windows') {
+                $out = shell_exec('mode CON');
+                if (is_string($out) === true
+                    && preg_match('/Columns:\s+(\d+)/', $out, $m) === 1) {
+                    $width = (int)$m[1];
+                }
+            } else {
+                $out = @shell_exec('stty size 2>/dev/null');
+                if (is_string($out) === true
+                    && preg_match('/\d+\s+(\d+)/', trim($out), $m) === 1) {
+                    $width = (int) $m[1];
+                }
             }
         }
 
-        return max(60, min(200, $width));
+        return max(80, min(200, $width));
     }
 
     public function scaleWidth(float $widthFactor = 0.66): int

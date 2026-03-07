@@ -60,6 +60,6 @@ final class CliApplication
             return $commands[$input->command()]->run($input)->value;
         }
 
-        return (new ListCommands($commands)->run($input))->value;
+        return (new ListCommands($commands))->run($input)->value;
     }
 }
