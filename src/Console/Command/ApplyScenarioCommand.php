@@ -101,29 +101,16 @@ final class ApplyScenarioCommand extends CliCommand
      */
     private function applyScenario(string $className, ExecutionType $executionType): void
     {
-        (new AttributeProcessor())->process(
-            AttributeContext::getInstance(
-                __CLASS__,
-                null,
-                $executionType,
-                false,
-            ),
-            (new ClassAttributeParser())->parse($className),
-        );
-
-        $context = AttributeContext::getInstance(
-            __CLASS__,
-            $executionType->value,
-            $executionType,
-            false,
-        );
-        (new AttributeProcessor())->process(
-            $context,
-            (new MethodAttributeParser())->parse($className, $executionType->value),
-        );
-
         HandlerRegistry::getInstance()
             ->attributeHandler(ApplyScenario::class)
-            ->handle($context, new ApplyScenario($className));
+            ->handle(
+                AttributeContext::getInstance(
+                    __CLASS__,
+                    $executionType->value,
+                    $executionType,
+                    false,
+                ),
+                new ApplyScenario($className)
+            );
     }
 }

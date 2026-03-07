@@ -158,7 +158,12 @@ final class ScenarioLoader
         foreach ($suites as $suite => $classes) {
             $cachedSuites[$suite] = [];
             foreach ($classes as $class) {
-                $attributes = (new ReflectionClass($class))->getAttributes(AsScenario::class);
+                $reflection = new ReflectionClass($class);
+                if ($reflection->isAbstract() === true) {
+                    continue;
+                }
+
+                $attributes = $reflection->getAttributes(AsScenario::class);
                 foreach ($attributes as $attribute) {
                     $attributeInstance = $attribute->newInstance();
                     assert($attributeInstance instanceof AsScenario);
