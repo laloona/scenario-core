@@ -19,6 +19,7 @@ use Scenario\Core\Runtime\Metadata\AttributeProcessor;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
+use Scenario\Core\Runtime\ScenarioParameters;
 use Scenario\Core\Runtime\ScenarioRegistry;
 
 final class ApplyScenarioHandler extends AttributeHandler
@@ -45,9 +46,12 @@ final class ApplyScenarioHandler extends AttributeHandler
             return;
         }
 
+        $scenarioInstance = $this->builder->build($scenario->class);
+        $scenarioInstance->resolve(new ScenarioParameters($metaData->parameters));
+
         match($context->executionType) {
-            ExecutionType::Up => $this->builder->build($scenario->class)->up(),
-            ExecutionType::Down => $this->builder->build($scenario->class)->down(),
+            ExecutionType::Up => $scenarioInstance->up(),
+            ExecutionType::Down => $scenarioInstance->down(),
         };
     }
 

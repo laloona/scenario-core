@@ -166,7 +166,9 @@ final class ScenarioLoader
                 $attributes = $reflection->getAttributes(AsScenario::class);
                 foreach ($attributes as $attribute) {
                     $attributeInstance = $attribute->newInstance();
+
                     assert($attributeInstance instanceof AsScenario);
+
                     $this->registry->register(new ScenarioDefinition($suite, $attributeInstance, $class));
                     $cachedSuites[$suite][] = [
                         'name' => (string) $attributeInstance->name,

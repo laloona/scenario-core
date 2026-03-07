@@ -14,10 +14,15 @@ namespace Scenario\Core\Tests\Files;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Contract\ScenarioInterface;
+use Scenario\Core\Runtime\ScenarioParameters;
 
 #[AsScenario]
 final class ValidScenario implements ScenarioInterface
 {
+    public function resolve(ScenarioParameters $parameters): void
+    {
+    }
+
     #[ApplyScenario('my-scenario')]
     public function up(): void
     {

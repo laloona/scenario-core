@@ -11,8 +11,12 @@
 
 namespace Scenario\Core\Contract;
 
+use Scenario\Core\Runtime\ScenarioParameters;
+
 interface ScenarioInterface
 {
+    public function resolve(ScenarioParameters $parameters): void;
+
     public function up(): void;
 
     public function down(): void;

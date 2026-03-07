@@ -16,8 +16,12 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 final class ApplyScenario
 {
+    /**
+     * @param array<string, mixed> $parameters
+     */
     public function __construct(
         public readonly string $id,
+        public readonly array $parameters = [],
     ) {
     }
 }

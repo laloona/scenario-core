@@ -17,11 +17,8 @@ use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\AttributeProcessor;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
-use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Scenario\Core\Runtime\ScenarioRegistry;
 
 final class ApplyScenarioCommand extends CliCommand
@@ -110,7 +107,7 @@ final class ApplyScenarioCommand extends CliCommand
                     $executionType,
                     false,
                 ),
-                new ApplyScenario($className)
+                new ApplyScenario($className),
             );
     }
 }
