@@ -23,12 +23,12 @@ final class LoadedConfiguration implements Configuration
     private ?string $cacheKey = null;
 
     /**
-     * @var ConnectionValue[]
+     * @var array<string, ConnectionValue>
      */
     private array $connections = [];
 
     /**
-     * @var SuiteValue[]
+     * @var array<string, SuiteValue>
      */
     private array $suites = [];
 
@@ -67,7 +67,7 @@ final class LoadedConfiguration implements Configuration
     }
 
     /**
-     * @return SuiteValue[]
+     * @return array<string, SuiteValue>
      */
     public function getSuites(): array
     {
@@ -77,7 +77,7 @@ final class LoadedConfiguration implements Configuration
     }
 
     /**
-     * @param SuiteValue[] $suites
+     * @param array<string, SuiteValue> $suites
      */
     public function setSuites(array $suites): void
     {
@@ -85,7 +85,7 @@ final class LoadedConfiguration implements Configuration
     }
 
     /**
-     * @return ConnectionValue[]
+     * @return array<string, ConnectionValue>
      */
     public function getConnections(): array
     {
@@ -95,7 +95,7 @@ final class LoadedConfiguration implements Configuration
     }
 
     /**
-     * @param ConnectionValue[] $connections
+     * @param array<string, ConnectionValue> $connections
      */
     public function setConnections(array $connections): void
     {

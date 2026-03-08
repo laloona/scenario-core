@@ -37,7 +37,7 @@ final class DefaultConfiguration implements Configuration
     }
 
     /**
-     * @return SuiteValue[]
+     * @return array<string, SuiteValue>
      */
     public function getSuites(): array
     {
@@ -47,7 +47,7 @@ final class DefaultConfiguration implements Configuration
     }
 
     /**
-     * @return ConnectionValue[]
+     * @return array<string, ConnectionValue>
      */
     public function getConnections(): array
     {

@@ -25,12 +25,12 @@ interface Configuration
     public function setCacheKey(string $cacheKey): void;
 
     /**
-     * @return SuiteValue[]
+     * @return array<string, SuiteValue>
      */
     public function getSuites(): array;
 
     /**
-     * @return ConnectionValue[]
+     * @return array<string, ConnectionValue>
      */
     public function getConnections(): array;
 }

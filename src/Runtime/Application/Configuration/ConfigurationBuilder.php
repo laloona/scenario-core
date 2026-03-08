@@ -79,6 +79,7 @@ final class ConfigurationBuilder
             if (isset($connectionObjects[$name]) === true) {
                 throw new BuilderException(sprintf('connection with name "%s" already exists', $name));
             }
+
             $connectionObjects[$name] = new ConnectionValue(
                 $name,
                 $connectionNode->textContent,
