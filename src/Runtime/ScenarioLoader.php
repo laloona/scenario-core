@@ -20,6 +20,7 @@ use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
+use Scenario\Core\Runtime\Metadata\ParameterType;
 use SplFileInfo;
 use Throwable;
 use UnexpectedValueException;
@@ -114,17 +115,24 @@ final class ScenarioLoader
                     $parameterInstances = [];
                     foreach ($parameters as $parameter) {
                         $parameterName = $parameter['name'] ?? null;
+                        $parameterType = $parameter['type'] ?? null;
                         $parameterDescription = $parameter['description'] ?? null;
                         $parameterRequired = $parameter['required'] ?? false;
                         $parameterDefault = $parameter['default'] ?? null;
 
                         if (is_string($parameterName) === false
+                            || is_string($parameterType) === false
                             || !(is_string($parameterDescription) === true || $parameterDescription === null)
                             || is_bool($parameterRequired) === false) {
                             continue;
                         }
 
-                        $parameterInstances[] = new Parameter($parameterName, $parameterDescription, $parameterRequired, $parameterDefault);
+                        $parameterType = ParameterType::tryFrom($parameterType);
+                        if ($parameterType === null) {
+                            continue;
+                        }
+
+                        $parameterInstances[] = new Parameter($parameterName, $parameterType, $parameterDescription, $parameterRequired, $parameterDefault);
                     }
 
                     $this->registry->register(
@@ -198,6 +206,7 @@ final class ScenarioLoader
                         $parameters[] = $parameterInstance;
                         $cacheParameters[] = [
                             'name' => $parameterInstance->name,
+                            'type' => $parameterInstance->type->value,
                             'description' => $parameterInstance->description,
                             'required' => $parameterInstance->required,
                             'default' => $parameterInstance->default,

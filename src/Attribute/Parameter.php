@@ -12,15 +12,27 @@
 namespace Scenario\Core\Attribute;
 
 use Attribute;
+use Scenario\Core\Runtime\Metadata\ParameterType;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Parameter
 {
     public function __construct(
         public readonly string $name,
+        public readonly ParameterType $type,
         public readonly ?string $description = null,
         public readonly bool $required = false,
         public readonly mixed $default = null,
     ) {
+    }
+
+    public function validate(mixed $value): bool
+    {
+        if ($this->required === true
+            && $value === null) {
+            return false;
+        }
+
+        return $this->type->valid($value);
     }
 }

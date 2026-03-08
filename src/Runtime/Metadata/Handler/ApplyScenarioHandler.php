@@ -42,12 +42,12 @@ final class ApplyScenarioHandler extends AttributeHandler
 
         $context->audit($scenario->class);
 
+        $scenarioInstance = $this->builder->build($scenario->class);
+        $scenarioInstance->configure(new ScenarioParameters($scenario->parameters, $metaData->parameters));
+
         if ($context->dryRun === true) {
             return;
         }
-
-        $scenarioInstance = $this->builder->build($scenario->class);
-        $scenarioInstance->configure(new ScenarioParameters($scenario->parameters, $metaData->parameters));
 
         match($context->executionType) {
             ExecutionType::Up => $scenarioInstance->up(),

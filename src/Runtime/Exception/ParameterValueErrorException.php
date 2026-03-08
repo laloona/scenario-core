@@ -11,17 +11,16 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
-final class MissingRequiredParametersException extends Exception
+final class ParameterValueErrorException extends Exception
 {
-    /**
-     * @param list<string> $parameters
-     */
-    public function __construct(array $parameters)
+    public function __construct(string $name, string $expected, string $actual)
     {
         parent::__construct(
             sprintf(
-                'required parameters [%s] are missing',
-                implode(', ', $parameters),
+                'wrong value for parameter %s, expected type %s but got %s',
+                $name,
+                $expected,
+                $actual,
             ),
         );
     }

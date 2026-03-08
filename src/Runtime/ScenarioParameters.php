@@ -14,10 +14,12 @@ namespace Scenario\Core\Runtime;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
+use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use function array_diff;
 use function array_key_exists;
 use function array_keys;
 use function array_values;
+use function gettype;
 
 final class ScenarioParameters
 {
@@ -39,6 +41,7 @@ final class ScenarioParameters
         }
 
         $this->resolve();
+        $this->validate();
     }
 
     private function resolve(): void
@@ -61,10 +64,20 @@ final class ScenarioParameters
         }
     }
 
+    private function validate(): void
+    {
+        foreach ($this->allowedParameters as $parameter) {
+            $value = $this->parameters[$parameter->name] ?? null;
+            if ($parameter->validate($value) === false) {
+                throw new ParameterValueErrorException($parameter->name, $parameter->type->value, gettype($value));
+            }
+        }
+    }
+
     public function get(string $name): mixed
     {
         if (array_key_exists($name, $this->parameters) === true) {
-            return $this->parameters[$name];
+            return $this->parameters[$name] ?? $this->allowedParameters[$name]->default;
         }
 
         return $this->allowedParameters[$name]->default;
