@@ -18,7 +18,7 @@ use Scenario\Core\Runtime\Metadata\ParameterType;
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Parameter
 {
-    public readonly mixed $default;
+    public readonly string|int|float|bool|null $default;
 
     public function __construct(
         public readonly string $name,

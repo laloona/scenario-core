@@ -30,7 +30,7 @@ enum ParameterType: string
         return $this->cast($value) !== null;
     }
 
-    public function cast(mixed $value): mixed
+    public function cast(mixed $value): string|int|float|bool|null
     {
         if ($value === null) {
             return null;
@@ -71,9 +71,7 @@ enum ParameterType: string
         }
 
         return match ($this) {
-            self::String => is_string($value) === true ? $value : null,
-            self::Integer => is_int($value) === true ? (string)$value : null,
-            self::Float => is_float($value) === true ? (string)$value : null,
+            self::String, self::Integer, self::Float => (string)$value,
             self::Boolean => $value === true ? '1' : '0',
         };
     }
