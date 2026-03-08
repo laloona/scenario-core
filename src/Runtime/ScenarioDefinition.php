@@ -12,6 +12,7 @@
 namespace Scenario\Core\Runtime;
 
 use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Attribute\Parameter;
 
 final class ScenarioDefinition
 {
@@ -19,11 +20,13 @@ final class ScenarioDefinition
 
     /**
      * @param class-string $class
+     * @param list<Parameter> $parameters
      */
     public function __construct(
         public readonly string $suite,
-        public readonly AsScenario $attribute,
         public readonly string $class,
+        public readonly AsScenario $attribute,
+        public readonly array $parameters,
     ) {
         $this->name = $this->attribute->name;
     }

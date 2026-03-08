@@ -47,7 +47,7 @@ final class ApplyScenarioHandler extends AttributeHandler
         }
 
         $scenarioInstance = $this->builder->build($scenario->class);
-        $scenarioInstance->resolve(new ScenarioParameters($metaData->parameters));
+        $scenarioInstance->configure(new ScenarioParameters($scenario->parameters, $metaData->parameters));
 
         match($context->executionType) {
             ExecutionType::Up => $scenarioInstance->up(),

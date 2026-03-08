@@ -53,8 +53,9 @@ final class ScenarioRegistryTest extends TestCase
 
         $definition = new ScenarioDefinition(
             'main',
-            new AsScenario(null, null),
             ValidScenario::class,
+            new AsScenario(null, null),
+            [],
         );
 
         $registry->register($definition);
@@ -68,8 +69,9 @@ final class ScenarioRegistryTest extends TestCase
 
         $definition = new ScenarioDefinition(
             'main',
-            new AsScenario('my-scenario', null),
             ValidScenario::class,
+            new AsScenario('my-scenario', null),
+            [],
         );
 
         $registry->register($definition);
@@ -84,8 +86,9 @@ final class ScenarioRegistryTest extends TestCase
 
         $definition = new ScenarioDefinition(
             'main',
-            new AsScenario('my-scenario', null),
             ValidScenario::class,
+            new AsScenario('my-scenario', null),
+            [],
         );
 
         $registry->register($definition);
@@ -105,8 +108,9 @@ final class ScenarioRegistryTest extends TestCase
 
         $definition = new ScenarioDefinition(
             'main',
-            new AsScenario('my-scenario', null),
             ValidScenario::class,
+            new AsScenario('my-scenario', null),
+            [],
         );
 
         $registry->register($definition);
@@ -135,8 +139,9 @@ final class ScenarioRegistryTest extends TestCase
 
         $definition = new ScenarioDefinition(
             'main',
-            new AsScenario('my-scenario', null),
             InvalidScenario::class,
+            new AsScenario('my-scenario', null),
+            [],
         );
 
         $this->expectException(DefinitionException::class);
@@ -151,14 +156,16 @@ final class ScenarioRegistryTest extends TestCase
 
         $firstDefinition = new ScenarioDefinition(
             'main',
-            new AsScenario('first', null),
             ValidScenario::class,
+            new AsScenario('first', null),
+            [],
         );
 
         $secondDefinition = new ScenarioDefinition(
             'main',
-            new AsScenario('second', null),
             ValidScenario::class,
+            new AsScenario('second', null),
+            [],
         );
 
         $registry->register($firstDefinition);

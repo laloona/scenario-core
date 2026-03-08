@@ -15,7 +15,7 @@ use Scenario\Core\Runtime\ScenarioParameters;
 
 interface ScenarioInterface
 {
-    public function resolve(ScenarioParameters $parameters): void;
+    public function configure(ScenarioParameters $parameters): void;
 
     public function up(): void;
 

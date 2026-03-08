@@ -18,25 +18,14 @@ abstract class Scenario implements ScenarioInterface
 {
     private ScenarioParameters $parameters;
 
-    protected function configure(): void
-    {
-    }
-
-    final protected function require(string $name): void
-    {
-        $this->parameters->register($name, true);
-    }
-
-    final protected function optional(string $name): void
-    {
-        $this->parameters->register($name, false);
-    }
-
-    final public function resolve(ScenarioParameters $parameters): void
+    final public function configure(ScenarioParameters $parameters): void
     {
         $this->parameters = $parameters;
-        $this->configure();
-        $this->parameters->resolve();
+    }
+
+    final public function parameter(string $name): mixed
+    {
+        return $this->parameters->get($name);
     }
 
     public function down(): void

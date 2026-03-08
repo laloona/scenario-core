@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Runtime;
 
+use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use function array_diff;
@@ -21,28 +22,26 @@ use function array_values;
 final class ScenarioParameters
 {
     /**
-     * @var array<string, bool>
+     * @var array<string, Parameter>
      */
     private array $allowedParameters = [];
 
     /**
+     * @param list<Parameter> $allowedParameters
      * @param array<string, mixed> $parameters
      */
     public function __construct(
+        array $allowedParameters,
         private readonly array $parameters,
     ) {
-    }
-
-    public function register(string $name, bool $required): void
-    {
-        if (isset($this->allowedParameters[$name]) === true) {
-            return;
+        foreach ($allowedParameters as $parameter) {
+            $this->allowedParameters[$parameter->name] = $parameter;
         }
 
-        $this->allowedParameters[$name] = $required;
+        $this->resolve();
     }
 
-    public function resolve(): void
+    private function resolve(): void
     {
         $notAllowedParameters = array_values(array_diff(array_keys($this->parameters), array_keys($this->allowedParameters)));
         if (count($notAllowedParameters) > 0) {
@@ -52,7 +51,7 @@ final class ScenarioParameters
         $requiredMissing = [];
         $missingParameters = array_values(array_diff(array_keys($this->allowedParameters), array_keys($this->parameters)));
         foreach ($missingParameters as $missingParameter) {
-            if ($this->allowedParameters[$missingParameter] === true) {
+            if ($this->allowedParameters[$missingParameter]->required === true) {
                 $requiredMissing[] = $missingParameter;
             }
         }
@@ -62,12 +61,12 @@ final class ScenarioParameters
         }
     }
 
-    public function get(string $name, mixed $default = null): mixed
+    public function get(string $name): mixed
     {
         if (array_key_exists($name, $this->parameters) === true) {
             return $this->parameters[$name];
         }
 
-        return $default;
+        return $this->allowedParameters[$name]->default;
     }
 }

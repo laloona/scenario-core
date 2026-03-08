@@ -17,6 +17,7 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use Scenario\Core\Application;
 use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
 use SplFileInfo;
@@ -98,23 +99,40 @@ final class ScenarioLoader
                     $class = $definition['class'] ?? null;
                     $name = $definition['name'] ?? null;
                     $description = $definition['description'] ?? null;
+                    $parameters = $definition['parameters'] ?? [];
 
                     if (is_string($class) === false
+                        || $class === ''
+                        || class_exists($class) === false
                         || !(is_string($name) === true || $name === null)
-                        || !(is_string($description) === true || $description === null)) {
+                        || !(is_string($description) === true || $description === null)
+                        || is_array($parameters) === false) {
                         continue;
                     }
 
-                    if ($class === ''
-                        || class_exists($class) === false) {
-                        continue;
+                    /** @var list<array{name?: mixed, description?: mixed, required?: mixed, default?: mixed}> $parameters */
+                    $parameterInstances = [];
+                    foreach ($parameters as $parameter) {
+                        $parameterName = $parameter['name'] ?? null;
+                        $parameterDescription = $parameter['description'] ?? null;
+                        $parameterRequired = $parameter['required'] ?? false;
+                        $parameterDefault = $parameter['default'] ?? null;
+
+                        if (is_string($parameterName) === false
+                            || !(is_string($parameterDescription) === true || $parameterDescription === null)
+                            || is_bool($parameterRequired) === false) {
+                            continue;
+                        }
+
+                        $parameterInstances[] = new Parameter($parameterName, $parameterDescription, $parameterRequired, $parameterDefault);
                     }
 
                     $this->registry->register(
                         new ScenarioDefinition(
                             $suite,
-                            new AsScenario($name, $description),
                             $class,
+                            new AsScenario($name, $description),
+                            $parameterInstances,
                         ),
                     );
                 }
@@ -169,11 +187,30 @@ final class ScenarioLoader
 
                     assert($attributeInstance instanceof AsScenario);
 
-                    $this->registry->register(new ScenarioDefinition($suite, $attributeInstance, $class));
+                    $parameters = [];
+                    $cacheParameters = [];
+                    $parameterAttributes = $reflection->getAttributes(Parameter::class);
+                    foreach ($parameterAttributes as $parameterAttribute) {
+                        $parameterInstance = $parameterAttribute->newInstance();
+
+                        assert($parameterInstance instanceof Parameter);
+
+                        $parameters[] = $parameterInstance;
+                        $cacheParameters[] = [
+                            'name' => $parameterInstance->name,
+                            'description' => $parameterInstance->description,
+                            'required' => $parameterInstance->required,
+                            'default' => $parameterInstance->default,
+                        ];
+                    }
+
+                    $this->registry->register(new ScenarioDefinition($suite, $class, $attributeInstance, $parameters));
+
                     $cachedSuites[$suite][] = [
                         'name' => (string) $attributeInstance->name,
                         'description' => (string) $attributeInstance->description,
                         'class' => (string) $class,
+                        'parameters' => $cacheParameters,
                     ];
                 }
             }

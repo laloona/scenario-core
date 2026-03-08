@@ -19,7 +19,7 @@ use Scenario\Core\Runtime\ScenarioParameters;
 #[AsScenario]
 final class ValidScenario implements ScenarioInterface
 {
-    public function resolve(ScenarioParameters $parameters): void
+    public function configure(ScenarioParameters $parameters): void
     {
     }
 
