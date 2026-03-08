@@ -13,11 +13,12 @@ namespace Scenario\Core\Runtime\Exception;
 
 final class ParameterValueErrorException extends Exception
 {
-    public function __construct(string $name, string $expected, string $actual)
+    public function __construct(string $name, string $expected, string $actual, bool $default)
     {
         parent::__construct(
             sprintf(
-                'wrong value for parameter %s, expected type %s but got %s',
+                'wrong %svalue for parameter %s, expected type %s but got %s',
+                $default === true ? 'default ' : '',
                 $name,
                 $expected,
                 $actual,

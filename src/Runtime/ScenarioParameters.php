@@ -69,17 +69,18 @@ final class ScenarioParameters
         foreach ($this->allowedParameters as $parameter) {
             $value = $this->parameters[$parameter->name] ?? null;
             if ($parameter->validate($value) === false) {
-                throw new ParameterValueErrorException($parameter->name, $parameter->type->value, gettype($value));
+                throw new ParameterValueErrorException($parameter->name, $parameter->type->value, gettype($value), false);
             }
         }
     }
 
     public function get(string $name): mixed
     {
+        $value = $this->allowedParameters[$name]->default;
         if (array_key_exists($name, $this->parameters) === true) {
-            return $this->parameters[$name] ?? $this->allowedParameters[$name]->default;
+            $value = $this->parameters[$name];
         }
 
-        return $this->allowedParameters[$name]->default;
+        return $this->allowedParameters[$name]->type->cast($value);
     }
 }

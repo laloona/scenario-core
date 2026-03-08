@@ -12,18 +12,27 @@
 namespace Scenario\Core\Attribute;
 
 use Attribute;
+use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Parameter
 {
+    public readonly mixed $default;
+
     public function __construct(
         public readonly string $name,
         public readonly ParameterType $type,
         public readonly ?string $description = null,
         public readonly bool $required = false,
-        public readonly mixed $default = null,
+        mixed $default = null,
     ) {
+        if ($default !== null
+            && $type->valid($default) === false) {
+            throw new ParameterValueErrorException($name, $type->value, gettype($default), true);
+        }
+
+        $this->default = $type->cast($default);
     }
 
     public function validate(mixed $value): bool

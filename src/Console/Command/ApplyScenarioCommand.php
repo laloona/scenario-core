@@ -44,9 +44,11 @@ final class ApplyScenarioCommand extends CliCommand
             return Command::Error;
         }
 
+        $directExecution = false;
         $scenario = $input->argument('0');
         $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
+            $directExecution = true;
             $scenarioClass = null;
             foreach ($scenarioDefinitions as $scenarioDefinition) {
                 if ($scenarioDefinition->class === $scenario) {
@@ -81,8 +83,37 @@ final class ApplyScenarioCommand extends CliCommand
             $scenario = $scenarios[$options[$choosen]]->class;
         }
 
+        $parameters = [];
+        if (is_string($scenario) === true) {
+            $definition = $scenarioDefinitions[$scenario];
+            if (count($definition->parameters) > 0) {
+                foreach ($definition->parameters as $parameter) {
+                    if ($directExecution === true) {
+                        $parameters[$parameter->name] = $input->option($parameter->name);
+                        continue;
+                    }
+
+                    $default = '';
+                    if (is_scalar($parameter->default) === true
+                        || $parameter->default === null) {
+                        $default = (string) $parameter->default;
+                    }
+
+                    $parameters[$parameter->name] = $output->ask(
+                        sprintf(
+                            'Please insert value for parameter "%s"%s%s',
+                            $parameter->name,
+                            $parameter->description === null ? '' : ' (' . $parameter->description . ')',
+                            $parameter->required === true ? ' (required)' : '',
+                        ),
+                        $default,
+                    );
+                }
+            }
+        }
+
         /** @var class-string $scenario */
-        $this->applyScenario($scenario, $executionType);
+        $this->applyScenario($scenario, $executionType, $parameters);
 
         (new TestClassState())->throw(__CLASS__);
         (new TestMethodState())->throw(__CLASS__, $executionType->value);
@@ -95,8 +126,9 @@ final class ApplyScenarioCommand extends CliCommand
 
     /**
      * @param class-string $className
+     * @param array<string, mixed> $parameters
      */
-    private function applyScenario(string $className, ExecutionType $executionType): void
+    private function applyScenario(string $className, ExecutionType $executionType, array $parameters): void
     {
         HandlerRegistry::getInstance()
             ->attributeHandler(ApplyScenario::class)
@@ -107,7 +139,7 @@ final class ApplyScenarioCommand extends CliCommand
                     $executionType,
                     false,
                 ),
-                new ApplyScenario($className),
+                new ApplyScenario($className, $parameters),
             );
     }
 }
