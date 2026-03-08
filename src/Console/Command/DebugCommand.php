@@ -75,8 +75,7 @@ final class DebugCommand extends CliCommand
 
         if (is_string($className) === true) {
             if (isset($scenarioDefinitions[$className]) === true) {
-                /** @var class-string $className */
-                $this->runDebugScenario($output, $className);
+                $this->runDebugScenario($output, $scenarioDefinitions[$className]);
                 return true;
             }
 
@@ -135,9 +134,8 @@ final class DebugCommand extends CliCommand
         $options = array_values(array_unique(array_keys($scenarios)));
         $choosen = (int)$output->choice('Which scenario would you like to debug?', $options);
 
-        /** @var class-string $scenarioClass */
-        $scenarioClass = $scenarios[$options[$choosen]]->class;
-        $this->runDebugScenario($output, $scenarioClass);
+        $scenario = $scenarios[$options[$choosen]];
+        $this->runDebugScenario($output, $scenario);
 
         return Command::Success;
     }
@@ -175,11 +173,41 @@ final class DebugCommand extends CliCommand
         return Command::Success;
     }
 
-    /**
-     * @param class-string $scenarioClass
-     */
-    private function runDebugScenario(CliOutput $output, string $scenarioClass): void
+    private function runDebugScenario(CliOutput $output, ScenarioDefinition $scenario): void
     {
+        /** @var class-string $scenarioClass */
+        $scenarioClass = $scenario->class;
+        $output->headline($scenario->suite . ': ' . $scenarioClass);
+
+        $output->table(
+            null,
+            [
+                [ $scenario->attribute->name, $scenario->attribute->description ],
+            ],
+            null,
+            false,
+        );
+
+        if (count($scenario->parameters) > 0) {
+            $output->headline('The following parameters are defined:');
+
+            $parameters = [];
+            foreach ($scenario->parameters as $parameter) {
+                $parameters[] = [
+                    $parameter->name,
+                    $parameter->type->value,
+                    $parameter->description,
+                    $parameter->required === true ? 'true' : 'false',
+                    $parameter->type->asString($parameter->default),
+                ];
+            }
+
+            $output->table(
+                [ 'name', 'type', 'description', 'required', 'default' ],
+                $parameters,
+            );
+        }
+
         $this->runDebugClass($output, $scenarioClass, ExecutionType::Up);
         $this->runDebugMethod($output, $scenarioClass, ExecutionType::Up->value, ExecutionType::Up);
         $this->runDebugClass($output, $scenarioClass, ExecutionType::Down);

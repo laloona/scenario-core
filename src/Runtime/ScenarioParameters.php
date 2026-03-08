@@ -16,7 +16,6 @@ use Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use function array_diff;
-use function array_key_exists;
 use function array_keys;
 use function array_values;
 use function gettype;
@@ -77,7 +76,8 @@ final class ScenarioParameters
     public function get(string $name): mixed
     {
         $value = $this->allowedParameters[$name]->default;
-        if (array_key_exists($name, $this->parameters) === true) {
+        if (isset($this->parameters[$name]) === true
+            && $this->parameters[$name] !== '') {
             $value = $this->parameters[$name];
         }
 
