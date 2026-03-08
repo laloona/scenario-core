@@ -62,4 +62,19 @@ enum ParameterType: string
                     : null),
         };
     }
+
+    public function asString(mixed $value): string|null
+    {
+        $value = $this->cast($value);
+        if ($value === null) {
+            return null;
+        }
+
+        return match ($this) {
+            self::String => is_string($value) === true ? $value : null,
+            self::Integer => is_int($value) === true ? (string)$value : null,
+            self::Float => is_float($value) === true ? (string)$value : null,
+            self::Boolean => $value === true ? '1' : '0',
+        };
+    }
 }

@@ -93,20 +93,15 @@ final class ApplyScenarioCommand extends CliCommand
                         continue;
                     }
 
-                    $default = '';
-                    if (is_scalar($parameter->default) === true
-                        || $parameter->default === null) {
-                        $default = (string) $parameter->default;
-                    }
-
                     $parameters[$parameter->name] = $output->ask(
                         sprintf(
-                            'Please insert value for parameter "%s"%s%s',
+                            'Please insert value for %s parameter "%s"%s%s',
+                            $parameter->type->value,
                             $parameter->name,
                             $parameter->description === null ? '' : ' (' . $parameter->description . ')',
                             $parameter->required === true ? ' (required)' : '',
                         ),
-                        $default,
+                        $parameter->type->asString($parameter->default),
                     );
                 }
             }
