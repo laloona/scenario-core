@@ -89,14 +89,16 @@ final class AttributeContext
 
     /**
      * @param class-string $scenario
+     * @param array<string, mixed> $parameters
      * @throws CycleException
      */
-    public function audit(string $scenario): void
+    public function audit(string $scenario, array $parameters): void
     {
-        if (in_array($scenario, $this->audits, true) === true) {
+        $scenarioSignature = $scenario . (count($parameters) === 0 ? '' : json_encode($parameters, JSON_THROW_ON_ERROR));
+        if (in_array($scenarioSignature, $this->audits, true) === true) {
             throw new CycleException(
                 $this->class . ($this->method === null ? '' : '::' . $this->method),
-                $scenario,
+                $scenarioSignature,
                 [...$this->audits, $scenario],
                 $this->executionType,
             );

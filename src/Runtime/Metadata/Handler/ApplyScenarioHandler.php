@@ -40,7 +40,7 @@ final class ApplyScenarioHandler extends AttributeHandler
 
         $this->attributes($context, $scenario->class);
 
-        $context->audit($scenario->class);
+        $context->audit($scenario->class, $metaData->parameters);
 
         $scenarioInstance = $this->builder->build($scenario->class);
         $scenarioInstance->configure(new ScenarioParameters($scenario->parameters, $metaData->parameters));
