@@ -84,4 +84,17 @@ final class ScenarioParameters
 
         return $this->allowedParameters[$name]->type->cast($value);
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function all(): array
+    {
+        $parameters = [];
+        foreach (array_keys($this->allowedParameters) as $name) {
+            $parameters[$name] = $this->get($name);
+        }
+
+        return $parameters;
+    }
 }

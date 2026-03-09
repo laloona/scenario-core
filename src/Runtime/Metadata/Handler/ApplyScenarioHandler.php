@@ -40,10 +40,12 @@ final class ApplyScenarioHandler extends AttributeHandler
 
         $this->attributes($context, $scenario->class);
 
-        $context->audit($scenario->class, $metaData->parameters);
+        $parameters = new ScenarioParameters($scenario->parameters, $metaData->parameters);
+
+        $context->audit($scenario->class, $parameters->all());
 
         $scenarioInstance = $this->builder->build($scenario->class);
-        $scenarioInstance->configure(new ScenarioParameters($scenario->parameters, $metaData->parameters));
+        $scenarioInstance->configure($parameters);
 
         if ($context->dryRun === true) {
             return;

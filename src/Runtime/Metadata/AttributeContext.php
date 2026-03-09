@@ -52,7 +52,7 @@ final class AttributeContext
         return self::$instances[$method . '::' . $executionType->value];
     }
 
-    /** @var list<class-string> */
+    /** @var list<string> */
     private array $audits = [];
 
     /**
@@ -108,7 +108,7 @@ final class AttributeContext
     }
 
     /**
-     * @return list<class-string>
+     * @return list<string>
      */
     public function getAudits(): array
     {
