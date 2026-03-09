@@ -12,6 +12,7 @@
 namespace Scenario\Core\Tests\Unit\Runtime\Application\Configuration;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -28,6 +29,7 @@ use function unlink;
 
 #[CoversClass(ConfigurationFinder::class)]
 #[UsesClass(Application::class)]
+#[Group('runtime')]
 final class ConfigurationFinderTest extends TestCase
 {
     private string $tempDir;
