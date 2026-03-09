@@ -104,7 +104,7 @@ final class AttributeContext
             );
         }
 
-        $this->audits[] = $scenario;
+        $this->audits[] = $scenarioSignature;
     }
 
     /**
