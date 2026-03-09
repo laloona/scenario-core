@@ -99,4 +99,17 @@ final class ApplicationStateTest extends TestCase
         $this->expectException(ApplicationFailureException::class);
         $state->throw(null);
     }
+
+    public function testFailuresAreTrackedPerClass(): void
+    {
+        $state = new ApplicationState();
+        $state->addClass('ClassA');
+        $state->addClass('ClassB');
+
+        $state->fail(new RuntimeException('A'));
+
+        self::assertInstanceOf(ApplicationFailureException::class, $state->failure('ClassA'));
+        self::assertInstanceOf(ApplicationFailureException::class, $state->failure('ClassB'));
+        self::assertNull($state->failure('ClassC'));
+    }
 }

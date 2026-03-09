@@ -20,7 +20,7 @@ final class ApplicationState
     private static ?Throwable $throwable = null;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private static array $classes = [];
 

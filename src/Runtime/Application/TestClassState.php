@@ -17,7 +17,7 @@ use Throwable;
 final class TestClassState
 {
     /**
-     * @var Throwable[]
+     * @var array<string, Throwable>
      */
     private static array $throwables = [];
 
