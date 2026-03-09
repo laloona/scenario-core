@@ -15,7 +15,7 @@ use Attribute;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 final class Parameter
 {
     public readonly string|int|float|bool|null $default;
@@ -37,9 +37,9 @@ final class Parameter
 
     public function validate(mixed $value): bool
     {
-        if ($this->required === true
+        if ($this->required === false
             && $value === null) {
-            return false;
+            return true;
         }
 
         return $this->type->valid($value);

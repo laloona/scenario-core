@@ -67,6 +67,7 @@ final class ScenarioParameters
     {
         foreach ($this->allowedParameters as $parameter) {
             $value = $this->parameters[$parameter->name] ?? null;
+            $value = $value === '' ? null : $value;
             if ($parameter->validate($value) === false) {
                 throw new ParameterValueErrorException($parameter->name, $parameter->type->value, gettype($value), false);
             }
