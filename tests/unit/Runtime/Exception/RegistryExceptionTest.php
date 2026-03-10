@@ -15,22 +15,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
+use Scenario\Core\Runtime\Exception\RegistryException;
 
-#[CoversClass(NotAllowedParametersException::class)]
+#[CoversClass(RegistryException::class)]
 #[Group('runtime')]
 #[Small]
-final class NotAllowedParametersExceptionTest extends TestCase
+final class RegistryExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new NotAllowedParametersException(
-            ['not_allowed_a', 'not_allowed_b', 'not_allowed_c'],
-            ['allowed_a', 'allowed_b'],
+        $exception = new RegistryException(
+            'MyScenario',
         );
 
         self::assertSame(
-            '[not_allowed_a, not_allowed_b, not_allowed_c] are not allowed, allowed parameters: allowed_a, allowed_b',
+            'MyScenario is not registered',
             $exception->getMessage(),
         );
     }

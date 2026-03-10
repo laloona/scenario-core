@@ -23,7 +23,7 @@ final class NotAllowedParametersException extends Exception
             sprintf(
                 '[%s] are not allowed, allowed parameters: %s',
                 implode(', ', $parameters),
-                implode('", "', $allowedParameters),
+                implode(', ', $allowedParameters),
             ),
         );
     }

@@ -11,26 +11,27 @@
 
 namespace Scenario\Core\Tests\Unit\Runtime\Exception;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
+use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
 
-#[CoversClass(NotAllowedParametersException::class)]
+#[CoversClass(ScenarioLoaderException::class)]
 #[Group('runtime')]
 #[Small]
-final class NotAllowedParametersExceptionTest extends TestCase
+final class ScenarioLoaderExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new NotAllowedParametersException(
-            ['not_allowed_a', 'not_allowed_b', 'not_allowed_c'],
-            ['allowed_a', 'allowed_b'],
+        $exception = new ScenarioLoaderException(
+            'mydirectory',
+            new Exception('some error'),
         );
 
         self::assertSame(
-            '[not_allowed_a, not_allowed_b, not_allowed_c] are not allowed, allowed parameters: allowed_a, allowed_b',
+            'Unable to read suite directory "mydirectory": [Exception]: some error',
             $exception->getMessage(),
         );
     }
