@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -23,6 +24,7 @@ use Scenario\Core\Runtime\Exception\TestMethodFailureException;
 #[CoversClass(TestMethodState::class)]
 #[UsesClass(TestMethodFailureException::class)]
 #[Group('runtime')]
+#[Small]
 final class TestMethodStateTest extends TestCase
 {
     protected function tearDown(): void

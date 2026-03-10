@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\Runtime\Exception\ScenarioBuilderException;
@@ -22,6 +23,7 @@ use Scenario\Core\Tests\Files\ValidScenario;
 
 #[CoversClass(ScenarioBuilder::class)]
 #[Group('runtime')]
+#[Small]
 final class ScenarioBuilderTest extends TestCase
 {
     public function testValidScenarioBuild(): void

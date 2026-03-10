@@ -15,12 +15,14 @@ use DOMDocument;
 use InvalidArgumentException;
 use Scenario\Core\Runtime\Exception\XMLParserException;
 use SplFileInfo;
+use function libxml_clear_errors;
+use function libxml_use_internal_errors;
 
 final class XMLParser
 {
     public function __construct(private string $xsdPath)
     {
-        if (!is_file($this->xsdPath)) {
+        if (is_file($this->xsdPath) === false) {
             throw new InvalidArgumentException('unable to find xsd file: ' . $this->xsdPath);
         }
     }
@@ -33,7 +35,7 @@ final class XMLParser
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = false;
 
-        if ($doc->load($file->getFilename(), LIBXML_NONET) === false) {
+        if ($doc->load($file->getPathname(), LIBXML_NONET) === false) {
             libxml_clear_errors();
             throw new XMLParserException('unable to load configuration xml');
         }

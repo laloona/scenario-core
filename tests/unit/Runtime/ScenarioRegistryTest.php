@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -31,6 +32,7 @@ use Scenario\Core\Tests\Files\ValidScenario;
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(RegistryException::class)]
 #[Group('runtime')]
+#[Small]
 final class ScenarioRegistryTest extends TestCase
 {
     protected function tearDown(): void

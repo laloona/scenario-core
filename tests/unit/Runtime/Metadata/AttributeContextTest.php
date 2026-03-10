@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ContextTarget;
@@ -21,6 +22,7 @@ use stdClass;
 
 #[CoversClass(AttributeContext::class)]
 #[Group('runtime')]
+#[Small]
 final class AttributeContextTest extends TestCase
 {
     public function testOnClassContext(): void

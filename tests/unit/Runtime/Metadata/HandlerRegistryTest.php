@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -30,6 +31,7 @@ use Scenario\Core\Tests\Files\CustomAttributeHandler;
 #[UsesClass(HandlerRegistryException::class)]
 #[UsesClass(RegistryException::class)]
 #[Group('runtime')]
+#[Small]
 final class HandlerRegistryTest extends TestCase
 {
     protected function tearDown(): void

@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\Parameter;
@@ -29,6 +30,7 @@ use Scenario\Core\Runtime\ScenarioParameters;
 #[UsesClass(MissingRequiredParametersException::class)]
 #[UsesClass(ParameterValueErrorException::class)]
 #[Group('runtime')]
+#[Small]
 final class ScenarioParametersTest extends TestCase
 {
     public function testReturnsConfiguredValue(): void

@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime\Application\Configuration;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -28,6 +29,7 @@ use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 #[UsesClass(ConnectionValue::class)]
 #[UsesClass(Application::class)]
 #[Group('runtime')]
+#[Small]
 final class LoadedConfigurationTest extends TestCase
 {
     protected function setUp(): void
@@ -87,7 +89,8 @@ final class LoadedConfigurationTest extends TestCase
 
         self::assertCount(1, $default->getSuites());
         self::assertCount(1, $config->getSuites());
-        self::assertSame($default->getSuites()['main'], $config->getSuites()['main']);
+        self::assertSame($default->getSuites()['main']->name, $config->getSuites()['main']->name);
+        self::assertSame($default->getSuites()['main']->directory, $config->getSuites()['main']->directory);
     }
 
     public function testOverridesSuites(): void

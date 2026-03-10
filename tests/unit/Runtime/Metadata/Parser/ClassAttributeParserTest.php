@@ -13,6 +13,7 @@ namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\AsScenario;
@@ -25,6 +26,7 @@ use Scenario\Core\Tests\Files\ValidScenario;
 #[UsesClass(ValidScenario::class)]
 #[UsesClass(InvalidScenario::class)]
 #[Group('runtime')]
+#[Small]
 final class ClassAttributeParserTest extends TestCase
 {
     public function testParseReturnsClassAttributes(): void

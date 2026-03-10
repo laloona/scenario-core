@@ -12,10 +12,14 @@
 namespace Scenario\Core\Tests\Unit\Console;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Input;
 
 #[CoversClass(Input::class)]
+#[Group('console')]
+#[Small]
 final class InputTest extends TestCase
 {
     public function testParsesCommand(): void

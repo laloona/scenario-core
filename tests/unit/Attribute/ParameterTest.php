@@ -12,6 +12,8 @@
 namespace Scenario\Core\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\Parameter;
@@ -21,6 +23,8 @@ use Scenario\Core\Runtime\Metadata\ParameterType;
 #[CoversClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ParameterValueErrorException::class)]
+#[Group('attribute')]
+#[Small]
 final class ParameterTest extends TestCase
 {
     public function testCastsValidDefaultValue(): void
