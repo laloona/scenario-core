@@ -86,6 +86,22 @@ final class MyTest extends TestCase
 
 Multiple scenarios may be applied at class or method level. A scenario class can apply other scenarios.
 
+## Example Use Case ##
+
+<pre><code type="php">
+#[ApplyScenario(UserExists::class, [ 'id' => 42 ])]
+#[ApplyScenario(UserHasSubscription::class, [ 'id' => 42 ])]
+final class SubscriptionTest extends TestCase
+{
+    public function testUserHasAccess(): void
+    {
+        // system is already in the desired state
+        $this->assertTrue($this->service->userHasAccess(42));
+    }
+}
+</code></pre>
+
+
 ## Resetting the Database
 
 Use the ```#[RefreshDatabase]``` attribute to reset the database before scenario execution:
