@@ -37,7 +37,7 @@ enum ParameterType: string
         }
 
         return match ($this) {
-            self::String => is_string($value) === true ? $value : null,
+            self::String => is_string($value) === true ? preg_replace('/^["\']|["\']$/', '', $value) : null,
 
             self::Integer => is_int($value) === true
                 ? $value
