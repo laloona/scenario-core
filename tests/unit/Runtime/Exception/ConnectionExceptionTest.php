@@ -26,7 +26,7 @@ final class ConnectionExceptionTest extends TestCase
     {
         self::assertSame(
             'Unknown connection "my_connection"',
-            (new ConnectionException('my_connection'))->getMessage()
+            (new ConnectionException('my_connection'))->getMessage(),
         );
     }
 }

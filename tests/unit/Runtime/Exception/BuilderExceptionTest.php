@@ -26,7 +26,7 @@ final class BuilderExceptionTest extends TestCase
     {
         self::assertSame(
             'some error happened',
-            (new BuilderException('some error happened'))->getMessage()
+            (new BuilderException('some error happened'))->getMessage(),
         );
     }
 }
