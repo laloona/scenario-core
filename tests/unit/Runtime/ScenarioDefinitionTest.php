@@ -11,11 +11,19 @@
 
 namespace Scenario\Core\Tests\Unit\Runtime;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Tests\Files\ValidScenario;
 
+#[CoversClass(ScenarioDefinition::class)]
+#[UsesClass(AsScenario::class)]
+#[Group('runtime')]
+#[Small]
 final class ScenarioDefinitionTest extends TestCase
 {
     public function testNameIsTakenFromAttribute(): void
