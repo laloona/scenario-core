@@ -148,7 +148,7 @@ final class ScenarioRegistryTest extends TestCase
         $registry->resolve(ValidScenario::class);
     }
 
-    public function xxtestResolveThrowsRegistryExceptionIfNotFound(): void
+    public function testResolveThrowsRegistryExceptionIfNotFound(): void
     {
         $this->expectException(RegistryException::class);
         $this->expectExceptionMessage('scenario does-not-exist is not registered');
