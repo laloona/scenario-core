@@ -17,14 +17,17 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Runtime\Exception\CycleException;
+use Scenario\Core\Runtime\Exception\SwitchDryRunAttributeContextException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ContextTarget;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
 use stdClass;
 
 #[CoversClass(AttributeContext::class)]
 #[UsesClass(CycleException::class)]
+#[UsesClass(SwitchDryRunAttributeContextException::class)]
 #[Group('runtime')]
 #[Small]
 final class AttributeContextTest extends TestCase
@@ -84,7 +87,7 @@ final class AttributeContextTest extends TestCase
             stdClass::class,
             'myMethod',
             ExecutionType::Up,
-            true,
+            false,
         );
 
         $third = AttributeContext::getInstance(
@@ -131,5 +134,58 @@ final class AttributeContextTest extends TestCase
 
         $this->expectException(CycleException::class);
         $context->audit(ValidScenario::class, ['foo' => 'bar']);
+    }
+
+    public function testAuditStoresSignatureWithoutParameters(): void
+    {
+        $context = AttributeContext::getInstance(
+            stdClass::class,
+            null,
+            ExecutionType::Down,
+            false,
+        );
+
+        $context->audit(ValidScenario::class, []);
+
+        self::assertSame([ValidScenario::class], $context->getAudits());
+    }
+
+    public function testGetInstanceCachesPerExecutionTypeOnClassContext(): void
+    {
+        $up = AttributeContext::getInstance(
+            AnotherScenario::class,
+            null,
+            ExecutionType::Up,
+            true,
+        );
+
+        $down = AttributeContext::getInstance(
+            AnotherScenario::class,
+            null,
+            ExecutionType::Down,
+            true,
+        );
+
+        self::assertNotSame($up, $down);
+    }
+
+    public function testGetInstanceOnClassContextWithDryRunSwitch(): void
+    {
+        AttributeContext::getInstance(
+            ValidScenario::class,
+            null,
+            ExecutionType::Up,
+            true,
+        );
+
+        $this->expectException(SwitchDryRunAttributeContextException::class);
+        $this->expectExceptionMessage('context switch not allowed, found switch from dryRun to regular');
+
+        AttributeContext::getInstance(
+            ValidScenario::class,
+            null,
+            ExecutionType::Up,
+            false,
+        );
     }
 }

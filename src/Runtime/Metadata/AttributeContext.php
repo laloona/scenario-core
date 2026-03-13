@@ -12,6 +12,7 @@
 namespace Scenario\Core\Runtime\Metadata;
 
 use Scenario\Core\Runtime\Exception\CycleException;
+use Scenario\Core\Runtime\Exception\SwitchDryRunAttributeContextException;
 
 final class AttributeContext
 {
@@ -43,12 +44,22 @@ final class AttributeContext
             if (isset(self::$instances[$executionType->value]) === false) {
                 self::$instances[$executionType->value] = new self($class, $method, $executionType, $dryRun);
             }
+
+            if (self::$instances[$executionType->value]->dryRun !== $dryRun) {
+                throw new SwitchDryRunAttributeContextException($dryRun);
+            }
+
             return self::$instances[$executionType->value];
         }
 
         if (isset(self::$instances[$method . '::' . $executionType->value]) === false) {
             self::$instances[$method . '::' . $executionType->value] = new self($class, $method, $executionType, $dryRun);
         }
+
+        if (self::$instances[$method . '::' . $executionType->value]->dryRun !== $dryRun) {
+            throw new SwitchDryRunAttributeContextException($dryRun);
+        }
+
         return self::$instances[$method . '::' . $executionType->value];
     }
 

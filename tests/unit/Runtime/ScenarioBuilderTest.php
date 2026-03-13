@@ -33,7 +33,7 @@ final class ScenarioBuilderTest extends TestCase
         self::assertInstanceOf(ScenarioInterface::class, $scenarioObject);
     }
 
-    public function IntestValidScenarioBuild(): void
+    public function testInValidScenarioBuild(): void
     {
         self::expectException(ScenarioBuilderException::class);
 
