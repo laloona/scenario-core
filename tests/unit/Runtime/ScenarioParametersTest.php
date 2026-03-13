@@ -133,4 +133,54 @@ final class ScenarioParametersTest extends TestCase
             ],
         );
     }
+
+    public function testAllReturnsCastedValuesForEachParameter(): void
+    {
+        $parameters = new ScenarioParameters(
+            [
+                new Parameter('myint', ParameterType::Integer, null, false, 1),
+                new Parameter('mybool', ParameterType::Boolean, null, false, null),
+            ],
+            [
+                'myint' => '2',
+                'mybool' => 'false',
+            ],
+        );
+
+        self::assertSame(
+            [
+                'myint' => 2,
+                'mybool' => false,
+            ],
+            $parameters->all(),
+        );
+    }
+
+    public function testOptionalNullValueIsAccepted(): void
+    {
+        $parameters = new ScenarioParameters(
+            [
+                new Parameter('name', ParameterType::String, null, false),
+            ],
+            [
+                'name' => null,
+            ],
+        );
+
+        self::assertNull($parameters->get('name'));
+    }
+
+    public function testRequiredParameterWithEmptyStringThrowsValueErrorException(): void
+    {
+        $this->expectException(ParameterValueErrorException::class);
+
+        new ScenarioParameters(
+            [
+                new Parameter('name', ParameterType::String, null, true),
+            ],
+            [
+                'name' => '',
+            ],
+        );
+    }
 }
