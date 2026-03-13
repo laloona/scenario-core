@@ -82,6 +82,27 @@ final class LoadedConfigurationTest extends TestCase
         self::assertSame('/mycache', $config->getCacheDirectory());
     }
 
+    public function testUsesDefaultCacheKeyWhenNotSet(): void
+    {
+        $default = new DefaultConfiguration();
+        $config = new LoadedConfiguration($default);
+
+        $cacheKey = $config->getCacheKey();
+
+        self::assertNotEmpty($cacheKey);
+        self::assertSame(32, strlen($cacheKey));
+    }
+
+    public function testOverridesCacheKey(): void
+    {
+        $default = new DefaultConfiguration();
+        $config = new LoadedConfiguration($default);
+
+        $config->setCacheKey('my-cache-key');
+
+        self::assertSame('my-cache-key', $config->getCacheKey());
+    }
+
     public function testUsesDefaultSuitesWhenEmpty(): void
     {
         $default = new DefaultConfiguration();

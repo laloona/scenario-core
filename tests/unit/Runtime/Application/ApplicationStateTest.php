@@ -114,4 +114,18 @@ final class ApplicationStateTest extends TestCase
         self::assertInstanceOf(ApplicationFailureException::class, $state->failure('ClassB'));
         self::assertNull($state->failure('ClassC'));
     }
+
+    public function testFailureExceptionWrapsOriginalThrowable(): void
+    {
+        $state = new ApplicationState();
+        $throwable = new RuntimeException('some error happened', 123);
+
+        $state->fail($throwable);
+
+        $failure = $state->failure(null);
+
+        self::assertInstanceOf(ApplicationFailureException::class, $failure);
+        self::assertSame($throwable, $failure->getPrevious());
+        self::assertStringContainsString('Scenario application failure', $failure->getMessage());
+    }
 }
