@@ -30,10 +30,4 @@ final class ScenarioDefinition
     ) {
         $this->name = $this->attribute->name;
     }
-
-    public function isSame(string $name): bool
-    {
-        return ($this->class === $name
-                || $this->name === $name);
-    }
 }

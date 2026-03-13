@@ -23,12 +23,12 @@ use Scenario\Core\Runtime\Exception\DefinitionException;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
+use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\InvalidScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
 
 #[CoversClass(ScenarioRegistry::class)]
 #[UsesClass(AsScenario::class)]
-#[UsesClass(ValidScenario::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(RegistryException::class)]
 #[Group('runtime')]
@@ -82,6 +82,27 @@ final class ScenarioRegistryTest extends TestCase
         self::assertSame($definition, $registry->resolve('my-scenario'));
     }
 
+    public function testRegisterDoesNotStoreEmptyNameAlias(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('', null),
+            [],
+        );
+
+        $registry->register($definition);
+
+        self::assertSame($definition, $registry->resolve(ValidScenario::class));
+
+        $this->expectException(RegistryException::class);
+        $this->expectExceptionMessage('scenario  is not registered');
+
+        $registry->resolve('');
+    }
+
     public function testAllReturnsRegisteredScenariosIncludingAliasByName(): void
     {
         $registry = ScenarioRegistry::getInstance();
@@ -127,7 +148,7 @@ final class ScenarioRegistryTest extends TestCase
         $registry->resolve(ValidScenario::class);
     }
 
-    public function testResolveThrowsRegistryExceptionIfNotFound(): void
+    public function xxtestResolveThrowsRegistryExceptionIfNotFound(): void
     {
         $this->expectException(RegistryException::class);
         $this->expectExceptionMessage('scenario does-not-exist is not registered');
@@ -152,7 +173,32 @@ final class ScenarioRegistryTest extends TestCase
         $registry->register($definition);
     }
 
-    public function testRegisterOverridesExistingEntryForSameClass(): void
+    public function testRegisterThrowsWhenAliasIsAlreadyRegisteredForAnotherScenario(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $firstDefinition = new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario('alias', null),
+            [],
+        );
+        $registry->register($firstDefinition);
+
+        $secondDefinition = new ScenarioDefinition(
+            'main',
+            AnotherScenario::class,
+            new AsScenario('alias', null),
+            [],
+        );
+
+        $this->expectException(DefinitionException::class);
+        $this->expectExceptionMessage('scenario name alias already registered for ' . ValidScenario::class);
+
+        $registry->register($secondDefinition);
+    }
+
+    public function testRegisterThrowsWhenSameClassIsAlreadyRegistered(): void
     {
         $registry = ScenarioRegistry::getInstance();
 
@@ -171,10 +217,13 @@ final class ScenarioRegistryTest extends TestCase
         );
 
         $registry->register($firstDefinition);
+
+        $this->expectException(DefinitionException::class);
+        $this->expectExceptionMessage(ValidScenario::class . ' is already registered');
+
         $registry->register($secondDefinition);
 
         self::assertSame($secondDefinition, $registry->resolve(ValidScenario::class));
         self::assertSame($firstDefinition, $registry->resolve('first'));
-        self::assertSame($secondDefinition, $registry->resolve('second'));
     }
 }

@@ -36,8 +36,19 @@ final class ScenarioRegistry extends Registry
             throw new DefinitionException($definition->class . ' is not a subclass of ' . ScenarioInterface::class);
         }
 
+        if (isset($this->registeredScenarios[$definition->class]) === true) {
+            throw new DefinitionException($definition->class . ' is already registered');
+        }
+
+        if ($definition->name !== null
+            && $definition->name !== ''
+            && isset($this->registeredScenarios[$definition->name]) === true) {
+            throw new DefinitionException('scenario name ' . $definition->name . ' already registered for '. $this->registeredScenarios[$definition->name]->class);
+        }
+
         $this->registeredScenarios[$definition->class] = $definition;
-        if ($definition->name !== null) {
+        if ($definition->name !== null
+            && $definition->name !== '') {
             $this->registeredScenarios[$definition->name] = $definition;
         }
     }

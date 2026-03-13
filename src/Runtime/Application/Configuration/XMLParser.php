@@ -29,23 +29,26 @@ final class XMLParser
 
     public function parse(SplFileInfo $file): DOMDocument
     {
-        libxml_use_internal_errors(true);
+        $previousSetting = libxml_use_internal_errors(true);
 
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->formatOutput = false;
+        try {
+            $doc = new DOMDocument();
+            $doc->preserveWhiteSpace = false;
+            $doc->formatOutput = false;
 
-        if ($doc->load($file->getPathname(), LIBXML_NONET) === false) {
-            libxml_clear_errors();
-            throw new XMLParserException('unable to load configuration xml');
+            if ($doc->load($file->getPathname(), LIBXML_NONET) === false) {
+                libxml_clear_errors();
+                throw new XMLParserException('unable to load configuration xml');
+            }
+
+            if (!$doc->schemaValidate($this->xsdPath)) {
+                libxml_clear_errors();
+                throw new XMLParserException('configuration xml does not validate');
+            }
+
+            return $doc;
+        } finally {
+            libxml_use_internal_errors($previousSetting);
         }
-
-        if (!$doc->schemaValidate($this->xsdPath)) {
-            libxml_clear_errors();
-            throw new XMLParserException('configuration xml does not validate');
-        }
-
-        libxml_use_internal_errors(false);
-        return $doc;
     }
 }

@@ -16,6 +16,7 @@ use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
+use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
@@ -48,16 +49,10 @@ final class ApplyScenarioCommand extends CliCommand
         $scenario = $input->argument('0');
         $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
-            $directExecution = true;
-            $scenarioClass = null;
-            foreach ($scenarioDefinitions as $scenarioDefinition) {
-                if ($scenarioDefinition->class === $scenario) {
-                    $scenarioClass = $scenarioDefinition->class;
-                    break;
-                }
-            }
-
-            if ($scenarioClass === null) {
+            try {
+                $scenario = ScenarioRegistry::getInstance()->resolve($scenario)->class;
+                $directExecution = true;
+            } catch (RegistryException $exception) {
                 $scenario = null;
                 if ($input->option('quiet') !== true) {
                     $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
