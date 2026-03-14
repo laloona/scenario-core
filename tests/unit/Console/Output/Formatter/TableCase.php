@@ -15,40 +15,37 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Core\Console\Output\Formatter\AnsiString;
 use Scenario\Core\Console\Output\Formatter\Table;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\FontStyle;
-use Scenario\Core\Tests\Files\FakeTerminalEnvironment;
 
 #[CoversClass(Table::class)]
 #[UsesClass(AnsiString::class)]
-#[UsesClass(Align::class)]
 #[UsesClass(AnsiStyler::class)]
+#[UsesClass(Align::class)]
 #[UsesClass(FontStyle::class)]
 #[Group('console')]
 #[Small]
-final class TableTest extends TestCase
+final class TableCase extends AnsiStylerCase
 {
     public function testGenerateReturnsNullWhenEmpty(): void
     {
-        $table = new Table($this->styler());
-
-        self::assertNull($table->generate(null, []));
+        self::assertNull(
+            new Table($this->styler())->generate(null, []),
+        );
     }
 
     public function testGenerateBuildsTableWithHeadersRowsAndBorder(): void
     {
-        $table = new Table($this->styler());
-
         $rows = [
             ['Alice', '10'],
             ['Bob', null],
         ];
         $headers = ['Name', 'Score'];
-        $lines = $table->generate($headers, $rows, [Align::Left, Align::Right], true);
+        $lines = new Table($this->styler())
+            ->generate($headers, $rows, [Align::Left, Align::Right], true);
 
         self::assertNotNull($lines);
         self::assertGreaterThanOrEqual(4, count($lines));
@@ -66,9 +63,8 @@ final class TableTest extends TestCase
 
     public function testGenerateWithoutBorder(): void
     {
-        $table = new Table($this->styler());
-
-        $lines = $table->generate(null, [['A', 'B']], null, false);
+        $lines = new Table($this->styler())
+            ->generate(null, [['A', 'B']], null, false);
 
         self::assertNotNull($lines);
         self::assertCount(1, $lines);
@@ -78,17 +74,17 @@ final class TableTest extends TestCase
 
     public function testGenerateTruncatesCellsWhenWidthTooSmall(): void
     {
-        $table = new Table($this->smallStyler());
-
         $long = str_repeat('X', 80);
         $headers = ['HeaderOne', 'HeaderTwo', 'HeaderThree', 'HeaderFour'];
         $rows = [
             [$long, $long, $long, $long],
         ];
 
-        $lines = $table->generate($headers, $rows, [Align::Left, Align::Center], true);
+        $lines = new Table($this->styler('150'))
+            ->generate($headers, $rows, [Align::Left, Align::Center], true);
 
         self::assertNotNull($lines);
+
         $body = $this->stripAnsi($lines[3] ?? implode("\n", $lines));
         self::assertStringContainsString('…', $body);
     }
@@ -96,23 +92,5 @@ final class TableTest extends TestCase
     private function stripAnsi(string $value): string
     {
         return preg_replace('/\e\[[\d;]*m/', '', $value) ?? $value;
-    }
-
-    private function styler(): AnsiStyler
-    {
-        return new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: false,
-            stdoutIsTty: true,
-            columnsEnv: '180',
-        ));
-    }
-
-    private function smallStyler(): AnsiStyler
-    {
-        return new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: false,
-            stdoutIsTty: true,
-            columnsEnv: '150',
-        ));
     }
 }

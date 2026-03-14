@@ -23,8 +23,6 @@ use Scenario\Core\Tests\Files\ValidScenario;
 
 #[CoversClass(ClassAttributeParser::class)]
 #[UsesClass(AsScenario::class)]
-#[UsesClass(ValidScenario::class)]
-#[UsesClass(InvalidScenario::class)]
 #[Group('runtime')]
 #[Small]
 final class ClassAttributeParserTest extends TestCase

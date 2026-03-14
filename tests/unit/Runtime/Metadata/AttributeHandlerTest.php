@@ -16,17 +16,15 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
-use Scenario\Core\Tests\Files\CustomAttributeHandler;
+use Scenario\Core\Tests\Unit\TestMethodStateMock;
 use stdClass;
 
 #[CoversClass(AttributeHandler::class)]
-#[UsesClass(CustomAttributeHandler::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(AttributeContext::class)]
 #[UsesClass(ExecutionType::class)]
@@ -35,16 +33,17 @@ use stdClass;
 #[Small]
 final class AttributeHandlerTest extends TestCase
 {
+    use TestMethodStateMock;
+
     protected function tearDown(): void
     {
-        $reflection = new ReflectionClass(TestMethodState::class);
-        $throwables = $reflection->getProperty('throwables');
-        $throwables->setValue(null, []);
+        $this->resetTestMethodState();
     }
 
     public function testSupportsReturnsAttributeNameAndMatches(): void
     {
-        $handler = new CustomAttributeHandler();
+        $handler = self::createStub(AttributeHandler::class);
+        $handler->method('attributeName')->willReturn(ApplyScenario::class);
 
         self::assertSame(ApplyScenario::class, $handler->supports(null));
         self::assertTrue($handler->supports(ApplyScenario::class));
@@ -53,7 +52,9 @@ final class AttributeHandlerTest extends TestCase
 
     public function testHandleIgnoresUnsupportedMetaData(): void
     {
-        $handler = new CustomAttributeHandler();
+        $handler = self::createStub(AttributeHandler::class);
+        $handler->method('attributeName')->willReturn(ApplyScenario::class);
+
         $context = AttributeContext::getInstance(
             self::class,
             'testHandleIgnoresUnsupportedMetaData',

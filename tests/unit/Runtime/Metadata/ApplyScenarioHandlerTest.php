@@ -16,7 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Application;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
@@ -35,6 +34,7 @@ use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioParameters;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Core\Tests\Files\TrackingScenario;
+use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ApplyScenarioHandler::class)]
 #[UsesClass(Application::class)]
@@ -57,6 +57,8 @@ use Scenario\Core\Tests\Files\TrackingScenario;
 #[Small]
 final class ApplyScenarioHandlerTest extends TestCase
 {
+    use ScenarioRegistryMock;
+
     protected function setUp(): void
     {
         $this->resetScenarioRegistry();
@@ -165,12 +167,5 @@ final class ApplyScenarioHandlerTest extends TestCase
         );
 
         ScenarioRegistry::getInstance()->register($definition);
-    }
-
-    private function resetScenarioRegistry(): void
-    {
-        $reflection = new ReflectionClass(ScenarioRegistry::class);
-        $property = $reflection->getProperty('instance');
-        $property->setValue(null, null);
     }
 }

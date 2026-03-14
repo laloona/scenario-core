@@ -20,7 +20,7 @@ use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\BackgroundColor;
 use Scenario\Core\Console\Output\Theme\FontStyle;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
-use Scenario\Core\Tests\Files\FakeTerminalEnvironment;
+use Scenario\Core\Console\Output\Theme\TerminalEnvironment;
 
 #[CoversClass(AnsiStyler::class)]
 #[UsesClass(BackgroundColor::class)]
@@ -32,11 +32,12 @@ final class AnsiStylerTest extends TestCase
 {
     public function testNoColorDisablesFormattingAndUsesMinimumWidth(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: true,
-            stdoutIsTty: true,
-            columnsEnv: '80',
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('columnsEnv')->willReturn('80');
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(true);
+
+        $styler = new AnsiStyler($terminal);
 
         self::assertSame(150, $styler->outputWidth);
         self::assertSame(99, $styler->scaleWidth());
@@ -48,77 +49,72 @@ final class AnsiStylerTest extends TestCase
 
     public function testFormatsTextWhenColorsEnabledAndTtyUnknown(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: false,
-            stdoutIsTty: null,
-            columnsEnv: '180',
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('columnsEnv')->willReturn('180');
+        $terminal->method('stdoutIsTty')->willReturn(null);
+        $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = $styler->bgText('X', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
+        $result = new AnsiStyler($terminal)->bgText('X', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
         self::assertSame("\033[41;32;1mX\033[0m", $result);
     }
 
     public function testTextUsesForegroundAndStyleOnly(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: false,
-            stdoutIsTty: true,
-            columnsEnv: '180',
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('columnsEnv')->willReturn('180');
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = $styler->text('Hi', ForegroundColor::Blue, FontStyle::Underline);
-        self::assertSame("\033[94;4mHi\033[0m", $result);
+        $result = new AnsiStyler($terminal)->text('MyText', ForegroundColor::Blue, FontStyle::Underline);
+
+        self::assertSame("\033[94;4mMyText\033[0m", $result);
     }
 
     public function testWidthUsesWindowsShellOutput(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: true,
-            stdoutIsTty: true,
-            columnsEnv: null,
-            osFamily: 'Windows',
-            shellOutput: 'Columns: 180',
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('osFamily')->willReturn('Windows');
+        $terminal->method('shellExec')->willReturn('Columns: 180');
+        $terminal->method('columnsEnv')->willReturn(null);
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(180, $styler->outputWidth);
+        self::assertSame(180, new AnsiStyler($terminal)->outputWidth);
     }
 
     public function testWidthFallsBackOnWindowsShellOutput(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: true,
-            stdoutIsTty: true,
-            columnsEnv: null,
-            osFamily: 'Windows',
-            shellOutput: 'n/a',
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('osFamily')->willReturn('Windows');
+        $terminal->method('shellExec')->willReturn('n/a');
+        $terminal->method('columnsEnv')->willReturn(null);
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(150, $styler->outputWidth);
+        self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
     }
 
     public function testWidthUsesUnixShellOutput(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: true,
-            stdoutIsTty: true,
-            columnsEnv: null,
-            osFamily: 'Linux',
-            shellOutput: "24 190\n",
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('osFamily')->willReturn('Linux');
+        $terminal->method('shellExec')->willReturn("24 190\n");
+        $terminal->method('columnsEnv')->willReturn(null);
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(190, $styler->outputWidth);
+        self::assertSame(190, new AnsiStyler($terminal)->outputWidth);
     }
 
     public function testWidthFallsBackOnUnixShellOutput(): void
     {
-        $styler = new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: true,
-            stdoutIsTty: true,
-            columnsEnv: null,
-            osFamily: 'Linux',
-            shellOutput: null,
-        ));
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('osFamily')->willReturn('Windows');
+        $terminal->method('shellExec')->willReturn(null);
+        $terminal->method('columnsEnv')->willReturn(null);
+        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(150, $styler->outputWidth);
+        self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
     }
 }

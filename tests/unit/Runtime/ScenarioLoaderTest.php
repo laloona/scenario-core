@@ -16,9 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use ReflectionClass;
 use Scenario\Core\Application;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
@@ -30,16 +27,13 @@ use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioLoader;
 use Scenario\Core\Runtime\ScenarioRegistry;
-use SplFileInfo;
+use Scenario\Core\Tests\Unit\ApplicationMock;
+use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
-use function is_dir;
 use function is_file;
 use function mkdir;
-use function rmdir;
-use function sys_get_temp_dir;
 use function uniqid;
-use function unlink;
 
 #[CoversClass(ScenarioLoader::class)]
 #[UsesClass(Application::class)]
@@ -56,30 +50,29 @@ use function unlink;
 #[Small]
 final class ScenarioLoaderTest extends TestCase
 {
-    private string $rootDir;
+    use ApplicationMock;
+    use ScenarioRegistryMock;
 
     protected function setUp(): void
     {
-        $this->rootDir = sys_get_temp_dir() . '/scenario_loader_' . uniqid();
-        mkdir($this->rootDir);
-        $this->setRootDir($this->rootDir);
+        $this->createRootDir();
     }
 
     protected function tearDown(): void
     {
         $this->resetScenarioRegistry();
-        $this->setRootDir(null);
-        $this->removeDir($this->rootDir);
+        $this->resetApplication();
+        $this->removeRootDir();
     }
 
     public function testLoadScenariosRegistersDefinitionsAndCreatesCache(): void
     {
-        $setup = $this->createScenarioSuite();
-        $config = $setup['config'];
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
 
-        $definition = ScenarioRegistry::getInstance()->resolve($setup['fqcn']);
+        $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
         self::assertSame($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
         self::assertCount(1, $definition->parameters);
@@ -91,23 +84,23 @@ final class ScenarioLoaderTest extends TestCase
 
     public function testLoadScenariosUsesCacheWhenAvailable(): void
     {
-        $setup = $this->createScenarioSuite();
-        $config = $setup['config'];
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
         $this->resetScenarioRegistry();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
 
-        $definition = ScenarioRegistry::getInstance()->resolve($setup['fqcn']);
+        $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
         self::assertSame($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
     }
 
     public function xxtestLoadScenariosRebuildsWhenCacheIsCorrupted(): void
     {
-        $setup = $this->createScenarioSuite();
-        $config = $setup['config'];
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
 
@@ -118,7 +111,7 @@ final class ScenarioLoaderTest extends TestCase
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
 
-        $definition = ScenarioRegistry::getInstance()->resolve($setup['fqcn']);
+        $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
         self::assertSame($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
         self::assertNotSame('not-json', file_get_contents($cacheFile));
@@ -126,8 +119,7 @@ final class ScenarioLoaderTest extends TestCase
 
     public function testLoadScenariosThrowsForMissingSuiteDirectory(): void
     {
-        $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setCacheDirectory($this->rootDir . '/.cache');
+        $config = $this->getConfiguration();
         $config->setSuites([
             'main' => new SuiteValue('main', 'missing-dir'),
         ]);
@@ -137,24 +129,13 @@ final class ScenarioLoaderTest extends TestCase
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
     }
 
-    private function setRootDir(?string $dir): void
+    private function createScenarioSuite(): string
     {
-        $reflection = new ReflectionClass(Application::class);
-        $property = $reflection->getProperty('rootDir');
-        $property->setValue(null, $dir);
-    }
-
-    /**
-     * @return array{config: LoadedConfiguration, fqcn: string}
-     */
-    private function createScenarioSuite(): array
-    {
-        $scenarioDir = $this->rootDir . '/scenarios';
+        $scenarioDir = Application::getRootDir() . '/scenarios';
         mkdir($scenarioDir);
 
         $namespace = 'Scenario\\Core\\Tests\\Tmp' . uniqid();
         $className = 'ScenarioA' . uniqid();
-        $fqcn = $namespace . '\\' . $className;
 
         $fileContent = <<<PHP
 <?php declare(strict_types=1);
@@ -176,44 +157,17 @@ final class {$className} implements ScenarioInterface
 PHP;
         file_put_contents($scenarioDir . '/ScenarioA.php', $fileContent);
 
+        return $namespace . '\\' . $className;
+    }
+
+    private function getConfiguration(): LoadedConfiguration
+    {
         $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setCacheDirectory($this->rootDir . '/.cache');
+        $config->setCacheDirectory(Application::getRootDir() . '/.cache');
         $config->setSuites([
             'main' => new SuiteValue('main', 'scenarios'),
         ]);
 
-        return [
-            'config' => $config,
-            'fqcn' => $fqcn,
-        ];
-    }
-
-    private function resetScenarioRegistry(): void
-    {
-        $property = new ReflectionClass(ScenarioRegistry::class)->getProperty('instance');
-        $property->setValue(null, null);
-    }
-
-    private function removeDir(string $dir): void
-    {
-        if (is_dir($dir) === false) {
-            return;
-        }
-
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST,
-        );
-
-        /** @var SplFileInfo $file */
-        foreach ($iterator as $file) {
-            if ($file->isDir() === true) {
-                rmdir($file->getPathname());
-            } else {
-                unlink($file->getPathname());
-            }
-        }
-
-        rmdir($dir);
+        return $config;
     }
 }

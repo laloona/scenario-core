@@ -24,7 +24,7 @@ final class AnsiStyler
 
     public readonly int $outputWidth;
 
-    public function __construct(private readonly TerminalEnvironment $environment = new SystemTerminalEnvironment())
+    public function __construct(private readonly TerminalEnvironment $environment = new SystemTerminal())
     {
         $this->useColors = $this->useColors();
         $this->outputWidth = $this->outputWidth();

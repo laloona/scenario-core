@@ -16,7 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\Runtime\Exception\DefinitionException;
@@ -26,6 +25,7 @@ use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\InvalidScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
+use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ScenarioRegistry::class)]
 #[UsesClass(AsScenario::class)]
@@ -35,10 +35,11 @@ use Scenario\Core\Tests\Files\ValidScenario;
 #[Small]
 final class ScenarioRegistryTest extends TestCase
 {
+    use ScenarioRegistryMock;
+
     protected function tearDown(): void
     {
-        $registryInstance = new ReflectionClass(ScenarioRegistry::getInstance())->getProperty('instance');
-        $registryInstance->setValue(null, null);
+        $this->resetScenarioRegistry();
     }
 
     public function testGetInstanceReturnsSameInstance(): void

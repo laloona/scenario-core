@@ -15,9 +15,6 @@ interface TerminalEnvironment
 {
     public function noColorEnv(): bool;
 
-    /**
-     * @return bool|null Returns null if the environment cannot determine TTY state.
-     */
     public function stdoutIsTty(): ?bool;
 
     public function columnsEnv(): ?string;

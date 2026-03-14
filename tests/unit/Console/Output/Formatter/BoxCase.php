@@ -15,7 +15,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Output\Formatter\AnsiString;
 use Scenario\Core\Console\Output\Formatter\Box;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
@@ -23,7 +22,6 @@ use Scenario\Core\Console\Output\Theme\BackgroundColor;
 use Scenario\Core\Console\Output\Theme\BoxType;
 use Scenario\Core\Console\Output\Theme\FontStyle;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
-use Scenario\Core\Tests\Files\FakeTerminalEnvironment;
 
 #[CoversClass(Box::class)]
 #[UsesClass(AnsiString::class)]
@@ -34,7 +32,7 @@ use Scenario\Core\Tests\Files\FakeTerminalEnvironment;
 #[UsesClass(FontStyle::class)]
 #[Group('console')]
 #[Small]
-final class BoxTest extends TestCase
+final class BoxCase extends AnsiStylerCase
 {
     public function testWarnGeneratesColoredBoxWithPrefix(): void
     {
@@ -74,14 +72,5 @@ final class BoxTest extends TestCase
         $plainQuestion = preg_replace('/\e\[[\d;]*m/', '', $question[1]) ?? $question[1];
         self::assertStringNotContainsString('[', $plainQuestion);
         self::assertStringContainsString('Q', $plainQuestion);
-    }
-
-    private function styler(): AnsiStyler
-    {
-        return new AnsiStyler(new FakeTerminalEnvironment(
-            noColor: false,
-            stdoutIsTty: true,
-            columnsEnv: '180',
-        ));
     }
 }

@@ -16,7 +16,7 @@ use function getenv;
 use function is_string;
 use function shell_exec;
 
-final class SystemTerminalEnvironment implements TerminalEnvironment
+final class SystemTerminal implements TerminalEnvironment
 {
     public function noColorEnv(): bool
     {

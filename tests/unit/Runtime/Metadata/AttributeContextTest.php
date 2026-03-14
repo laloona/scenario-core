@@ -16,7 +16,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Runtime\Exception\CycleException;
 use Scenario\Core\Runtime\Exception\SwitchDryRunAttributeContextException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
@@ -24,6 +23,7 @@ use Scenario\Core\Runtime\Metadata\ContextTarget;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
+use Scenario\Core\Tests\Unit\AttributeContextMock;
 use stdClass;
 
 #[CoversClass(AttributeContext::class)]
@@ -33,10 +33,11 @@ use stdClass;
 #[Small]
 final class AttributeContextTest extends TestCase
 {
+    use AttributeContextMock;
+
     public function setUp(): void
     {
-        $property = new ReflectionClass(AttributeContext::class)->getProperty('instances');
-        $property->setValue(null, []);
+        $this->resetAttributeContext();
     }
 
     public function testOnClassContext(): void

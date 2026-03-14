@@ -16,10 +16,10 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use RuntimeException;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Exception\ApplicationFailureException;
+use Scenario\Core\Tests\Unit\ApplicationStateMock;
 
 #[CoversClass(ApplicationState::class)]
 #[UsesClass(ApplicationFailureException::class)]
@@ -27,13 +27,11 @@ use Scenario\Core\Runtime\Exception\ApplicationFailureException;
 #[Small]
 final class ApplicationStateTest extends TestCase
 {
+    use ApplicationStateMock;
+
     protected function tearDown(): void
     {
-        $applicationState = new ReflectionClass(ApplicationState::class);
-        $throwable = $applicationState->getProperty('throwable');
-        $throwable->setValue(null, null);
-        $classes = $applicationState->getProperty('classes');
-        $classes->setValue(null, []);
+        $this->resetApplicationState();
     }
 
     public function testInitialStateIsSuccessAndThrowDoesNothingWhenNoFailure(): void

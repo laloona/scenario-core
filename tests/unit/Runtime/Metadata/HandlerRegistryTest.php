@@ -16,16 +16,16 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Runtime\Exception\HandlerRegistryException;
 use Scenario\Core\Runtime\Exception\RegistryException;
+use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Tests\Files\CustomAttributeHandler;
+use Scenario\Core\Tests\Unit\HandlerRegistryMock;
 
 #[CoversClass(HandlerRegistry::class)]
-#[UsesClass(CustomAttributeHandler::class)]
+#[UsesClass(AttributeHandler::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(AsScenario::class)]
 #[UsesClass(HandlerRegistryException::class)]
@@ -34,10 +34,11 @@ use Scenario\Core\Tests\Files\CustomAttributeHandler;
 #[Small]
 final class HandlerRegistryTest extends TestCase
 {
+    use HandlerRegistryMock;
+
     protected function tearDown(): void
     {
-        $registryInstance = new ReflectionClass(HandlerRegistry::getInstance())->getProperty('instance');
-        $registryInstance->setValue(null, null);
+        $this->resetHandlerRegistry();
     }
 
     public function testGetInstanceReturnsSameInstance(): void
@@ -50,7 +51,7 @@ final class HandlerRegistryTest extends TestCase
 
     public function testRegisterHandlerAndResolveByAttributeName(): void
     {
-        $handler = new CustomAttributeHandler();
+        $handler = $this->getAttributeHandler();
 
         $registry = HandlerRegistry::getInstance();
         $registry->registerHandler($handler);
@@ -60,8 +61,8 @@ final class HandlerRegistryTest extends TestCase
 
     public function testRegisterHandlerThrowsWhenSameAttributeRegisteredTwice(): void
     {
-        $firstHandler = new CustomAttributeHandler();
-        $secondHandler = new CustomAttributeHandler();
+        $firstHandler = $this->getAttributeHandler();
+        $secondHandler = $this->getAttributeHandler();
 
         $registry = HandlerRegistry::getInstance();
         $registry->registerHandler($firstHandler);
@@ -74,11 +75,17 @@ final class HandlerRegistryTest extends TestCase
 
     public function testAttributeHandlerThrowsRegistryExceptionWhenNotFound(): void
     {
-        $registry = HandlerRegistry::getInstance();
-
         $this->expectException(RegistryException::class);
         $this->expectExceptionMessage('Attribute ' . AsScenario::class);
 
-        $registry->attributeHandler(AsScenario::class);
+        HandlerRegistry::getInstance()->attributeHandler(AsScenario::class);
+    }
+
+    private function getAttributeHandler(): AttributeHandler
+    {
+        $handler = self::createStub(AttributeHandler::class);
+        $handler->method('attributeName')->willReturn(ApplyScenario::class);
+
+        return $handler;
     }
 }
