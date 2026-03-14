@@ -12,13 +12,10 @@
 namespace Scenario\Core\Console\Output\Theme;
 
 use function ctype_digit;
-use function function_exists;
-use function getenv;
 use function implode;
 use function is_string;
 use function max;
 use function preg_match;
-use function shell_exec;
 use function trim;
 
 final class AnsiStyler
@@ -27,7 +24,7 @@ final class AnsiStyler
 
     public readonly int $outputWidth;
 
-    public function __construct()
+    public function __construct(private readonly TerminalEnvironment $environment = new SystemTerminalEnvironment())
     {
         $this->useColors = $this->useColors();
         $this->outputWidth = $this->outputWidth();
@@ -35,46 +32,47 @@ final class AnsiStyler
 
     private function useColors(): bool
     {
-        if (getenv('NO_COLOR') !== false) {
+        if ($this->environment->noColorEnv() === true) {
             return false;
         }
 
-        if (function_exists('stream_isatty')) {
-            return @stream_isatty(STDOUT);
-        }
-
-        if (function_exists('posix_isatty')) {
-            return @posix_isatty(STDOUT);
-        }
-
-        return true;
+        return $this->environment->stdoutIsTty() ?? true;
     }
 
     private function outputWidth(): int
     {
         $width = 100;
 
-        $cols = getenv('COLUMNS');
+        $cols = $this->environment->columnsEnv();
         if (is_string($cols)
             && ctype_digit($cols)) {
             $width = (int)$cols;
-        } elseif (function_exists('shell_exec')) {
-            if (PHP_OS_FAMILY === 'Windows') {
-                $out = shell_exec('mode CON');
-                if (is_string($out) === true
-                    && preg_match('/Columns:\s+(\d+)/', $out, $m) === 1) {
-                    $width = (int)$m[1];
-                }
-            } else {
-                $out = @shell_exec('stty size 2>/dev/null');
-                if (is_string($out) === true
-                    && preg_match('/\d+\s+(\d+)/', trim($out), $m) === 1) {
-                    $width = (int) $m[1];
-                }
-            }
+        } else {
+            $width = $this->shellWidth($width);
         }
 
         return max(150, min(200, $width));
+    }
+
+    private function shellWidth(int $fallback): int
+    {
+        if ($this->environment->osFamily() === 'Windows') {
+            $out = $this->environment->shellExec('mode CON');
+            if (is_string($out) === true
+                && preg_match('/Columns:\s+(\d+)/', $out, $m) === 1) {
+                return (int)$m[1];
+            }
+
+            return $fallback;
+        }
+
+        $out = $this->environment->shellExec('stty size 2>/dev/null');
+        if (is_string($out) === true
+            && preg_match('/\d+\s+(\d+)/', trim($out), $m) === 1) {
+            return (int) $m[1];
+        }
+
+        return $fallback;
     }
 
     public function scaleWidth(float $widthFactor = 0.66): int

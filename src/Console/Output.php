@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Console;
 
+use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Core\Console\Output\Formatter\Box;
 use Scenario\Core\Console\Output\Formatter\Confirm;
 use Scenario\Core\Console\Output\Formatter\Table;
@@ -36,7 +37,7 @@ final class Output implements CliOutput
      */
     public function write(string|array $string): void
     {
-        if (is_string($string)) {
+        if (is_string($string) === true) {
             $string = [$string];
         }
 
@@ -50,7 +51,7 @@ final class Output implements CliOutput
      */
     public function writeln(string|array $string): void
     {
-        if (is_string($string)) {
+        if (is_string($string) === true) {
             $string = [ $string ];
         }
 
@@ -161,7 +162,7 @@ final class Output implements CliOutput
                 return $default;
             }
 
-            if (in_array((int)$input, array_keys($choices), true)) {
+            if (in_array((int)$input, array_keys($choices), true) === true) {
                 return $input;
             }
 
@@ -190,7 +191,7 @@ final class Output implements CliOutput
     /**
      * @param list<string>|null $headers
      * @param list<list<string|null>> $rows
-     * @param list<'left'|'right'|'center'>|null $align
+     * @param list<Align>|null $align
      */
     public function table(?array $headers, array $rows, ?array $align = null, bool $showBorder = true): void
     {

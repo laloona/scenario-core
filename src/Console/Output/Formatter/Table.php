@@ -18,7 +18,7 @@ final class Table extends AnsiString
     /**
      * @param list<string>|null $headers
      * @param list<list<string|null>> $rows
-     * @param list<'left'|'right'|'center'>|null $align
+     * @param list<Align>|null $align
      * @return list<string>|null
      */
     public function generate(?array $headers, array $rows, ?array $align = null, bool $showBorder = true): ?array
@@ -123,7 +123,7 @@ final class Table extends AnsiString
     /**
      * @param list<string|null> $cells
      * @param list<int> $sizes
-     * @param list<'left'|'right'|'center'> $align
+     * @param list<Align> $align
      */
     private function row(array $cells, array $sizes, array $align): string
     {

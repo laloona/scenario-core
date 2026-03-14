@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Contract;
 
+use Scenario\Core\Console\Output\Formatter\Align;
+
 interface CliOutput
 {
     public function confirm(string $question, bool $default = true): bool;
@@ -26,7 +28,7 @@ interface CliOutput
     /**
      * @param list<string>|null $headers
      * @param list<list<string|null>> $rows
-     * @param list<'left'|'right'|'center'>|null $align
+     * @param list<Align>|null $align
      */
     public function table(?array $headers, array $rows, ?array $align = null, bool $showBorder = true): void;
 
