@@ -82,6 +82,26 @@ final class ScenarioRegistryTest extends TestCase
         self::assertSame($definition, $registry->resolve('my-scenario'));
     }
 
+    public function testRegisterDoesNotStoreAliasWhenNameIsNull(): void
+    {
+        $registry = ScenarioRegistry::getInstance();
+
+        $definition = new ScenarioDefinition(
+            'main',
+            ValidScenario::class,
+            new AsScenario(null, null),
+            [],
+        );
+
+        $registry->register($definition);
+
+        self::assertSame($definition, $registry->resolve(ValidScenario::class));
+        self::assertSame([ValidScenario::class => $definition], $registry->all());
+
+        $this->expectException(RegistryException::class);
+        $registry->resolve('');
+    }
+
     public function testRegisterDoesNotStoreEmptyNameAlias(): void
     {
         $registry = ScenarioRegistry::getInstance();
@@ -101,6 +121,11 @@ final class ScenarioRegistryTest extends TestCase
         $this->expectExceptionMessage('scenario  is not registered');
 
         $registry->resolve('');
+    }
+
+    public function testAllReturnsEmptyArrayWhenNothingRegistered(): void
+    {
+        self::assertSame([], ScenarioRegistry::getInstance()->all());
     }
 
     public function testAllReturnsRegisteredScenariosIncludingAliasByName(): void

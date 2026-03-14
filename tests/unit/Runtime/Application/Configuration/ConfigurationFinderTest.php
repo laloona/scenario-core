@@ -20,6 +20,7 @@ use ReflectionClass;
 use Scenario\Core\Application;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
 use SplFileInfo;
+use UnexpectedValueException;
 use function file_put_contents;
 use function mkdir;
 use function rmdir;
@@ -85,5 +86,18 @@ final class ConfigurationFinderTest extends TestCase
 
         self::assertInstanceOf(SplFileInfo::class, $result);
         self::assertSame('scenario.dist.xml', $result->getFilename());
+    }
+
+    public function testReturnsNullWhenDirectoryIsInvalid(): void
+    {
+        $reflection = new ReflectionClass(Application::class);
+        $property = $reflection->getProperty('rootDir');
+        $property->setValue(null, $this->tempDir . '/missing');
+
+        try {
+            self::assertNull((new ConfigurationFinder())->find());
+        } catch (UnexpectedValueException $exception) {
+            self::fail('UnexpectedValueException should be handled internally.');
+        }
     }
 }

@@ -188,4 +188,51 @@ final class AttributeContextTest extends TestCase
             false,
         );
     }
+
+    public function testGetInstanceOnMethodContextWithDryRunSwitch(): void
+    {
+        AttributeContext::getInstance(
+            ValidScenario::class,
+            'up',
+            ExecutionType::Up,
+            true,
+        );
+
+        $this->expectException(SwitchDryRunAttributeContextException::class);
+        $this->expectExceptionMessage('context switch not allowed, found switch from dryRun to regular');
+
+        AttributeContext::getInstance(
+            ValidScenario::class,
+            'up',
+            ExecutionType::Up,
+            false,
+        );
+    }
+
+    public function testAuditAllowsDifferentParameters(): void
+    {
+        $context = AttributeContext::getInstance(
+            stdClass::class,
+            null,
+            ExecutionType::Up,
+            false,
+        );
+
+        $context->audit(ValidScenario::class, ['foo' => 'bar']);
+        $context->audit(ValidScenario::class, ['foo' => 'baz']);
+
+        self::assertCount(2, $context->getAudits());
+    }
+
+    public function testGetAuditsStartsEmpty(): void
+    {
+        $context = AttributeContext::getInstance(
+            stdClass::class,
+            'method',
+            ExecutionType::Down,
+            false,
+        );
+
+        self::assertSame([], $context->getAudits());
+    }
 }
