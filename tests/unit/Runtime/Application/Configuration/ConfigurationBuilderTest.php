@@ -16,8 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
@@ -26,51 +25,37 @@ use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Core\Runtime\Application\Configuration\XMLParser;
 use Scenario\Core\Runtime\Exception\BuilderException;
+use Scenario\Core\Runtime\Exception\XMLParserException;
+use Scenario\Core\Tests\Unit\ApplicationMock;
 use function dirname;
 use function file_put_contents;
-use function mkdir;
-use function rmdir;
-use function scandir;
-use function sys_get_temp_dir;
-use function uniqid;
-use function unlink;
 
 #[CoversClass(ConfigurationBuilder::class)]
-#[UsesClass(ConfigurationFinder::class)]
-#[UsesClass(XMLParser::class)]
-#[UsesClass(DefaultConfiguration::class)]
-#[UsesClass(LoadedConfiguration::class)]
-#[UsesClass(ConnectionValue::class)]
-#[UsesClass(SuiteValue::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(BuilderException::class)]
+#[UsesClass(ConfigurationFinder::class)]
+#[UsesClass(ConnectionValue::class)]
+#[UsesClass(DefaultConfiguration::class)]
+#[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(SuiteValue::class)]
+#[UsesClass(XMLParser::class)]
+#[UsesClass(XMLParserException::class)]
 #[Group('runtime')]
 #[Small]
 final class ConfigurationBuilderTest extends TestCase
 {
-    private string $tempDir;
+    use ApplicationMock;
 
     protected function setUp(): void
     {
-        $this->tempDir = sys_get_temp_dir() . '/scenario_config_' . uniqid();
-        mkdir($this->tempDir);
-
-        $property = new ReflectionClass(Application::class)->getProperty('rootDir');
-        $property->setValue(null, $this->tempDir);
+        $this->resetApplication();
+        $this->createRootDir();
     }
 
     protected function tearDown(): void
     {
-        foreach (scandir($this->tempDir) as $file) {
-            if ($file !== '.' && $file !== '..') {
-                unlink($this->tempDir . '/' . $file);
-            }
-        }
-
-        rmdir($this->tempDir);
-
-        $property = new ReflectionClass(Application::class)->getProperty('rootDir');
-        $property->setValue(null, null);
+        $this->resetApplication();
+        $this->removeRootDir();
     }
 
     public function testBuildReadsScenarioXmlAndPopulatesConfiguration(): void
@@ -88,7 +73,7 @@ final class ConfigurationBuilderTest extends TestCase
   </suites>
 </scenario>
 XML;
-        file_put_contents($this->tempDir . '/scenario.xml', $xml);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
         $config = new ConfigurationBuilder(
             new ConfigurationFinder(),
@@ -122,7 +107,7 @@ XML;
   </suites>
 </scenario>
 XML;
-        file_put_contents($this->tempDir . '/scenario.xml', $xml);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
         $config = new ConfigurationBuilder(
             new ConfigurationFinder(),
@@ -159,7 +144,7 @@ XML;
   </suites>
 </scenario>
 XML;
-        file_put_contents($this->tempDir . '/scenario.xml', $xml);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
         $builder = new ConfigurationBuilder(
             new ConfigurationFinder(),
@@ -188,7 +173,7 @@ XML;
   </suites>
 </scenario>
 XML;
-        file_put_contents($this->tempDir . '/scenario.xml', $xml);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
         $this->expectException(BuilderException::class);
         $this->expectExceptionMessage('connection with name "db" already exists');
@@ -215,10 +200,33 @@ XML;
   </suites>
 </scenario>
 XML;
-        file_put_contents($this->tempDir . '/scenario.xml', $xml);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
         $this->expectException(BuilderException::class);
         $this->expectExceptionMessage('connection with name "" already exists');
+
+        new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        )->build();
+    }
+
+    public function testBuildThrowsWhenSuiteDirectoryIsMissing(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0"?>
+<scenario>
+  <suites>
+    <suite name="main">
+      <directory></directory>
+    </suite>
+  </suites>
+</scenario>
+XML;
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
+
+        $this->expectException(XMLParserException::class);
+        $this->expectExceptionMessage('configuration xml does not validate');
 
         new ConfigurationBuilder(
             new ConfigurationFinder(),

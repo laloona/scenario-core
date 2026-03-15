@@ -29,8 +29,8 @@ use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ScenarioRegistry::class)]
 #[UsesClass(AsScenario::class)]
-#[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(RegistryException::class)]
+#[UsesClass(ScenarioDefinition::class)]
 #[Group('runtime')]
 #[Small]
 final class ScenarioRegistryTest extends TestCase

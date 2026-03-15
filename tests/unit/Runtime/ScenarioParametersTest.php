@@ -24,10 +24,10 @@ use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioParameters;
 
 #[CoversClass(ScenarioParameters::class)]
+#[UsesClass(MissingRequiredParametersException::class)]
+#[UsesClass(NotAllowedParametersException::class)]
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
-#[UsesClass(NotAllowedParametersException::class)]
-#[UsesClass(MissingRequiredParametersException::class)]
 #[UsesClass(ParameterValueErrorException::class)]
 #[Group('runtime')]
 #[Small]

@@ -17,17 +17,17 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 
 #[CoversClass(LoadedConfiguration::class)]
+#[UsesClass(Application::class)]
+#[UsesClass(ConnectionValue::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(SuiteValue::class)]
-#[UsesClass(ConnectionValue::class)]
-#[UsesClass(Application::class)]
 #[Group('runtime')]
 #[Small]
 final class LoadedConfigurationTest extends TestCase

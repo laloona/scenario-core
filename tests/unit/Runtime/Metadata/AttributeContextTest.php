@@ -177,6 +177,25 @@ final class AttributeContextTest extends TestCase
         self::assertNotSame($up, $down);
     }
 
+    public function testGetInstanceCachesOnClassContextSameExecutionType(): void
+    {
+        $first = AttributeContext::getInstance(
+            AnotherScenario::class,
+            null,
+            ExecutionType::Up,
+            false,
+        );
+
+        $second = AttributeContext::getInstance(
+            AnotherScenario::class,
+            null,
+            ExecutionType::Up,
+            false,
+        );
+
+        self::assertSame($first, $second);
+    }
+
     public function testGetInstanceOnClassContextWithDryRunSwitch(): void
     {
         AttributeContext::getInstance(

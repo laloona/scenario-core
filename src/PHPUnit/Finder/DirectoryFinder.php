@@ -14,7 +14,9 @@ namespace Scenario\Core\PHPUnit\Finder;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
+use function libxml_clear_errors;
+use function libxml_use_internal_errors;
 
 final class DirectoryFinder
 {
@@ -26,7 +28,7 @@ final class DirectoryFinder
         $files = [ 'phpunit.dist.xml', 'phpunit.xml' ];
         foreach ($files as $file) {
             if (is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $file)) {
-                return $this->getDirectories($file);
+                return $this->getDirectories(Application::getRootDir() . DIRECTORY_SEPARATOR . $file);
             }
         }
 
@@ -38,24 +40,33 @@ final class DirectoryFinder
      */
     private function getDirectories(string $configXmlFile): array
     {
-        $dom = new DOMDocument();
-        $dom->load($configXmlFile);
+        $previousSetting = libxml_use_internal_errors(true);
 
-        $xpath = new DOMXPath($dom);
-        $suiteDirectories = $xpath->query('//testsuites/testsuite/directory');
-        if ($suiteDirectories === false) {
-            return [];
-        }
-
-        $directories = [];
-        foreach ($suiteDirectories as $node) {
-            if (!$node instanceof DOMElement) {
-                continue;
+        try {
+            $doc = new DOMDocument();
+            if ($doc->load($configXmlFile, LIBXML_NONET) === false) {
+                libxml_clear_errors();
+                return [];
             }
 
-            $directories[] = rtrim($node->textContent, '/');
-        }
+            $xpath = new DOMXPath($doc);
+            $suiteDirectories = $xpath->query('//testsuites/testsuite/directory');
+            if ($suiteDirectories === false) {
+                return [];
+            }
 
-        return $directories;
+            $directories = [];
+            foreach ($suiteDirectories as $node) {
+                if (!$node instanceof DOMElement) {
+                    continue;
+                }
+
+                $directories[] = rtrim($node->textContent, '/');
+            }
+
+            return $directories;
+        } finally {
+            libxml_use_internal_errors($previousSetting);
+        }
     }
 }

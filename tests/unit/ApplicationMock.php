@@ -14,7 +14,7 @@ namespace Scenario\Core\Tests\Unit;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use SplFileInfo;
 use function is_dir;

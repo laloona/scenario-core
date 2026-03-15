@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
+namespace Scenario\Core\Tests\Unit\Runtime\Metadata\Handler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,8 +17,8 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Scenario\Core\Application;
 use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;

@@ -41,7 +41,7 @@ final class XMLParser
                 throw new XMLParserException('unable to load configuration xml');
             }
 
-            if (!$doc->schemaValidate($this->xsdPath)) {
+            if ($doc->schemaValidate($this->xsdPath) === false) {
                 libxml_clear_errors();
                 throw new XMLParserException('configuration xml does not validate');
             }

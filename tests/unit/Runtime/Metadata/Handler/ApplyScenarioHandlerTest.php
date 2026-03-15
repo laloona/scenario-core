@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
+namespace Scenario\Core\Tests\Unit\Runtime\Metadata\Handler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Application;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;

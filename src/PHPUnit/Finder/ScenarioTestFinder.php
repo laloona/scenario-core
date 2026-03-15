@@ -43,8 +43,6 @@ final class ScenarioTestFinder
      */
     private function findTestCLassesUsingScenario(string $dirname): array
     {
-        $current = get_declared_classes();
-
         $directory = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($dirname),
         );
@@ -61,7 +59,7 @@ final class ScenarioTestFinder
 
         /** @var array<class-string, list<non-empty-string>> $testClasses */
         $testClasses = [];
-        $candidates = array_diff(get_declared_classes(), $current);
+        $candidates = get_declared_classes();
         foreach ($candidates as $className) {
             if (class_exists($className) === false) {
                 continue;

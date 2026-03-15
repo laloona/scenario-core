@@ -15,7 +15,7 @@ use PHPUnit\Runner\Extension\Extension as ExtensionInterface;
 use PHPUnit\Runner\Extension\Facade;
 use PHPUnit\Runner\Extension\ParameterCollection;
 use PHPUnit\TextUI\Configuration\Configuration;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 
 final class Extension implements ExtensionInterface
 {

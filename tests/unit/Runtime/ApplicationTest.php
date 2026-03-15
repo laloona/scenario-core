@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit;
+namespace Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Application;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
@@ -34,6 +34,10 @@ use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioLoader;
 use Scenario\Core\Runtime\ScenarioRegistry;
+use Scenario\Core\Tests\Unit\ApplicationMock;
+use Scenario\Core\Tests\Unit\ApplicationStateMock;
+use Scenario\Core\Tests\Unit\HandlerRegistryMock;
+use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
 use function mkdir;
@@ -41,21 +45,21 @@ use function mkdir;
 #[CoversClass(Application::class)]
 #[UsesClass(AsScenario::class)]
 #[UsesClass(ApplicationState::class)]
+#[UsesClass(ApplyScenario::class)]
+#[UsesClass(ApplyScenarioHandler::class)]
+#[UsesClass(ConfigurationBuilder::class)]
+#[UsesClass(ConfigurationFinder::class)]
+#[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(HandlerRegistry::class)]
+#[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(RefreshDatabase::class)]
+#[UsesClass(RefreshDatabaseHandler::class)]
 #[UsesClass(RegistryException::class)]
 #[UsesClass(ScenarioRegistry::class)]
-#[UsesClass(ApplyScenarioHandler::class)]
-#[UsesClass(RefreshDatabaseHandler::class)]
-#[UsesClass(ApplyScenario::class)]
-#[UsesClass(RefreshDatabase::class)]
-#[UsesClass(DefaultConfiguration::class)]
-#[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(ScenarioLoader::class)]
 #[UsesClass(ScenarioDefinition::class)]
-#[UsesClass(XMLParser::class)]
 #[UsesClass(SuiteValue::class)]
-#[UsesClass(ConfigurationFinder::class)]
-#[UsesClass(ConfigurationBuilder::class)]
+#[UsesClass(XMLParser::class)]
 #[Group('runtime')]
 #[Small]
 final class ApplicationTest extends TestCase
@@ -139,7 +143,7 @@ final class ApplicationTest extends TestCase
 
     public function testPrepareBuildsConfigurationWhenMissing(): void
     {
-        $xsdSource = file_get_contents(__DIR__ . '/../../xsd/scenario.xsd');
+        $xsdSource = file_get_contents(__DIR__ . '/../../../xsd/scenario.xsd');
         self::assertIsString($xsdSource);
 
         mkdir(Application::getRootDir() . '/vendor/scenario/core/xsd', 0777, true);
@@ -176,5 +180,19 @@ XML);
 
         self::assertNotNull(Application::config());
         self::assertInstanceOf(ScenarioDefinition::class, ScenarioRegistry::getInstance()->resolve('Scenario\\Core\\Tests\\Tmp\\ScenarioY'));
+    }
+
+    public function testGetRootDirComputesWhenNotCached(): void
+    {
+        $this->resetApplication();
+
+        self::assertNotEmpty(Application::getRootDir());
+    }
+
+    public function testConfigReturnsNullWhenNotSet(): void
+    {
+        $this->resetApplication();
+
+        self::assertNull(Application::config());
     }
 }

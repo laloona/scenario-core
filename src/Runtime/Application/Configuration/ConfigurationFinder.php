@@ -12,7 +12,7 @@
 namespace Scenario\Core\Runtime\Application\Configuration;
 
 use DirectoryIterator;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use SplFileInfo;
 use UnexpectedValueException;
 

@@ -22,9 +22,9 @@ use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\FontStyle;
 
 #[CoversClass(Table::class)]
+#[UsesClass(Align::class)]
 #[UsesClass(AnsiString::class)]
 #[UsesClass(AnsiStyler::class)]
-#[UsesClass(Align::class)]
 #[UsesClass(FontStyle::class)]
 #[Group('console')]
 #[Small]

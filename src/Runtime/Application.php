@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core;
+namespace Scenario\Core\Runtime;
 
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
@@ -20,9 +20,6 @@ use Scenario\Core\Runtime\Exception\HandlerRegistryException;
 use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Runtime\ScenarioBuilder;
-use Scenario\Core\Runtime\ScenarioLoader;
-use Scenario\Core\Runtime\ScenarioRegistry;
 use Throwable;
 
 final class Application
@@ -84,7 +81,7 @@ final class Application
             $vendor = array_search('vendor', $dirs, true);
             if ($vendor === false
                 || is_int($vendor) === false) {
-                $vendor = -1;
+                $vendor = -2;
             }
 
             self::$rootDir = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $vendor));

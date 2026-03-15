@@ -67,6 +67,15 @@ final class ApplicationStateTest extends TestCase
         self::assertInstanceOf(ApplicationFailureException::class, $state->failure(null));
     }
 
+    public function testIsSuccessReturnsFalseAfterFailure(): void
+    {
+        $state = new ApplicationState();
+        $state->fail(new RuntimeException('boom'));
+
+        self::assertFalse($state->isSuccess());
+        self::assertTrue($state->isFailed());
+    }
+
     public function testFailureReturnsNullIfClassNotRegisteredAndThrowDoesNothingWhenClassIsNotRegistered(): void
     {
         $state = new ApplicationState();

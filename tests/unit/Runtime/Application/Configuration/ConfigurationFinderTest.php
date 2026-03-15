@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
 use SplFileInfo;
 use UnexpectedValueException;

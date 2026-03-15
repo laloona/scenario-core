@@ -11,7 +11,7 @@
 
 namespace Scenario\Core\Runtime\Application\Configuration;
 
-use Scenario\Core\Application;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 

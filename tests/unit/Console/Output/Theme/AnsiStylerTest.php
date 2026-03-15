@@ -24,8 +24,8 @@ use Scenario\Core\Console\Output\Theme\TerminalEnvironment;
 
 #[CoversClass(AnsiStyler::class)]
 #[UsesClass(BackgroundColor::class)]
-#[UsesClass(ForegroundColor::class)]
 #[UsesClass(FontStyle::class)]
+#[UsesClass(ForegroundColor::class)]
 #[Group('console')]
 #[Small]
 final class AnsiStylerTest extends TestCase
@@ -116,5 +116,16 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('noColorEnv')->willReturn(true);
 
         self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
+    }
+
+    public function testTtyFalseDisablesFormatting(): void
+    {
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('columnsEnv')->willReturn('180');
+        $terminal->method('isTty')->willReturn(false);
+        $terminal->method('noColorEnv')->willReturn(false);
+
+        $result = new AnsiStyler($terminal)->bgText('Plain', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
+        self::assertSame('Plain', $result);
     }
 }

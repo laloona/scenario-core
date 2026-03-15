@@ -11,9 +11,9 @@
 
 namespace Scenario\Core\Console\Command;
 
-use Scenario\Core\Application;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
+use Scenario\Core\Runtime\Application;
 
 final class MakeScenarioCommand extends CliCommand
 {

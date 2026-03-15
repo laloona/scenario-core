@@ -28,8 +28,8 @@ use Scenario\Core\Console\Output\Theme\ForegroundColor;
 #[UsesClass(AnsiStyler::class)]
 #[UsesClass(BoxType::class)]
 #[UsesClass(BackgroundColor::class)]
-#[UsesClass(ForegroundColor::class)]
 #[UsesClass(FontStyle::class)]
+#[UsesClass(ForegroundColor::class)]
 #[Group('console')]
 #[Small]
 final class BoxCase extends AnsiStylerCase

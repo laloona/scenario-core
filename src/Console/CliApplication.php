@@ -11,7 +11,6 @@
 
 namespace Scenario\Core\Console;
 
-use Scenario\Core\Application;
 use Scenario\Core\Console\Command\ApplyScenarioCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\DebugCommand;
@@ -20,6 +19,7 @@ use Scenario\Core\Console\Command\ListScenariosCommand;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
 use Scenario\Core\Console\Command\RefreshDatabaseCommand;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
+use Scenario\Core\Runtime\Application;
 
 final class CliApplication
 {

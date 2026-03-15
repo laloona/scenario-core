@@ -15,7 +15,6 @@ use DirectoryIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
-use Scenario\Core\Application;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
@@ -25,8 +24,6 @@ use SplFileInfo;
 use Throwable;
 use UnexpectedValueException;
 use ValueError;
-use function array_diff;
-use function array_values;
 use function dirname;
 use function file_get_contents;
 use function file_put_contents;
@@ -48,6 +45,7 @@ final class ScenarioLoader
 
     public function loadScenarios(Configuration $configuration): void
     {
+        $this->registry->clear();
         $suites = $this->readSuites($configuration);
         $configuration->setCacheKey($this->cacheKey);
         $cacheFile = $configuration->getCacheDirectory() . DIRECTORY_SEPARATOR;
@@ -243,7 +241,6 @@ final class ScenarioLoader
                     throw new UnexpectedValueException(sprintf('directory "%s" doesn\'t exist', $suite->directory));
                 }
 
-                $declaredClasses = get_declared_classes();
                 $directory = new RecursiveIteratorIterator(
                     new RecursiveDirectoryIterator($path),
                 );
@@ -258,7 +255,7 @@ final class ScenarioLoader
                         include_once($file->getPathname());
                     }
                 }
-                $suites[$suite->name] = array_values(array_diff(get_declared_classes(), $declaredClasses));
+                $suites[$suite->name] = get_declared_classes();
             } catch (UnexpectedValueException|ValueError $exception) {
                 throw new ScenarioLoaderException($suite->directory, $exception);
             }
