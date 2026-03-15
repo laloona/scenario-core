@@ -15,7 +15,7 @@ interface TerminalEnvironment
 {
     public function noColorEnv(): bool;
 
-    public function stdoutIsTty(): ?bool;
+    public function isTty(): ?bool;
 
     public function columnsEnv(): ?string;
 

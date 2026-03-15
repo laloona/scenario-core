@@ -23,7 +23,7 @@ final class SystemTerminal implements TerminalEnvironment
         return getenv('NO_COLOR') !== false;
     }
 
-    public function stdoutIsTty(): ?bool
+    public function isTty(): ?bool
     {
         if (function_exists('stream_isatty') === true) {
             return @stream_isatty(STDOUT);

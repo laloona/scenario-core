@@ -21,7 +21,7 @@ abstract class AnsiStylerCase extends TestCase
     {
         $terminal = self::createStub(TerminalEnvironment::class);
         $terminal->method('columnsEnv')->willReturn($columsEnv);
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(false);
 
         return new AnsiStyler($terminal);

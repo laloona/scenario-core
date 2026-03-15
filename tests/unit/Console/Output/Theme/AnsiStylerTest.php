@@ -34,7 +34,7 @@ final class AnsiStylerTest extends TestCase
     {
         $terminal = self::createStub(TerminalEnvironment::class);
         $terminal->method('columnsEnv')->willReturn('80');
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
         $styler = new AnsiStyler($terminal);
@@ -51,7 +51,7 @@ final class AnsiStylerTest extends TestCase
     {
         $terminal = self::createStub(TerminalEnvironment::class);
         $terminal->method('columnsEnv')->willReturn('180');
-        $terminal->method('stdoutIsTty')->willReturn(null);
+        $terminal->method('isTty')->willReturn(null);
         $terminal->method('noColorEnv')->willReturn(false);
 
         $result = new AnsiStyler($terminal)->bgText('X', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
@@ -62,7 +62,7 @@ final class AnsiStylerTest extends TestCase
     {
         $terminal = self::createStub(TerminalEnvironment::class);
         $terminal->method('columnsEnv')->willReturn('180');
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(false);
 
         $result = new AnsiStyler($terminal)->text('MyText', ForegroundColor::Blue, FontStyle::Underline);
@@ -76,7 +76,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('osFamily')->willReturn('Windows');
         $terminal->method('shellExec')->willReturn('Columns: 180');
         $terminal->method('columnsEnv')->willReturn(null);
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
         self::assertSame(180, new AnsiStyler($terminal)->outputWidth);
@@ -88,7 +88,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('osFamily')->willReturn('Windows');
         $terminal->method('shellExec')->willReturn('n/a');
         $terminal->method('columnsEnv')->willReturn(null);
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
         self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
@@ -100,7 +100,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('osFamily')->willReturn('Linux');
         $terminal->method('shellExec')->willReturn("24 190\n");
         $terminal->method('columnsEnv')->willReturn(null);
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
         self::assertSame(190, new AnsiStyler($terminal)->outputWidth);
@@ -112,7 +112,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('osFamily')->willReturn('Windows');
         $terminal->method('shellExec')->willReturn(null);
         $terminal->method('columnsEnv')->willReturn(null);
-        $terminal->method('stdoutIsTty')->willReturn(true);
+        $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
         self::assertSame(150, new AnsiStyler($terminal)->outputWidth);

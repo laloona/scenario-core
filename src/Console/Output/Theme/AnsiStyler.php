@@ -36,7 +36,7 @@ final class AnsiStyler
             return false;
         }
 
-        return $this->environment->stdoutIsTty() ?? true;
+        return $this->environment->isTty() ?? true;
     }
 
     private function outputWidth(): int
