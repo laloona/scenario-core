@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -27,10 +28,12 @@ use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Core\Runtime\Application\Configuration\XMLParser;
+use Scenario\Core\Runtime\ClassFinder;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioLoader;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -47,11 +50,14 @@ use function mkdir;
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(ApplyScenarioHandler::class)]
+#[UsesClass(ClassFinder::class)]
 #[UsesClass(ConfigurationBuilder::class)]
 #[UsesClass(ConfigurationFinder::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(HandlerRegistry::class)]
 #[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(Parameter::class)]
+#[UsesClass(ParameterType::class)]
 #[UsesClass(RefreshDatabase::class)]
 #[UsesClass(RefreshDatabaseHandler::class)]
 #[UsesClass(RegistryException::class)]

@@ -12,22 +12,18 @@
 namespace Scenario\Core\Runtime;
 
 use DirectoryIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use ReflectionClass;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
-use SplFileInfo;
 use Throwable;
 use UnexpectedValueException;
 use ValueError;
 use function dirname;
 use function file_get_contents;
 use function file_put_contents;
-use function get_declared_classes;
 use function is_dir;
 use function is_file;
 use function json_decode;
@@ -183,7 +179,8 @@ final class ScenarioLoader
             $cachedSuites[$suite] = [];
             foreach ($classes as $class) {
                 $reflection = new ReflectionClass($class);
-                if ($reflection->isAbstract() === true) {
+                if ($reflection->isAbstract() === true
+                    || $reflection->isInstantiable() === false) {
                     continue;
                 }
 
@@ -232,7 +229,7 @@ final class ScenarioLoader
      */
     private function readSuites(Configuration $configuration): array
     {
-        $cacheKey = '';
+        $classFinder = new ClassFinder();
         $suites = [];
         foreach ($configuration->getSuites() as $suite) {
             try {
@@ -241,27 +238,13 @@ final class ScenarioLoader
                     throw new UnexpectedValueException(sprintf('directory "%s" doesn\'t exist', $suite->directory));
                 }
 
-                $directory = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator($path),
-                );
-                foreach ($directory as $file) {
-                    if (!$file instanceof SplFileInfo) {
-                        continue;
-                    }
-
-                    if ($file->isFile() === true
-                        && $file->getExtension() === 'php') {
-                        $cacheKey .= $file->getMTime() . $suite->name;
-                        include_once($file->getPathname());
-                    }
-                }
-                $suites[$suite->name] = get_declared_classes();
+                $suites[$suite->name] = $classFinder->findClassesInDirectory($path);
             } catch (UnexpectedValueException|ValueError $exception) {
                 throw new ScenarioLoaderException($suite->directory, $exception);
             }
         }
 
-        $this->cacheKey = md5($cacheKey);
+        $this->cacheKey = $classFinder->getCacheKey();
         return $suites;
     }
 }

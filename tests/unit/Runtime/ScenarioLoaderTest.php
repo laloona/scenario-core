@@ -68,7 +68,7 @@ final class ScenarioLoaderTest extends TestCase
         $this->removeRootDir();
     }
 
-    public function xxtestLoadScenariosRegistersDefinitionsAndCreatesCache(): void
+    public function testLoadScenariosRegistersDefinitionsAndCreatesCache(): void
     {
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
@@ -85,7 +85,7 @@ final class ScenarioLoaderTest extends TestCase
         self::assertTrue(is_file($cacheFile));
     }
 
-    public function xxtestLoadScenariosUsesCacheWhenAvailable(): void
+    public function testLoadScenariosUsesCacheWhenAvailable(): void
     {
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
@@ -120,7 +120,7 @@ final class ScenarioLoaderTest extends TestCase
         self::assertNotSame('not-json', file_get_contents($cacheFile));
     }
 
-    public function xxtestLoadScenariosSkipsInvalidCacheEntries(): void
+    public function testLoadScenariosSkipsInvalidCacheEntries(): void
     {
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
@@ -160,7 +160,7 @@ final class ScenarioLoaderTest extends TestCase
         self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('from-cache')->class);
     }
 
-    public function xxtestLoadScenariosRebuildsCacheAndRemovesOldFiles(): void
+    public function testLoadScenariosRebuildsCacheAndRemovesOldFiles(): void
     {
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
@@ -182,7 +182,7 @@ final class ScenarioLoaderTest extends TestCase
         self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('my-scenario')->class);
     }
 
-    public function xxtestLoadScenariosThrowsForMissingSuiteDirectory(): void
+    public function testLoadScenariosThrowsForMissingSuiteDirectory(): void
     {
         $config = $this->getConfiguration();
         $config->setSuites([

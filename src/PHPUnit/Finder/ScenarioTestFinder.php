@@ -12,14 +12,12 @@
 namespace Scenario\Core\PHPUnit\Finder;
 
 use PHPUnit\Framework\TestCase;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
-use SplFileInfo;
+use Scenario\Core\Runtime\ClassFinder;
 
 final class ScenarioTestFinder
 {
@@ -43,23 +41,9 @@ final class ScenarioTestFinder
      */
     private function findTestCLassesUsingScenario(string $dirname): array
     {
-        $directory = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dirname),
-        );
-        foreach ($directory as $file) {
-            if (!$file instanceof SplFileInfo) {
-                continue;
-            }
-
-            if ($file->isFile() === true
-                && $file->getExtension() === 'php') {
-                include_once($file->getPathname());
-            }
-        }
-
         /** @var array<class-string, list<non-empty-string>> $testClasses */
         $testClasses = [];
-        $candidates = get_declared_classes();
+        $candidates = (new ClassFinder())->findClassesInDirectory($dirname);
         foreach ($candidates as $className) {
             if (class_exists($className) === false) {
                 continue;
