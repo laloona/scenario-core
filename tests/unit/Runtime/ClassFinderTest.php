@@ -116,4 +116,15 @@ PHP);
 
         self::assertSame(md5('1700000000'), $finder->getCacheKey());
     }
+
+    public function testFindClassesInDirectoryReturnsEmptyArrayAndEmptyCacheKeyForEmptyDirectory(): void
+    {
+        $scanDir = Application::getRootDir() . '/empty';
+        mkdir($scanDir, 0777, true);
+
+        $finder = new ClassFinder();
+
+        self::assertSame([], $finder->findClassesInDirectory($scanDir));
+        self::assertSame('', $finder->getCacheKey());
+    }
 }

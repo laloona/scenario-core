@@ -150,4 +150,42 @@ PHP);
             $classes,
         );
     }
+
+    public function testIgnoresConcreteTestCasesWithoutScenarioAttributes(): void
+    {
+        mkdir(Application::getRootDir() . '/tests/unit', 0777, true);
+
+        file_put_contents(
+            Application::getRootDir() . '/phpunit.xml',
+            sprintf(<<<XML
+<?xml version="1.0"?>
+<phpunit>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>%s/tests/unit</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
+XML, Application::getRootDir()),
+        );
+
+        $suffix = 'Fixture' . uniqid();
+
+        file_put_contents(Application::getRootDir() . '/tests/unit/PlainTest.php', <<<PHP
+<?php declare(strict_types=1);
+
+namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+
+use PHPUnit\\Framework\\TestCase;
+
+final class PlainTest extends TestCase
+{
+    public function testItRuns(): void
+    {
+    }
+}
+PHP);
+
+        self::assertSame([], (new ScenarioTestFinder())->all());
+    }
 }
