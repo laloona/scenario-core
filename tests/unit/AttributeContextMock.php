@@ -18,7 +18,12 @@ trait AttributeContextMock
 {
     private function resetAttributeContext(): void
     {
-        $property = new ReflectionClass(AttributeContext::class)->getProperty('instances');
-        $property->setValue(null, []);
+        $reflection = new ReflectionClass(AttributeContext::class);
+
+        $currentClass = $reflection->getProperty('currentClass');
+        $currentClass->setValue(null, null);
+
+        $instances = $reflection->getProperty('instances');
+        $instances->setValue(null, []);
     }
 }

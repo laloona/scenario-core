@@ -12,6 +12,8 @@
 namespace Scenario\Core\Console\Command;
 
 use Scenario\Core\Console\Output;
+use Scenario\Core\Console\Output\NativeTerminalIO;
+use Scenario\Core\Console\Output\SystemTerminal;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
@@ -22,7 +24,7 @@ abstract class CliCommand
 {
     final public function run(CliInput $input): Command
     {
-        $output = new Output(new AnsiStyler());
+        $output = new Output(new AnsiStyler(new SystemTerminal()), new NativeTerminalIO());
 
         try {
             (new ApplicationState())->throw(null);

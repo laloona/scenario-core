@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Console\Output\Theme;
 
+use Scenario\Core\Console\Output\TerminalEnvironment;
 use function ctype_digit;
 use function implode;
 use function is_string;
@@ -24,7 +25,7 @@ final class AnsiStyler
 
     public readonly int $outputWidth;
 
-    public function __construct(private readonly TerminalEnvironment $environment = new SystemTerminal())
+    public function __construct(private readonly TerminalEnvironment $environment)
     {
         $this->useColors = $this->useColors();
         $this->outputWidth = $this->outputWidth();

@@ -16,11 +16,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Console\Output\TerminalEnvironment;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\BackgroundColor;
 use Scenario\Core\Console\Output\Theme\FontStyle;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
-use Scenario\Core\Console\Output\Theme\TerminalEnvironment;
 
 #[CoversClass(AnsiStyler::class)]
 #[UsesClass(BackgroundColor::class)]

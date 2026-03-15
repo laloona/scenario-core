@@ -12,8 +12,8 @@
 namespace Scenario\Core\Tests\Unit\Console\Output\Formatter;
 
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Console\Output\TerminalEnvironment;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
-use Scenario\Core\Console\Output\Theme\TerminalEnvironment;
 
 abstract class AnsiStylerCase extends TestCase
 {

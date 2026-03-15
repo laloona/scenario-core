@@ -16,20 +16,20 @@ use Scenario\Core\Console\Output\Formatter\Box;
 use Scenario\Core\Console\Output\Formatter\Confirm;
 use Scenario\Core\Console\Output\Formatter\Table;
 use Scenario\Core\Console\Output\Formatter\Text;
+use Scenario\Core\Console\Output\TerminalIO;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
 use Scenario\Core\Contract\CliOutput;
-use function fgets;
-use function fwrite;
 use function in_array;
 use function is_string;
-use function rtrim;
 use function strtolower;
 
 final class Output implements CliOutput
 {
-    public function __construct(private AnsiStyler $ansiStyler)
-    {
+    public function __construct(
+        private AnsiStyler $ansiStyler,
+        private TerminalIO $terminalIO,
+    ) {
     }
 
     /**
@@ -42,7 +42,7 @@ final class Output implements CliOutput
         }
 
         foreach ($string as $singleStrimg) {
-            fwrite(STDOUT, $singleStrimg);
+            $this->terminalIO->write($singleStrimg);
         }
     }
 
@@ -62,10 +62,7 @@ final class Output implements CliOutput
 
     private function readln(): string
     {
-        $line = fgets(STDIN);
-        return $line === false
-            ? ''
-            : rtrim($line, "\r\n");
+        return $this->terminalIO->read();
     }
 
     public function ask(string $question, ?string $default = null, ?callable $validator = null): string

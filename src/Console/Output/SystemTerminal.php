@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Output\Theme;
+namespace Scenario\Core\Console\Output;
 
 use function function_exists;
 use function getenv;
