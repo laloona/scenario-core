@@ -194,6 +194,36 @@ final class ScenarioLoaderTest extends TestCase
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
     }
 
+    public function testLoadScenariosCreatesEmptyCacheWhenNoScenarioDefinitionsWereFound(): void
+    {
+        mkdir(Application::getRootDir() . '/scenarios');
+        file_put_contents(Application::getRootDir() . '/scenarios/Helper.php', <<<'PHP'
+<?php declare(strict_types=1);
+namespace Scenario\Core\Tests\Tmp;
+final class Helper
+{
+}
+PHP);
+
+        $config = $this->getConfiguration();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+
+        self::assertSame([], ScenarioRegistry::getInstance()->all());
+        self::assertTrue(is_file($config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey()));
+    }
+
+    public function testLoadScenariosStoresEmptyCacheKeyWhenSuiteContainsNoPhpClasses(): void
+    {
+        mkdir(Application::getRootDir() . '/scenarios');
+
+        $config = $this->getConfiguration();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+
+        self::assertSame('', $config->getCacheKey());
+    }
+
     private function createScenarioSuite(): string
     {
         $scenarioDir = Application::getRootDir() . '/scenarios';

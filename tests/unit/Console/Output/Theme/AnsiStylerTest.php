@@ -70,6 +70,18 @@ final class AnsiStylerTest extends TestCase
         self::assertSame("\033[94;4mMyText\033[0m", $result);
     }
 
+    public function testBgTextReturnsPlainTextWhenNoStyleArgumentsAreGiven(): void
+    {
+        $terminal = self::createStub(TerminalEnvironment::class);
+        $terminal->method('columnsEnv')->willReturn('180');
+        $terminal->method('isTty')->willReturn(true);
+        $terminal->method('noColorEnv')->willReturn(false);
+
+        $result = new AnsiStyler($terminal)->bgText('Plain', null, null, null);
+
+        self::assertSame('Plain', $result);
+    }
+
     public function testWidthUsesWindowsShellOutput(): void
     {
         $terminal = self::createStub(TerminalEnvironment::class);

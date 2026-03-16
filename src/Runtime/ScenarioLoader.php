@@ -62,7 +62,8 @@ final class ScenarioLoader
         }
 
         $cachedSuites = $this->loadSuites($suites);
-        if (count($cachedSuites) > 0) {
+        if ($this->cacheKey !== ''
+            && count($cachedSuites) > 0) {
             $this->buildCache($cacheFile, $cachedSuites);
         }
     }

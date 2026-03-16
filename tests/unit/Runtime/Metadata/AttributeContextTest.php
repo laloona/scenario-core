@@ -262,4 +262,16 @@ final class AttributeContextTest extends TestCase
 
         self::assertSame([], $context->getAudits());
     }
+
+    public function testDryRunPropertyIsExposed(): void
+    {
+        $context = AttributeContext::getInstance(
+            AnotherScenario::class,
+            'down',
+            ExecutionType::Down,
+            true,
+        );
+
+        self::assertTrue($context->dryRun);
+    }
 }

@@ -234,6 +234,30 @@ XML;
         )->build();
     }
 
+    public function testBuildUsesMainAsDefaultSuiteNameWhenNameAttributeIsMissing(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0"?>
+<scenario>
+  <suites>
+    <suite name="">
+      <directory>scenarios</directory>
+    </suite>
+  </suites>
+</scenario>
+XML;
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
+
+        $config = new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        )->build();
+
+        $suites = $config->getSuites();
+        self::assertArrayHasKey('main', $suites);
+        self::assertSame('scenarios', $suites['main']->directory);
+    }
+
     private function xsdPath(): string
     {
         return dirname(__DIR__, 5) . '/xsd/scenario.xsd';
