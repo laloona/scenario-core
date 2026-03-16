@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Output;
+use Scenario\Core\Console\Output\Formatter\Align;
 use Scenario\Core\Console\Output\Formatter\Box;
 use Scenario\Core\Console\Output\Formatter\Confirm;
 use Scenario\Core\Console\Output\Formatter\Table;
@@ -37,6 +38,28 @@ use Scenario\Core\Console\Output\Theme\BoxType;
 #[Small]
 final class OutputTest extends TestCase
 {
+    public function testWriteAndWritelnForwardStringsAndArraysToTerminal(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(4);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1 => self::assertSame('first', $line),
+                    2 => self::assertSame('second', $line),
+                    3 => self::assertSame('third' . PHP_EOL, $line),
+                    4 => self::assertSame('fourth' . PHP_EOL, $line),
+                    default => '',
+                };
+            });
+
+        $output = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO);
+        $output->write(['first', 'second']);
+        $output->writeln(['third', 'fourth']);
+    }
+
     public function testAskRetriesUntilValidatorAcceptsInput(): void
     {
         $terminalIO = $this->createMock(TerminalIO::class);
@@ -112,6 +135,187 @@ final class OutputTest extends TestCase
 
         $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
             ->choice('Select one', ['first', 'second']);
+
+        self::assertSame('0', $result);
+    }
+
+    public function testChoiceReturnsDefaultWhenInputIsEmpty(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+        $terminalIO->expects(self::once())
+            ->method('read')
+            ->willReturn('');
+
+        $matcher = self::exactly(10);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    3 => self::assertStringContainsString('Choose one', $line),
+                    6 => self::assertStringContainsString('Please select one of the following:', $line),
+                    7 => self::assertStringContainsString('default (second)', $line),
+                    8 => self::assertStringContainsString('(0) first', $line),
+                    9 => self::assertStringContainsString('(1) second', $line),
+                    10 => self::assertStringContainsString('>', $line),
+                    default => '',
+                };
+            });
+
+        $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
+            ->choice('Choose one', ['first', 'second'], 'second');
+
+        self::assertSame('second', $result);
+    }
+
+    public function testHeadlineWritesHeadlineAndUnderlineWithSpacing(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(4);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 4 => self::assertSame(PHP_EOL, $line),
+                    2 => self::assertSame('Important' . PHP_EOL, $line),
+                    3 => self::assertSame('---------' . PHP_EOL, $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->headline('Important');
+    }
+
+    public function testSuccessWrapsFormattedBoxWithBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(5);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 5 => self::assertSame(PHP_EOL, $line),
+                    2, 4 => self::assertStringContainsString(PHP_EOL, $line),
+                    3 => self::assertStringContainsString('[OK] Done', $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->success('Done');
+    }
+
+    public function testTextWritesPlainTextWithTrailingLineBreak(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+        $terminalIO->expects(self::once())
+            ->method('write')
+            ->with('Hello' . PHP_EOL);
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->text('Hello');
+    }
+
+    public function testTableWritesGeneratedTableBetweenBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(7);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 7 => self::assertSame(PHP_EOL, $line),
+                    2, 4, 6 => self::assertStringContainsString('─', $line),
+                    3 => self::assertMatchesRegularExpression('/Name.*Score/', $line),
+                    5 => self::assertMatchesRegularExpression('/Alice.*10/', $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->table(['Name', 'Score'], [['Alice', '10']], [Align::Left, Align::Right]);
+    }
+
+    public function testInfoWritesMessageBetweenBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(3);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 3 => self::assertSame(PHP_EOL, $line),
+                    2 => self::assertSame('Heads up' . PHP_EOL, $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->info('Heads up');
+    }
+
+    public function testWarnWrapsFormattedBoxWithBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(5);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 5 => self::assertSame(PHP_EOL, $line),
+                    2, 4 => self::assertStringContainsString(PHP_EOL, $line),
+                    3 => self::assertStringContainsString('[WARNING] Careful', $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->warn('Careful');
+    }
+
+    public function testErrorWrapsFormattedBoxWithBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(5);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 5 => self::assertSame(PHP_EOL, $line),
+                    2, 4 => self::assertStringContainsString(PHP_EOL, $line),
+                    3 => self::assertStringContainsString('[ERROR] Broken', $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->error('Broken');
+    }
+
+    public function testQuestionWrapsFormattedBoxWithBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(5);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 5 => self::assertSame(PHP_EOL, $line),
+                    2, 4 => self::assertStringContainsString(PHP_EOL, $line),
+                    3 => self::assertStringContainsString('Need input?', $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->question('Need input?');
     }
 
     private function getTerminalStub(): TerminalEnvironment
