@@ -24,19 +24,21 @@ use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Core\Runtime\Application\Configuration\XMLParser;
-use Scenario\Core\Runtime\Exception\BuilderException;
-use Scenario\Core\Runtime\Exception\XMLParserException;
+use Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
+use Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
+use Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use Scenario\Core\Tests\Unit\ApplicationMock;
 use function dirname;
 use function file_put_contents;
 
 #[CoversClass(ConfigurationBuilder::class)]
 #[UsesClass(Application::class)]
-#[UsesClass(BuilderException::class)]
+#[UsesClass(ConnectionAlreadyExistsException::class)]
 #[UsesClass(ConfigurationFinder::class)]
 #[UsesClass(ConnectionValue::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(SuiteAlreadyExistsException::class)]
 #[UsesClass(SuiteValue::class)]
 #[UsesClass(XMLParser::class)]
 #[UsesClass(XMLParserException::class)]
@@ -151,7 +153,7 @@ XML;
             new XMLParser($this->xsdPath()),
         );
 
-        $this->expectException(BuilderException::class);
+        $this->expectException(SuiteAlreadyExistsException::class);
         $this->expectExceptionMessage('suite with name "main" already exists');
 
         $builder->build();
@@ -175,7 +177,7 @@ XML;
 XML;
         file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
-        $this->expectException(BuilderException::class);
+        $this->expectException(ConnectionAlreadyExistsException::class);
         $this->expectExceptionMessage('connection with name "db" already exists');
 
         new ConfigurationBuilder(
@@ -202,7 +204,7 @@ XML;
 XML;
         file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
-        $this->expectException(BuilderException::class);
+        $this->expectException(ConnectionAlreadyExistsException::class);
         $this->expectExceptionMessage('connection with name "" already exists');
 
         new ConfigurationBuilder(

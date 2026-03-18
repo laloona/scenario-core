@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Exception;
+namespace Scenario\Core\Runtime\Exception\Metadata;
+
+use Scenario\Core\Runtime\Exception\Exception;
 
 final class SwitchDryRunAttributeContextException extends Exception
 {

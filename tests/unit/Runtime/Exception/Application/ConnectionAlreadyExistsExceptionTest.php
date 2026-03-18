@@ -9,31 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\CycleException;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
 
-#[CoversClass(CycleException::class)]
+#[CoversClass(ConnectionAlreadyExistsException::class)]
 #[Group('runtime')]
 #[Small]
-final class CycleExceptionTest extends TestCase
+final class ConnectionAlreadyExistsExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new CycleException(
-            'RootScenario',
-            'CycleScenario',
-            ['A', 'B', 'C'],
-            ExecutionType::Up,
+        $exception = new ConnectionAlreadyExistsException(
+            'default',
         );
 
         self::assertSame(
-            'RootScenario: CycleScenario caused cycle in applied stack [A => B => C] while applying up',
+            'connection with name "default" already exists',
             $exception->getMessage(),
         );
     }

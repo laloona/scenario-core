@@ -11,7 +11,7 @@
 
 namespace Scenario\Core\Runtime\Application;
 
-use Scenario\Core\Runtime\Exception\ApplicationFailureException;
+use Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
 use Throwable;
 use function array_search;
 

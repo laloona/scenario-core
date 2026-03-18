@@ -15,6 +15,7 @@ use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Scenario\Core\Runtime\Exception\UndefinedParameterException;
 use function array_diff;
 use function array_keys;
 use function array_values;
@@ -76,6 +77,10 @@ final class ScenarioParameters
 
     public function get(string $name): mixed
     {
+        if (isset($this->allowedParameters[$name]) === false) {
+            throw new UndefinedParameterException($name);
+        }
+
         $value = $this->allowedParameters[$name]->default;
         if (isset($this->parameters[$name]) === true
             && $this->parameters[$name] !== '') {

@@ -9,30 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Metadata;
 
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\TestMethodFailureException;
+use Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
 
-#[CoversClass(TestMethodFailureException::class)]
+#[CoversClass(ConnectionException::class)]
 #[Group('runtime')]
 #[Small]
-final class TestMethodFailureExceptionTest extends TestCase
+final class ConnectionExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new TestMethodFailureException(
-            'MyScenario::myMethod',
-            new Exception('some error'),
-        );
-
         self::assertSame(
-            'OnMethod "MyScenario::myMethod" failure: [Exception]: some error',
-            $exception->getMessage(),
+            'Unknown connection "my_connection"',
+            (new ConnectionException('my_connection'))->getMessage(),
         );
     }
 }

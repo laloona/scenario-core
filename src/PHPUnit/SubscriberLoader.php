@@ -22,7 +22,7 @@ final class SubscriberLoader
 {
     public function load(Facade $facade): void
     {
-        $facade->registerSubscriber(new FailureSubscriber());
+        $facade->registerSubscriber(new FailureSubscriber(new Emitter()));
 
         $facade->registerSubscriber(new TestClassUpSubscriber());
         $facade->registerSubscriber(new TestClassDownSubscriber());

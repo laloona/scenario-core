@@ -11,6 +11,15 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
-final class XMLParserException extends Exception
+final class UndefinedParameterException extends Exception
 {
+    public function __construct(string $name)
+    {
+        parent::__construct(
+            sprintf(
+                'parameter with name "%s" is not defined.',
+                $name,
+            ),
+        );
+    }
 }

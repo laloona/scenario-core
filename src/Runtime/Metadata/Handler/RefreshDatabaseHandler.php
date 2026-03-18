@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime\Metadata\Handler;
 
 use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Exception\ConnectionException;
+use Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 

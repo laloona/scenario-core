@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Exception\TestClassFailureException;
+use Scenario\Core\Runtime\Exception\Application\TestClassFailureException;
 use Scenario\Core\Tests\Unit\TestClassStateMock;
 
 #[CoversClass(TestClassState::class)]

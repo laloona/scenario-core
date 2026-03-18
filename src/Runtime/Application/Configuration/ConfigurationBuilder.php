@@ -16,7 +16,9 @@ use DOMElement;
 use DOMXPath;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Scenario\Core\Runtime\Exception\BuilderException;
+use Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
+use Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
+use Scenario\Core\Runtime\Exception\Application\SuiteWithoutDirectoryException;
 
 final class ConfigurationBuilder
 {
@@ -77,7 +79,7 @@ final class ConfigurationBuilder
 
             $name = $connectionNode->attributes->getNamedItem('name')?->nodeValue;
             if (isset($connectionObjects[$name]) === true) {
-                throw new BuilderException(sprintf('connection with name "%s" already exists', $name));
+                throw new ConnectionAlreadyExistsException($name ?? '');
             }
 
             $connectionObjects[$name] = new ConnectionValue(
@@ -110,7 +112,7 @@ final class ConfigurationBuilder
                 $name = 'main';
             }
             if (isset($suiteObjects[$name]) === true) {
-                throw new BuilderException(sprintf('suite with name "%s" already exists', $name));
+                throw new SuiteAlreadyExistsException($name);
             }
 
             $dirNodes = $xpath->query('directory', $suiteNode);
@@ -123,7 +125,7 @@ final class ConfigurationBuilder
             }
 
             if ($directory === '') {
-                throw new BuilderException(sprintf('suite "%s" without directory', $name));
+                throw new SuiteWithoutDirectoryException($name);
             }
 
             $suiteObjects[$name] = new SuiteValue($name, $directory);

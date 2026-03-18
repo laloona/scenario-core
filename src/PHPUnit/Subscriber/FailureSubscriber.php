@@ -12,10 +12,9 @@
 namespace Scenario\Core\PHPUnit\Subscriber;
 
 use PHPUnit\Event\Code\TestMethod;
-use PHPUnit\Event\Code\ThrowableBuilder;
-use PHPUnit\Event\Facade;
 use PHPUnit\Event\Test\Finished;
 use PHPUnit\Event\Test\FinishedSubscriber;
+use Scenario\Core\PHPUnit\ErrorEmitter;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
@@ -23,20 +22,35 @@ use Throwable;
 
 final class FailureSubscriber implements FinishedSubscriber
 {
+    public function __construct(private ErrorEmitter $errorEmitter)
+    {
+    }
+
     public function notify(Finished $event): void
     {
         if ($event->test()->isTestMethod() === true) {
-            $this->state($event->test(), (new ApplicationState())->failure($event->test()->className()));
-            $this->state($event->test(), (new TestClassState())->failure($event->test()->className()));
-            $this->state($event->test(), (new TestMethodState())->failure($event->test()->className(), $event->test()));
+            /* @var TestMethod $testMethod */
+            $testMethod = $event->test();
+
+            $this->throwOnError(
+                $testMethod,
+                (new ApplicationState())->failure($event->test()->className()),
+            );
+            $this->throwOnError(
+                $testMethod,
+                (new TestClassState())->failure($event->test()->className()),
+            );
+            $this->throwOnError(
+                $testMethod,
+                (new TestMethodState())->failure($event->test()->className(), $testMethod),
+            );
         }
     }
 
-    private function state(TestMethod $test, ?Throwable $throwable): void
+    private function throwOnError(TestMethod $test, ?Throwable $throwable): void
     {
         if ($throwable !== null) {
-            Facade::emitter()->testErrored($test, ThrowableBuilder::from($throwable));
-
+            $this->errorEmitter->testErrored($test, $throwable);
             throw $throwable;
         }
     }

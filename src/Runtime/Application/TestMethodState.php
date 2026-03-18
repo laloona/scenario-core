@@ -12,7 +12,7 @@
 namespace Scenario\Core\Runtime\Application;
 
 use PHPUnit\Event\Code\TestMethod;
-use Scenario\Core\Runtime\Exception\TestMethodFailureException;
+use Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
 use Throwable;
 
 final class TestMethodState

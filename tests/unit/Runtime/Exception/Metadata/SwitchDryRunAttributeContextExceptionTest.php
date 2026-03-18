@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\SwitchDryRunAttributeContextException;
+use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
 
 #[CoversClass(SwitchDryRunAttributeContextException::class)]
 #[Group('runtime')]

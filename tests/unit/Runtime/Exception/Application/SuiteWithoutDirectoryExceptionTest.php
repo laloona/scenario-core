@@ -9,29 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Application;
 
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\TestClassFailureException;
+use Scenario\Core\Runtime\Exception\Application\SuiteWithoutDirectoryException;
 
-#[CoversClass(TestClassFailureException::class)]
+#[CoversClass(SuiteWithoutDirectoryException::class)]
 #[Group('runtime')]
 #[Small]
-final class TestClassFailureExceptionTest extends TestCase
+final class SuiteWithoutDirectoryExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new TestClassFailureException(
-            'MyScenario',
-            new Exception('some error'),
+        $exception = new SuiteWithoutDirectoryException(
+            'main',
         );
 
         self::assertSame(
-            'OnClass "MyScenario" failure: [Exception]: some error',
+            'suite "main" without directory',
             $exception->getMessage(),
         );
     }

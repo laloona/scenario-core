@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Exception;
+namespace Scenario\Core\Runtime\Exception\Application;
 
 use Throwable;
 
-final class TestClassFailureException extends FailureException
+final class TestMethodFailureException extends FailureException
 {
-    public function __construct(string $class, Throwable $throwable)
+    public function __construct(string $method, Throwable $throwable)
     {
         parent::__construct(
             sprintf(
-                'OnClass "%s" failure: [%s]: %s',
-                $class,
+                'OnMethod "%s" failure: [%s]: %s',
+                $method,
                 get_class($throwable),
                 $throwable->getMessage(),
             ),

@@ -35,6 +35,7 @@
             <file>src/Output/Theme/FontStyle.php</file>
             <file>src/Output/Theme/ForegroundColor.php</file>
             <file>src/PHPUnit/Extension.php</file>
+            <file>src/PHPUnit/Emitter.php</file>
             <file>src/PHPUnit/SubscriberLoader.php</file>
             <file>src/Runtime/Registry.php</file>
             <file>src/Runtime/Application/Configuration/Value/ConnectionValue.php</file>

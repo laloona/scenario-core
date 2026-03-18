@@ -15,18 +15,22 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\ConnectionException;
+use Scenario\Core\Runtime\Exception\UndefinedParameterException;
 
-#[CoversClass(ConnectionException::class)]
+#[CoversClass(UndefinedParameterException::class)]
 #[Group('runtime')]
 #[Small]
-final class ConnectionExceptionTest extends TestCase
+final class UndefinedParameterExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
+        $exception = new UndefinedParameterException(
+            'myparam',
+        );
+
         self::assertSame(
-            'Unknown connection "my_connection"',
-            (new ConnectionException('my_connection'))->getMessage(),
+            'parameter with name "myparam" is not defined.',
+            $exception->getMessage(),
         );
     }
 }

@@ -9,24 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\BuilderException;
+use Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
 
-#[CoversClass(BuilderException::class)]
+#[CoversClass(SuiteAlreadyExistsException::class)]
 #[Group('runtime')]
 #[Small]
-final class BuilderExceptionTest extends TestCase
+final class SuiteAlreadyExistsExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
+        $exception = new SuiteAlreadyExistsException(
+            'main',
+        );
+
         self::assertSame(
-            'some error happened',
-            (new BuilderException('some error happened'))->getMessage(),
+            'suite with name "main" already exists',
+            $exception->getMessage(),
         );
     }
 }

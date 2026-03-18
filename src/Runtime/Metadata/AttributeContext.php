@@ -11,8 +11,8 @@
 
 namespace Scenario\Core\Runtime\Metadata;
 
-use Scenario\Core\Runtime\Exception\CycleException;
-use Scenario\Core\Runtime\Exception\SwitchDryRunAttributeContextException;
+use Scenario\Core\Runtime\Exception\Metadata\CycleException;
+use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
 
 final class AttributeContext
 {

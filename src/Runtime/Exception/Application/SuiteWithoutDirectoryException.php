@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Exception;
+namespace Scenario\Core\Runtime\Exception\Application;
 
-final class ConnectionException extends FailureException
+final class SuiteWithoutDirectoryException extends FailureException
 {
-    public function __construct(string $connection)
+    public function __construct(string $directory)
     {
         parent::__construct(
             sprintf(
-                'Unknown connection "%s"',
-                $connection,
+                'suite "%s" without directory',
+                $directory,
             ),
         );
     }

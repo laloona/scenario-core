@@ -18,6 +18,9 @@ use Scenario\Core\Console\Command\ListCommands;
 use Scenario\Core\Console\Command\ListScenariosCommand;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
 use Scenario\Core\Console\Command\RefreshDatabaseCommand;
+use Scenario\Core\Console\Output\NativeTerminalIO;
+use Scenario\Core\Console\Output\SystemTerminal;
+use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application;
 
@@ -55,11 +58,21 @@ final class CliApplication
             'refresh' => new RefreshDatabaseCommand(),
         ];
 
+        $output = new Output(new AnsiStyler(new SystemTerminal()), new NativeTerminalIO());
+
         if ($input->command() !== null
             && isset($commands[$input->command()]) === true) {
-            return $commands[$input->command()]->run($input)->value;
+            return $commands[$input->command()]
+                ->run(
+                    $input,
+                    $output,
+                )->value;
         }
 
-        return (new ListCommands($commands))->run($input)->value;
+        return (new ListCommands($commands))
+            ->run(
+                $input,
+                $output,
+            )->value;
     }
 }

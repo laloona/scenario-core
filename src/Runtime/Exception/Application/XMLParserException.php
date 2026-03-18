@@ -9,12 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Exception;
+namespace Scenario\Core\Runtime\Exception\Application;
 
-final class BuilderException extends Exception
+use Scenario\Core\Runtime\Exception\Exception;
+
+final class XMLParserException extends Exception
 {
-    public function __construct(string $message)
-    {
-        parent::__construct($message);
-    }
 }

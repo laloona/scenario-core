@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Scenario\Core\Tests\Unit\Runtime\Exception\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Scenario\Core\Runtime\Exception\ApplicationFailureException;
+use Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
 
 #[CoversClass(ApplicationFailureException::class)]
 #[Group('runtime')]

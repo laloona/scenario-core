@@ -11,7 +11,7 @@
 
 namespace Scenario\Core\Runtime\Application;
 
-use Scenario\Core\Runtime\Exception\TestClassFailureException;
+use Scenario\Core\Runtime\Exception\Application\TestClassFailureException;
 use Throwable;
 
 final class TestClassState
