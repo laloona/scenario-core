@@ -12,7 +12,9 @@
 namespace Scenario\Core\Runtime;
 
 use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\Exception\DefinitionException;
+use Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
+use Scenario\Core\Runtime\Exception\DefinitionNameAlreadyRegisteredException;
+use Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
 use Scenario\Core\Runtime\Exception\RegistryException;
 
 final class ScenarioRegistry extends Registry
@@ -33,17 +35,17 @@ final class ScenarioRegistry extends Registry
     public function register(ScenarioDefinition $definition): void
     {
         if (is_subclass_of($definition->class, ScenarioInterface::class) === false) {
-            throw new DefinitionException($definition->class . ' is not a subclass of ' . ScenarioInterface::class);
+            throw new InvalidScenarioSubClassException($definition->class);
         }
 
         if (isset($this->registeredScenarios[$definition->class]) === true) {
-            throw new DefinitionException($definition->class . ' is already registered');
+            throw new DefinitionClassAlreadyRegisteredException($definition->class);
         }
 
         if ($definition->name !== null
             && $definition->name !== ''
             && isset($this->registeredScenarios[$definition->name]) === true) {
-            throw new DefinitionException('scenario name ' . $definition->name . ' already registered for '. $this->registeredScenarios[$definition->name]->class);
+            throw new DefinitionNameAlreadyRegisteredException($definition->name, $this->registeredScenarios[$definition->name]->class);
         }
 
         $this->registeredScenarios[$definition->class] = $definition;

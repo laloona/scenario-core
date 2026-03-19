@@ -11,6 +11,6 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
-final class DefinitionException extends Exception
+abstract class DefinitionException extends Exception
 {
 }

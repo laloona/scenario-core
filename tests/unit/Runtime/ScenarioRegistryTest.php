@@ -18,7 +18,10 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Contract\ScenarioInterface;
+use Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
 use Scenario\Core\Runtime\Exception\DefinitionException;
+use Scenario\Core\Runtime\Exception\DefinitionNameAlreadyRegisteredException;
+use Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -29,6 +32,9 @@ use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ScenarioRegistry::class)]
 #[UsesClass(AsScenario::class)]
+#[UsesClass(DefinitionClassAlreadyRegisteredException::class)]
+#[UsesClass(DefinitionNameAlreadyRegisteredException::class)]
+#[UsesClass(InvalidScenarioSubClassException::class)]
 #[UsesClass(RegistryException::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[Group('runtime')]
