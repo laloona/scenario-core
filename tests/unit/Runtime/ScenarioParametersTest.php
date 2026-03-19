@@ -20,6 +20,7 @@ use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Scenario\Core\Runtime\Exception\UndefinedParameterException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\ScenarioParameters;
 
@@ -29,6 +30,7 @@ use Scenario\Core\Runtime\ScenarioParameters;
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ParameterValueErrorException::class)]
+#[UsesClass(UndefinedParameterException::class)]
 #[Group('runtime')]
 #[Small]
 final class ScenarioParametersTest extends TestCase
@@ -181,6 +183,43 @@ final class ScenarioParametersTest extends TestCase
             [
                 'name' => '',
             ],
+        );
+    }
+
+    public function testGetThrowsExceptionForUndefinedParameter(): void
+    {
+        $parameters = new ScenarioParameters(
+            [
+                new Parameter('name', ParameterType::String),
+            ],
+            [
+                'name' => 'MyName',
+            ],
+        );
+
+        $this->expectException(UndefinedParameterException::class);
+
+        $parameters->get('unknown');
+    }
+
+    public function testAllReturnsDefaultsForMissingOptionalParameters(): void
+    {
+        $parameters = new ScenarioParameters(
+            [
+                new Parameter('name', ParameterType::String, null, false, 'fallback'),
+                new Parameter('count', ParameterType::Integer, null, false, 5),
+            ],
+            [
+                'name' => 'configured',
+            ],
+        );
+
+        self::assertSame(
+            [
+                'name' => 'configured',
+                'count' => 5,
+            ],
+            $parameters->all(),
         );
     }
 }
