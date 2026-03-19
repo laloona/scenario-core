@@ -28,6 +28,11 @@ final class RefreshDatabaseCommand extends CliCommand
 
     protected function execute(CliInput $input, CliOutput $output): Command
     {
+        $connection = null;
+        if (is_string($input->option('connection')) === true) {
+            $connection = $input->option('connection');
+        }
+
         HandlerRegistry::getInstance()
             ->attributeHandler(RefreshDatabase::class)
             ->handle(
@@ -37,10 +42,10 @@ final class RefreshDatabaseCommand extends CliCommand
                     ExecutionType::Up,
                     false,
                 ),
-                new RefreshDatabase((string)$input->option('connection')),
+                new RefreshDatabase($connection),
             );
 
-        (new TestMethodState())->throw(__CLASS__, __METHOD__);
+        (new TestMethodState())->failure(__CLASS__, __METHOD__);
 
         $output->success('Refresh executed.');
         return Command::Success;
