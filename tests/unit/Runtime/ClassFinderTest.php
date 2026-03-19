@@ -127,4 +127,35 @@ PHP);
         self::assertSame([], $finder->findClassesInDirectory($scanDir));
         self::assertSame('', $finder->getCacheKey());
     }
+
+    public function testFindClassesInDirectoryIgnoresNonPhpFilesForCacheKeyAndDiscovery(): void
+    {
+        $scanDir = Application::getRootDir() . '/mixed';
+        mkdir($scanDir, 0777, true);
+
+        $phpFile = $scanDir . '/ScenarioFile.php';
+        $textFile = $scanDir . '/Notes.txt';
+        $className = 'MixedFixture' . uniqid();
+
+        file_put_contents($phpFile, <<<PHP
+<?php declare(strict_types=1);
+namespace Scenario\Core\Tests\Tmp;
+final class {$className}
+{
+}
+PHP);
+        file_put_contents($textFile, 'not a php file');
+
+        touch($phpFile, 1_700_000_001);
+        touch($textFile, 1_700_000_999);
+
+        $finder = new ClassFinder();
+        $classes = $finder->findClassesInDirectory($scanDir);
+
+        self::assertSame(
+            ['Scenario\\Core\\Tests\\Tmp\\' . $className],
+            $classes,
+        );
+        self::assertSame(md5('1700000001'), $finder->getCacheKey());
+    }
 }
