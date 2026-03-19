@@ -63,7 +63,7 @@ unset($vendorDir);
 
 // check if package is installed with composer
 if (strstr(__FILE__, 'vendor') === false) {
-    //define('SCENARIO_CLI_DISABLED', true);
+    define('SCENARIO_CLI_DISABLED', true);
 }
 
 try {
@@ -77,4 +77,5 @@ try {
             $e->getTraceAsString()
         )
     );
+    exit(1);
 }

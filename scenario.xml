@@ -1,0 +1,10 @@
+<scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="xsd/scenario.xsd"
+          cacheDirectory=".scenario.cache"
+>
+    <suites>
+        <suite name="Main Scenario Suite">
+            <directory>tests/integration/scenario</directory>
+        </suite>
+    </suites>
+</scenario>

@@ -17,6 +17,10 @@
         <testsuite name="scenario-core-unit">
             <directory>tests/unit/</directory>
         </testsuite>
+
+        <testsuite name="scenario-core-integration">
+            <directory suffix=".phpt">tests/integration/</directory>
+        </testsuite>
     </testsuites>
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">

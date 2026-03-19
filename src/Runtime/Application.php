@@ -30,18 +30,28 @@ final class Application
 
     private static bool $isBooted = false;
 
+    private function getXsd(): string
+    {
+        $vendorPath = self::getRootDir() . DIRECTORY_SEPARATOR .
+            'vendor' . DIRECTORY_SEPARATOR .
+            'scenario' . DIRECTORY_SEPARATOR .
+            'core' . DIRECTORY_SEPARATOR .
+            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
+
+        if (is_file($vendorPath)) {
+            return $vendorPath;
+        }
+
+        return self::getRootDir() . DIRECTORY_SEPARATOR .
+            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
+    }
+
     public function prepare(): void
     {
         if (self::$configuration === null) {
             self::$configuration = (new ConfigurationBuilder(
                 new ConfigurationFinder(),
-                new XMLParser(
-                    self::getRootDir() .DIRECTORY_SEPARATOR .
-                    'vendor' . DIRECTORY_SEPARATOR .
-                    'scenario' . DIRECTORY_SEPARATOR .
-                    'core' . DIRECTORY_SEPARATOR .
-                    'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd',
-                ),
+                new XMLParser($this->getXsd()),
             ))->build();
 
             (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios(self::$configuration);
