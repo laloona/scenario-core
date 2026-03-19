@@ -66,6 +66,11 @@ final class MakeScenarioCommand extends CliCommand
             },
         );
 
+        if ($name === null) {
+            $output->error('Invalid Scenario name.');
+            return Command::Error;
+        }
+
         $scenario = Application::getRootDir() . DIRECTORY_SEPARATOR . $suite->directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
         if (is_file($scenario) === true) {
             $output->error('Scenario already exists.');

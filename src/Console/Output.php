@@ -65,7 +65,7 @@ final class Output implements CliOutput
         return $this->terminalIO->read();
     }
 
-    public function ask(string $question, ?string $default = null, ?callable $validator = null): string
+    public function ask(string $question, ?string $default = null, ?callable $validator = null): ?string
     {
         $text = new Text($this->ansiStyler);
         $this->question($question);
@@ -80,6 +80,7 @@ final class Output implements CliOutput
 
         while (true) {
             $input = $this->readln();
+            $input = $input === '' ? null : $input;
 
             if ($validator !== null
                 && $validator($input) === false) {

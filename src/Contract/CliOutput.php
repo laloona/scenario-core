@@ -39,7 +39,7 @@ interface CliOutput
      */
     public function choice(string $question, array $choices, ?string $default = null): string;
 
-    public function ask(string $question, ?string $default = null, ?callable $validator = null): string;
+    public function ask(string $question, ?string $default = null, ?callable $validator = null): ?string;
 
     /**
      * @param string|list<string> $string
