@@ -63,7 +63,7 @@ final class DebugCommand extends CliCommand
      * @param array<class-string|string, ScenarioDefinition> $scenarioDefinitions
      * @param array<class-string, list<non-empty-string>> $classesMethods
      */
-    public function handleInput(CliInput $input, CliOutput $output, array $scenarioDefinitions, array $classesMethods): bool|null
+    private function handleInput(CliInput $input, CliOutput $output, array $scenarioDefinitions, array $classesMethods): bool|null
     {
         $className = $input->argument('0');
         $method = $input->argument('1');
