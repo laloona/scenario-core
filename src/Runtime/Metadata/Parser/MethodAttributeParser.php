@@ -14,6 +14,7 @@ namespace Scenario\Core\Runtime\Metadata\Parser;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
+use Scenario\Core\Runtime\Application;
 
 final class MethodAttributeParser
 {
@@ -24,6 +25,18 @@ final class MethodAttributeParser
      */
     public function parse(string $className, string $methodName): array
     {
-        return (new ReflectionClass($className))->getMethod($methodName)->getAttributes();
+        $attributes = [];
+
+        $config = Application::config();
+        if ($config !== null) {
+            foreach ($config->getAttributes() as $attribute) {
+                $attributes = array_merge(
+                    $attributes,
+                    (new ReflectionClass($className))->getMethod($methodName)->getAttributes($attribute),
+                );
+            }
+        }
+
+        return $attributes;
     }
 }

@@ -17,17 +17,36 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Runtime\Application;
+use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
-use Scenario\Core\Tests\Files\InvalidScenario;
+use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
+use Scenario\Core\Tests\Unit\ApplicationMock;
 
 #[CoversClass(MethodAttributeParser::class)]
+#[UsesClass(Application::class)]
 #[UsesClass(ApplyScenario::class)]
+#[UsesClass(DefaultConfiguration::class)]
+#[UsesClass(LoadedConfiguration::class)]
 #[Group('runtime')]
 #[Small]
 final class MethodAttributeParserTest extends TestCase
 {
-    public function testParseReturnsMethodAttributes(): void
+    use ApplicationMock;
+
+    protected function setUp(): void
+    {
+        $this->setConfiguration(new LoadedConfiguration(new DefaultConfiguration()));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetApplication();
+    }
+
+    public function testParseReturnsOnlyConfiguredMethodAttributes(): void
     {
         $attributes = new MethodAttributeParser()->parse(ValidScenario::class, 'up');
 
@@ -36,8 +55,10 @@ final class MethodAttributeParserTest extends TestCase
         self::assertInstanceOf(ApplyScenario::class, $attributes[0]->newInstance());
     }
 
-    public function testParseReturnsEmptyArrayWhenNoAttributes(): void
+    public function testParseReturnsEmptyArrayWhenNoConfiguredAttributeWasFound(): void
     {
-        self::assertSame([], new MethodAttributeParser()->parse(InvalidScenario::class, 'up'));
+        $attributes = new MethodAttributeParser()->parse(AnotherScenario::class, 'up');
+
+        self::assertCount(0, $attributes);
     }
 }

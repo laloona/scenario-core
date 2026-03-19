@@ -16,6 +16,8 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
@@ -23,8 +25,10 @@ use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Scenario\Core\Tests\Unit\ApplicationMock;
 
 #[CoversClass(DefaultConfiguration::class)]
+#[UsesClass(ApplyScenario::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(ConnectionValue::class)]
+#[UsesClass(RefreshDatabase::class)]
 #[UsesClass(SuiteValue::class)]
 #[Group('runtime')]
 #[Small]
@@ -59,6 +63,10 @@ final class DefaultConfigurationTest extends TestCase
         self::assertSame(Application::getRootDir() . '/scenario', $suites['main']->directory);
 
         self::assertSame([], $configuration->getConnections());
+        self::assertSame([
+            ApplyScenario::class,
+            RefreshDatabase::class,
+        ], $configuration->getAttributes());
     }
 
     public function testSetCacheKeyDoesNotChangeGeneratedCacheKey(): void

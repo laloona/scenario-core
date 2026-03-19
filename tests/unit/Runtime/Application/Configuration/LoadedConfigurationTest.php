@@ -17,6 +17,8 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
@@ -24,9 +26,11 @@ use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 
 #[CoversClass(LoadedConfiguration::class)]
+#[UsesClass(ApplyScenario::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(ConnectionValue::class)]
 #[UsesClass(DefaultConfiguration::class)]
+#[UsesClass(RefreshDatabase::class)]
 #[UsesClass(SuiteValue::class)]
 #[Group('runtime')]
 #[Small]
@@ -56,9 +60,7 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testOverridesBootstrap(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
-
+        $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setBootstrap('bootstrap.php');
 
         self::assertSame('bootstrap.php', $config->getBootstrap());
@@ -74,9 +76,7 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testOverridesCacheDirectory(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
-
+        $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setCacheDirectory('/mycache');
 
         self::assertSame('/mycache', $config->getCacheDirectory());
@@ -84,8 +84,7 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testUsesDefaultCacheKeyWhenNotSet(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
+        $config = new LoadedConfiguration(new DefaultConfiguration());
 
         $cacheKey = $config->getCacheKey();
 
@@ -95,8 +94,7 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testOverridesCacheKey(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
+        $config = new LoadedConfiguration(new DefaultConfiguration());
 
         $config->setCacheKey('my-cache-key');
 
@@ -116,8 +114,7 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testOverridesSuites(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
+        $config = new LoadedConfiguration(new DefaultConfiguration());
 
         $suite = new SuiteValue('other', '/myscenario');
         $config->setSuites(['other' => $suite]);
@@ -135,12 +132,21 @@ final class LoadedConfigurationTest extends TestCase
 
     public function testOverridesConnections(): void
     {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
+        $config = new LoadedConfiguration(new DefaultConfiguration());
 
         $connection = new ConnectionValue('db', 'myconfig');
         $config->setConnections(['db' => $connection]);
 
         self::assertSame(['db' => $connection], $config->getConnections());
+    }
+
+    public function testUsesDefaultAttributes(): void
+    {
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+
+        self::assertSame([
+            ApplyScenario::class,
+            RefreshDatabase::class,
+        ], $config->getAttributes());
     }
 }

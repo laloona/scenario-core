@@ -101,4 +101,12 @@ final class LoadedConfiguration implements Configuration
     {
         $this->connections = $connections;
     }
+
+    /**
+     * @return list<class-string>
+     */
+    public function getAttributes(): array
+    {
+        return $this->defaultConfiguration->getAttributes();
+    }
 }

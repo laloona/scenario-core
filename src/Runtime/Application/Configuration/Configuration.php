@@ -33,4 +33,9 @@ interface Configuration
      * @return array<string, ConnectionValue>
      */
     public function getConnections(): array;
+
+    /**
+     * @return list<class-string>
+     */
+    public function getAttributes(): array;
 }

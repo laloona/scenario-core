@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Application\Configuration;
 
+use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
@@ -52,5 +54,16 @@ final class DefaultConfiguration implements Configuration
     public function getConnections(): array
     {
         return [];
+    }
+
+    /**
+     * @return list<class-string>
+     */
+    public function getAttributes(): array
+    {
+        return [
+            ApplyScenario::class,
+            RefreshDatabase::class,
+        ];
     }
 }

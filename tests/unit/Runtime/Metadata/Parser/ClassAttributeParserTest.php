@@ -16,28 +16,51 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\Runtime\Application;
+use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
-use Scenario\Core\Tests\Files\InvalidScenario;
+use Scenario\Core\Tests\Files\AnotherScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
+use Scenario\Core\Tests\Unit\ApplicationMock;
 
 #[CoversClass(ClassAttributeParser::class)]
-#[UsesClass(AsScenario::class)]
+#[UsesClass(Application::class)]
+#[UsesClass(DefaultConfiguration::class)]
+#[UsesClass(LoadedConfiguration::class)]
 #[Group('runtime')]
 #[Small]
 final class ClassAttributeParserTest extends TestCase
 {
-    public function testParseReturnsClassAttributes(): void
+    use ApplicationMock;
+
+    protected function setUp(): void
+    {
+        $this->setConfiguration(new LoadedConfiguration(new DefaultConfiguration()));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetApplication();
+    }
+
+    public function testParseReturnsOnlyConfiguredClassAttributes(): void
     {
         $attributes = new ClassAttributeParser()->parse(ValidScenario::class);
 
-        self::assertCount(1, $attributes);
-        self::assertSame(AsScenario::class, $attributes[0]->getName());
-        self::assertInstanceOf(AsScenario::class, $attributes[0]->newInstance());
+        self::assertCount(2, $attributes);
+        self::assertSame(ApplyScenario::class, $attributes[0]->getName());
+        self::assertInstanceOf(ApplyScenario::class, $attributes[0]->newInstance());
+        self::assertSame(RefreshDatabase::class, $attributes[1]->getName());
+        self::assertInstanceOf(RefreshDatabase::class, $attributes[1]->newInstance());
     }
 
-    public function testParseReturnsEmptyArrayWhenNoAttributes(): void
+    public function testParseReturnsEmptyArrayWhenNoConfiguredAttributeWasFound(): void
     {
-        self::assertSame([], new ClassAttributeParser()->parse(InvalidScenario::class));
+        $attributes = new ClassAttributeParser()->parse(AnotherScenario::class);
+
+        self::assertCount(0, $attributes);
     }
 }

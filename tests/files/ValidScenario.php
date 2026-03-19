@@ -13,10 +13,13 @@ namespace Scenario\Core\Tests\Files;
 
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\Runtime\ScenarioParameters;
 
 #[AsScenario]
+#[RefreshDatabase]
+#[ApplyScenario('my-new-scenario')]
 final class ValidScenario implements ScenarioInterface
 {
     public function configure(ScenarioParameters $parameters): void
