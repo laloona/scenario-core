@@ -22,7 +22,6 @@ use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\DebugCommand;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application;
@@ -35,7 +34,6 @@ use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioParameters;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Core\Tests\Files\ValidScenario;
 use Scenario\Core\Tests\Unit\ApplicationMock;
@@ -168,4 +166,3 @@ final class DebugCommandTest extends TestCase
         );
     }
 }
-
