@@ -54,4 +54,70 @@ final class ParameterTest extends TestCase
 
         self::assertFalse($parameter->validate('abc'));
     }
+
+    public function testCastsValidDefaultValueForRepeatable(): void
+    {
+        $parameter = new Parameter('name', ParameterType::Integer, repeatable: true, default: [ '10', '100']);
+
+        self::assertIsArray($parameter->default);
+        self::assertCount(2, $parameter->default);
+        self::assertSame(10, $parameter->default[0]);
+        self::assertSame(100, $parameter->default[1]);
+    }
+
+    public function testThrowsExceptionForAtLeastOneInvalidDefaultValueWhenRepeatable(): void
+    {
+        $this->expectException(ParameterValueErrorException::class);
+
+        new Parameter('myint', ParameterType::Integer, repeatable: true, default: [ 5, 'abc' ]);
+    }
+
+    public function testThrowsExceptionForWhenDefaultValueIsNoArrayWhenRepeatable(): void
+    {
+        $this->expectException(ParameterValueErrorException::class);
+
+        new Parameter('myint', ParameterType::Integer, repeatable: true, default: 5);
+    }
+
+    public function testValidateReturnsTrueForOptionalNullWHenRepeatable(): void
+    {
+        $parameter = new Parameter('name', ParameterType::String, repeatable: true);
+
+        self::assertTrue($parameter->validate(null));
+    }
+
+    public function testValidateReturnsFalseForRequiredNull(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, required: true);
+
+        self::assertFalse($parameter->validate(null));
+    }
+
+    public function testValidateReturnsTrueForCorrectType(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, required: true);
+
+        self::assertTrue($parameter->validate(5));
+    }
+
+    public function testValidateReturnsTrueForValidArrayWhenRepeatable(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, repeatable: true);
+
+        self::assertTrue($parameter->validate([ 5, 10 ]));
+    }
+
+    public function testValidateReturnsFalseForNonArrayWhenRepeatable(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, repeatable: true);
+
+        self::assertFalse($parameter->validate(5));
+    }
+
+    public function testValidateReturnsFalseForAtLeastOneInvalidValueWhenRepeatable(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, repeatable: true);
+
+        self::assertFalse($parameter->validate([ 5, 'abc' ]));
+    }
 }

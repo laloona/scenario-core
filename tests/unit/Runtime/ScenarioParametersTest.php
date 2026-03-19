@@ -53,7 +53,7 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, 100),
+                new Parameter('myint', ParameterType::Integer, null, false, false, 100),
             ],
             [],
         );
@@ -65,7 +65,7 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, 100),
+                new Parameter('myint', ParameterType::Integer, null, false, false, 100),
             ],
             [
                 'myint' => '',
@@ -79,9 +79,9 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, null),
-                new Parameter('mybool', ParameterType::Boolean, null, false, null),
-                new Parameter('myfloat', ParameterType::Float, null, false, null),
+                new Parameter('myint', ParameterType::Integer, null, false, false, null),
+                new Parameter('mybool', ParameterType::Boolean, null, false, false, null),
+                new Parameter('myfloat', ParameterType::Float, null, false, false, null),
             ],
             [
                 'myint' => '42',
@@ -128,7 +128,7 @@ final class ScenarioParametersTest extends TestCase
 
         new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, null),
+                new Parameter('myint', ParameterType::Integer, null, false, false, null),
             ],
             [
                 'myint' => 'abc',
@@ -140,8 +140,8 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, 1),
-                new Parameter('mybool', ParameterType::Boolean, null, false, null),
+                new Parameter('myint', ParameterType::Integer, null, false, false, 1),
+                new Parameter('mybool', ParameterType::Boolean, null, false, false, null),
             ],
             [
                 'myint' => '2',
@@ -206,8 +206,8 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('name', ParameterType::String, null, false, 'fallback'),
-                new Parameter('count', ParameterType::Integer, null, false, 5),
+                new Parameter('name', ParameterType::String, null, false, false, 'fallback'),
+                new Parameter('count', ParameterType::Integer, null, false, false, 5),
             ],
             [
                 'name' => 'configured',

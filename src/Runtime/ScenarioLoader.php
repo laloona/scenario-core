@@ -113,12 +113,14 @@ final class ScenarioLoader
                         $parameterType = $parameter['type'] ?? null;
                         $parameterDescription = $parameter['description'] ?? null;
                         $parameterRequired = $parameter['required'] ?? false;
+                        $parameterRepeatable = $parameter['repeatable'] ?? false;
                         $parameterDefault = $parameter['default'] ?? null;
 
                         if (is_string($parameterName) === false
                             || is_string($parameterType) === false
                             || !(is_string($parameterDescription) === true || $parameterDescription === null)
-                            || is_bool($parameterRequired) === false) {
+                            || is_bool($parameterRequired) === false
+                            || is_bool($parameterRepeatable) === false) {
                             continue;
                         }
 
@@ -127,7 +129,7 @@ final class ScenarioLoader
                             continue;
                         }
 
-                        $parameterInstances[] = new Parameter($parameterName, $parameterType, $parameterDescription, $parameterRequired, $parameterDefault);
+                        $parameterInstances[] = new Parameter($parameterName, $parameterType, $parameterDescription, $parameterRequired, $parameterRepeatable, $parameterDefault);
                     }
 
                     $this->registry->register(
