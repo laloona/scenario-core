@@ -28,9 +28,11 @@ use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
+use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Scenario\Core\Runtime\ScenarioDefinition;
@@ -45,15 +47,17 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[CoversClass(DebugCommand::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(ApplicationState::class)]
+#[UsesClass(AttributeContext::class)]
 #[UsesClass(AttributeProcessor::class)]
 #[UsesClass(AsScenario::class)]
 #[UsesClass(ClassAttributeParser::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
-#[UsesClass(AttributeContext::class)]
 #[UsesClass(DirectoryFinder::class)]
 #[UsesClass(ExecutionType::class)]
+#[UsesClass(HandlerRegistry::class)]
 #[UsesClass(MethodAttributeParser::class)]
+#[UsesClass(RegistryException::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioRegistry::class)]
 #[UsesClass(ScenarioTestFinder::class)]
