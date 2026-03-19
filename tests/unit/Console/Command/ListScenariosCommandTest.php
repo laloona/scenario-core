@@ -1,0 +1,178 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Scenario\Core package.
+ *
+ * (c) Christina Koenig <christina.koenig@looriva.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Scenario\Core\Tests\Unit\Console\Command;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\TestCase;
+use Scenario\Core\Attribute\AsScenario;
+use Scenario\Core\Console\Command\CliCommand;
+use Scenario\Core\Console\Command\Command;
+use Scenario\Core\Console\Command\ListScenariosCommand;
+use Scenario\Core\Contract\CliInput;
+use Scenario\Core\Contract\CliOutput;
+use Scenario\Core\Runtime\Application\ApplicationState;
+use Scenario\Core\Runtime\ScenarioDefinition;
+use Scenario\Core\Runtime\ScenarioRegistry;
+use Scenario\Core\Tests\Files\AnotherScenario;
+use Scenario\Core\Tests\Files\ValidScenario;
+use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+
+#[CoversClass(ListScenariosCommand::class)]
+#[UsesClass(ApplicationState::class)]
+#[UsesClass(AsScenario::class)]
+#[UsesClass(CliCommand::class)]
+#[UsesClass(Command::class)]
+#[UsesClass(ScenarioDefinition::class)]
+#[UsesClass(ScenarioRegistry::class)]
+#[Group('console')]
+#[Small]
+final class ListScenariosCommandTest extends TestCase
+{
+    use ScenarioRegistryMock;
+
+    protected function tearDown(): void
+    {
+        $this->resetScenarioRegistry();
+    }
+
+    public function testDescriptionReturnsExpectedText(): void
+    {
+        self::assertSame(
+            'List all available scenarios, use --suite="name of you suite" if you want to see just one suite.',
+            (new ListScenariosCommand())->description(),
+        );
+    }
+
+    public function testRunWarnsWhenNoScenariosAreRegistered(): void
+    {
+        $input = $this->createMock(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('warn')
+            ->with('No scenarios found. Please create one.');
+        $output->expects(self::never())->method('headline');
+        $output->expects(self::never())->method('table');
+
+        self::assertSame(Command::Success, (new ListScenariosCommand())->run($input, $output));
+    }
+
+    public function testRunOutputsGroupedScenarioTablesPerSuite(): void
+    {
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'main',
+                ValidScenario::class,
+                new AsScenario('first', 'my first scenario in main'),
+                [],
+            ),
+        );
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'other',
+                AnotherScenario::class,
+                new AsScenario('second', 'my second scenario in other'),
+                [],
+            ),
+        );
+
+        $input = $this->createMock(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+
+        $matcher = self::exactly(2);
+        $output->expects($matcher)
+            ->method('headline')
+            ->willReturnCallback(function (string $suite) use ($matcher): void {
+                match ($matcher->numberOfInvocations()) {
+                    1 => self::assertSame('main', $suite),
+                    2 => self::assertSame('other', $suite),
+                    default => null,
+                };
+            });
+
+        $matcher = self::exactly(2);
+        $output->expects($matcher)
+            ->method('table')
+            ->willReturnCallback(function (?array $headers, array $rows) use ($matcher): void {
+                self::assertSame(['class', 'name', 'description'], $headers);
+
+                match ($matcher->numberOfInvocations()) {
+                    1 => self::assertSame(
+                        [[ValidScenario::class, 'first', 'my first scenario in main']],
+                        $rows,
+                    ),
+                    2 => self::assertSame(
+                        [[AnotherScenario::class, 'second', 'my second scenario in other']],
+                        $rows,
+                    ),
+                    default => null,
+                };
+            });
+
+        $output->expects(self::never())->method('warn');
+
+        self::assertSame(Command::Success, (new ListScenariosCommand())->run($input, $output));
+    }
+
+    public function testRunFiltersScenariosBySuite(): void
+    {
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'main',
+                ValidScenario::class,
+                new AsScenario('first', 'my first scenario in main'),
+                [],
+            ),
+        );
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'other',
+                AnotherScenario::class,
+                new AsScenario('second', 'my second scenario in other'),
+                [],
+            ),
+        );
+
+        $input = $this->createMock(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+                ['suite', 'other'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('headline')
+            ->with('other');
+        $output->expects(self::once())
+            ->method('table')
+            ->with(
+                ['class', 'name', 'description'],
+                [[AnotherScenario::class, 'second', 'my second scenario in other']],
+            );
+        $output->expects(self::never())->method('warn');
+
+        self::assertSame(Command::Success, (new ListScenariosCommand())->run($input, $output));
+    }
+}
