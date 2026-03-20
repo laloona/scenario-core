@@ -120,4 +120,32 @@ final class ParameterTest extends TestCase
 
         self::assertFalse($parameter->validate([ 5, 'abc' ]));
     }
+
+    public function testCastReturnsCastedSingleValue(): void
+    {
+        $parameter = new Parameter('enabled', ParameterType::Boolean);
+
+        self::assertTrue($parameter->cast('yes'));
+    }
+
+    public function testCastReturnsCastedArrayWhenRepeatable(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, repeatable: true);
+
+        self::assertSame([ 5, 10 ], $parameter->cast([ '5', '10' ]));
+    }
+
+    public function testAsStringReturnsScalarStringRepresentation(): void
+    {
+        $parameter = new Parameter('enabled', ParameterType::Boolean);
+
+        self::assertSame('0', $parameter->asString(false));
+    }
+
+    public function testAsStringReturnsArrayStringRepresentationWhenRepeatable(): void
+    {
+        $parameter = new Parameter('myint', ParameterType::Integer, repeatable: true);
+
+        self::assertSame('[5,10]', $parameter->asString([ '5', 10 ]));
+    }
 }

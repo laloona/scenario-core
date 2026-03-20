@@ -87,7 +87,7 @@ final class ScenarioParameters
             $value = $this->parameters[$name];
         }
 
-        return $this->allowedParameters[$name]->type->cast($value);
+        return $this->allowedParameters[$name]->cast($value);
     }
 
     /**

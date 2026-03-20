@@ -83,6 +83,24 @@ final class Parameter
     }
 
     /**
+     * @return string|int|float|bool|null|list<string|int|float|bool|null>
+     */
+    public function cast(mixed $value): string|int|float|bool|null|array
+    {
+        if ($this->repeatable === true
+            && is_array($value) === true) {
+            $casted = [];
+            foreach ($value as $singleValue) {
+                $casted[] = $this->type->cast($singleValue);
+            }
+
+            return $casted;
+        }
+
+        return $this->type->cast($value);
+    }
+
+    /**
      * @param string|int|float|bool|null|list<string|int|float|bool|null> $value
      */
     public function asString(string|int|float|bool|null|array $value): string|null
