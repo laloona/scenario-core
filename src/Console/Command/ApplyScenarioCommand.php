@@ -84,7 +84,9 @@ final class ApplyScenarioCommand extends CliCommand
             if (count($definition->parameters) > 0) {
                 foreach ($definition->parameters as $parameter) {
                     if ($directExecution === true) {
-                        $parameters[$parameter->name] = $input->option($parameter->name);
+                        $parameters[$parameter->name] = $parameter->repeatable === true
+                            ? json_decode((string)$input->option($parameter->name), true)
+                            : $input->option($parameter->name);
                         continue;
                     }
 
@@ -96,8 +98,8 @@ final class ApplyScenarioCommand extends CliCommand
                         $parameter->required === true ? ' (required)' : '',
                     );
                     $validator = $parameter->required === true
-                        ? static fn ($input) => $input !== null
-                        : null;
+                        ? fn ($input) => $parameter->type->valid($input)
+                        : fn ($input) => $input === null || $parameter->type->valid($input);
                     $default = $parameter->asString($parameter->default);
                     $answer = $output->ask($ask, $default, $validator);
                     if ($parameter->repeatable === true) {

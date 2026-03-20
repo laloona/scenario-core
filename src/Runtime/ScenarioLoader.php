@@ -112,8 +112,8 @@ final class ScenarioLoader
                         $parameterName = $parameter['name'] ?? null;
                         $parameterType = $parameter['type'] ?? null;
                         $parameterDescription = $parameter['description'] ?? null;
-                        $parameterRequired = $parameter['required'] ?? false;
-                        $parameterRepeatable = $parameter['repeatable'] ?? false;
+                        $parameterRequired = $parameter['required'] ?? null;
+                        $parameterRepeatable = $parameter['repeatable'] ?? null;
                         $parameterDefault = $parameter['default'] ?? null;
 
                         if (is_string($parameterName) === false
@@ -207,6 +207,7 @@ final class ScenarioLoader
                             'type' => $parameterInstance->type->value,
                             'description' => $parameterInstance->description,
                             'required' => $parameterInstance->required,
+                            'repeatable' => $parameterInstance->repeatable,
                             'default' => $parameterInstance->default,
                         ];
                     }
