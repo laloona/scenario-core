@@ -4,7 +4,10 @@
 >
     <suites>
         <suite name="Main Scenario Suite">
-            <directory>tests/integration/scenario</directory>
+            <directory>tests/integration/scenario/main</directory>
+        </suite>
+        <suite name="Other Scenario Suite">
+            <directory>tests/integration/scenario/other</directory>
         </suite>
     </suites>
 </scenario>

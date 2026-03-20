@@ -13,3 +13,6 @@
 
 # PHPStan
 /var
+
+# Scanerio
+.scenario.cache

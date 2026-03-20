@@ -1,0 +1,19 @@
+--TEST--
+CLI make command with scenario will fail because blueprints are not found
+--FILE--
+<?php declare(strict_types=1);
+
+define('SCENARIO_CLI_DISABLED', false);
+$_SERVER['argv'] = [
+    'bin/scenario',
+    'make',
+    'scenario',
+    '--quiet'
+];
+
+require_once 'bootstrap.php';
+
+exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+?>
+--EXPECT--
+[ERROR] Scenario generation failed.
