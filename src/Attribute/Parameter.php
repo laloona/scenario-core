@@ -81,4 +81,21 @@ final class Parameter
             return $this->type->valid($value);
         }
     }
+
+    /**
+     * @param string|int|float|bool|null|list<string|int|float|bool|null> $value
+     */
+    public function asString(string|int|float|bool|null|array $value): string|null
+    {
+        if ($this->repeatable === true
+            && is_array($value) === true) {
+            foreach ($value as &$singleValue) {
+                $singleValue = $this->type->asString($singleValue);
+            }
+
+            return '[' . implode(',', $value) . ']';
+        }
+
+        return $this->type->asString($value);
+    }
 }

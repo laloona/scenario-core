@@ -198,12 +198,13 @@ final class DebugCommand extends CliCommand
                     $parameter->type->value,
                     $parameter->description,
                     $parameter->required === true ? 'true' : 'false',
+                    $parameter->repeatable === true ? 'true' : 'false',
                     $parameter->type->asString($parameter->default),
                 ];
             }
 
             $output->table(
-                [ 'name', 'type', 'description', 'required', 'default' ],
+                [ 'name', 'type', 'description', 'required', 'repeatable', 'default' ],
                 $parameters,
             );
         }

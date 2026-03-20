@@ -88,16 +88,37 @@ final class ApplyScenarioCommand extends CliCommand
                         continue;
                     }
 
-                    $parameters[$parameter->name] = $output->ask(
-                        sprintf(
-                            'Please insert value for %s parameter "%s"%s%s',
-                            $parameter->type->value,
-                            $parameter->name,
-                            $parameter->description === null ? '' : ' (' . $parameter->description . ')',
-                            $parameter->required === true ? ' (required)' : '',
-                        ),
-                        $parameter->type->asString($parameter->default),
+                    $ask = sprintf(
+                        'Please insert value for %s parameter "%s"%s%s',
+                        $parameter->type->value,
+                        $parameter->name,
+                        $parameter->description === null ? '' : ' (' . $parameter->description . ')',
+                        $parameter->required === true ? ' (required)' : '',
                     );
+                    $validator = $parameter->required === true
+                        ? static fn ($input) => $input !== null
+                        : null;
+                    $default = $parameter->asString($parameter->default);
+                    $answer = $output->ask($ask, $default, $validator);
+                    if ($parameter->repeatable === true) {
+                        $value = [];
+                        if ($answer !== null) {
+                            $value[] = $answer;
+
+                            while ($output->confirm('Do you want to continue?', false) === true) {
+                                $answer = $output->ask($ask, $default, $validator);
+                                if ($answer !== null) {
+                                    $value[] = $answer;
+                                    continue;
+                                }
+                                break;
+                            }
+                        }
+
+                        $answer = $value;
+                    }
+
+                    $parameters[$parameter->name] = $answer;
                 }
             }
         }
