@@ -44,8 +44,6 @@
             <file>src/Runtime/Registry.php</file>
             <file>src/Runtime/Application/Configuration/Value/ConnectionValue.php</file>
             <file>src/Runtime/Application/Configuration/Value/SuiteValue.php</file>
-            <file>src/Runtime/Exception/DefinitionException.php</file>
-            <file>src/Runtime/Exception/Exception.php</file>
             <file>src/Runtime/Exception/FailureException.php</file>
             <file>src/Runtime/Exception/HandlerRegistryException.php</file>
             <file>src/Runtime/Exception/XMLParserException.php</file>
