@@ -91,13 +91,15 @@ final class ScenarioLoaderTest extends TestCase
         $config = $this->getConfiguration();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        $definitionFromClass = ScenarioRegistry::getInstance()->resolve($scenario);
+
         $this->resetScenarioRegistry();
 
         (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        $definitionFromCache = ScenarioRegistry::getInstance()->resolve($scenario);
 
-        $definition = ScenarioRegistry::getInstance()->resolve($scenario);
-        self::assertSame('my-scenario', $definition->name);
-        self::assertSame($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
+        self::assertSame('my-scenario', $definitionFromCache->name);
+        self::assertSameDefinition($definitionFromClass, $definitionFromCache);
     }
 
     public function testLoadScenariosRebuildsWhenCacheIsCorrupted(): void
@@ -116,7 +118,7 @@ final class ScenarioLoaderTest extends TestCase
 
         $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
-        self::assertSame($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
+        self::assertSameDefinition($definition, ScenarioRegistry::getInstance()->resolve('my-scenario'));
         self::assertNotSame('not-json', file_get_contents($cacheFile));
     }
 
@@ -134,18 +136,24 @@ final class ScenarioLoaderTest extends TestCase
                     'class' => $scenario,
                     'name' => 'from-cache',
                     'description' => null,
+                    'required' => false,
+                    'repeatable' => true,
                     'parameters' => [],
                 ],
                 [
                     'class' => '',
                     'name' => 'invalid',
                     'description' => null,
+                    'required' => true,
+                    'repeatable' => false,
                     'parameters' => [],
                 ],
                 [
                     'class' => 'Unknown\\ClassName',
                     'name' => 'invalid2',
                     'description' => null,
+                    'required' => false,
+                    'repeatable' => false,
                     'parameters' => [],
                 ],
             ],
@@ -242,7 +250,7 @@ use Scenario\\Core\\Runtime\\Metadata\\ParameterType;
 use Scenario\\Core\\Runtime\\ScenarioParameters;
 
 #[AsScenario('my-scenario')]
-#[Parameter('id', ParameterType::Integer, required: true)]
+#[Parameter('id', ParameterType::Integer, required: true, repeatable: true, default: null)]
 final class {$className} implements ScenarioInterface
 {
     public function configure(ScenarioParameters \$parameters): void {}
@@ -264,5 +272,22 @@ PHP;
         ]);
 
         return $config;
+    }
+
+    private static function assertSameDefinition(ScenarioDefinition $expected, ScenarioDefinition $actual): void
+    {
+        self::assertSame($expected->name, $actual->name);
+        self::assertSame($expected->class, $actual->class);
+        self::assertSame($expected->suite, $actual->suite);
+        foreach ($expected->parameters as $key => $parameter) {
+            self::assertInstanceOf(Parameter::class, $parameter);
+            self::assertInstanceOf(Parameter::class, $actual->parameters[$key]);
+            self::assertSame($parameter->name, $actual->parameters[$key]->name);
+            self::assertSame($parameter->type, $actual->parameters[$key]->type);
+            self::assertSame($parameter->description, $actual->parameters[$key]->description);
+            self::assertSame($parameter->required, $actual->parameters[$key]->required);
+            self::assertSame($parameter->repeatable, $actual->parameters[$key]->repeatable);
+            self::assertSame($parameter->default, $actual->parameters[$key]->default);
+        }
     }
 }
