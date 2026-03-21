@@ -1,0 +1,30 @@
+--TEST--
+PHPUnit will apply an scenario with attributes and configured extension
+--FILE--
+<?php declare(strict_types=1);
+
+define('SCENARIO_CLI_DISABLED', false);
+$_SERVER['argv'] = [
+    '--configuration=' . __DIR__ . DIRECTORY_SEPARATOR . 'phpunit.xml',
+    '--no-progress',
+    '--do-not-cache-result',
+    __DIR__ . '/tests/ScenarioTest.php'
+];
+
+require_once 'bootstrap.php';
+
+(new PHPUnit\TextUI\Application)->run($_SERVER['argv']);
+?>
+--EXPECTF--
+PHPUnit %s by Sebastian Bergmann and contributors.
+
+Runtime:       PHP %s
+Configuration: /app/tests/integration/phpunit.xml
+
+first scenario was applied with up
+other scenario was applied with up
+first scenario was applied with down
+other scenario was applied with down
+Time: %s, Memory: %s MB
+
+OK (1 test, 0 assertions)

@@ -32,11 +32,19 @@ final class SecondScenario extends Scenario
 {
     public function up(): void
     {
-        echo 'second scenario was applied with up and parameter ' . $this->parameter('param-1') . PHP_EOL;
+        $param = '';
+        if (is_int($this->parameter('param-1'))) {
+            $param = $this->parameter('param-1');
+        }
+        echo 'second scenario was applied with up and parameter ' . $param . PHP_EOL;
     }
 
     public function down(): void
     {
-        echo 'second scenario was applied with down and parameter ' . $this->parameter('param-1') . PHP_EOL;
+        $param = '';
+        if (is_int($this->parameter('param-1'))) {
+            $param = $this->parameter('param-1');
+        }
+        echo 'second scenario was applied with down and parameter ' . $param . PHP_EOL;
     }
 }

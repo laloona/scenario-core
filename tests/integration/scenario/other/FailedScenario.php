@@ -11,19 +11,20 @@
 
 namespace Scenario\Other;
 
+use Exception;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Scenario;
 
-#[AsScenario('other-scenario')]
-final class OtherScenario extends Scenario
+#[AsScenario('failed-scenario')]
+final class FailedScenario extends Scenario
 {
     public function up(): void
     {
-        echo 'other scenario was applied with up' . PHP_EOL;
+        throw new Exception('some error happend in up.');
     }
 
     public function down(): void
     {
-        echo 'other scenario was applied with down' . PHP_EOL;
+        throw new Exception('some error happend in down.');
     }
 }
