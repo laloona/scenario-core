@@ -57,7 +57,7 @@ final class ListScenariosCommandTest extends TestCase
 
     public function testRunWarnsWhenNoScenariosAreRegistered(): void
     {
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
@@ -92,14 +92,13 @@ final class ListScenariosCommandTest extends TestCase
             ),
         );
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
             ]);
 
         $output = $this->createMock(CliOutput::class);
-
         $matcher = self::exactly(2);
         $output->expects($matcher)
             ->method('headline')
@@ -154,7 +153,7 @@ final class ListScenariosCommandTest extends TestCase
             ),
         );
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],

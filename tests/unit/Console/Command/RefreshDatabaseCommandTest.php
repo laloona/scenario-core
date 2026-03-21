@@ -93,7 +93,7 @@ final class RefreshDatabaseCommandTest extends TestCase
 
         HandlerRegistry::getInstance()->registerHandler($handler);
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
@@ -129,7 +129,7 @@ final class RefreshDatabaseCommandTest extends TestCase
 
         HandlerRegistry::getInstance()->registerHandler($handler);
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],

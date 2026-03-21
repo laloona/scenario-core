@@ -90,7 +90,7 @@ PHP,
         ]);
         $this->setConfiguration($config);
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
@@ -128,7 +128,7 @@ PHP,
             "<scenario></scenario>\n",
         );
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],

@@ -69,7 +69,7 @@ final class CliCommandTest extends TestCase
 
     public function testRunReturnsErrorWhenUserDoesNotConfirm(): void
     {
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', false],
@@ -95,7 +95,7 @@ final class CliCommandTest extends TestCase
 
     public function testRunExecutesAfterConfirmation(): void
     {
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', false],
@@ -122,7 +122,7 @@ final class CliCommandTest extends TestCase
     {
         (new ApplicationState())->fail(new RuntimeException('boot failed'));
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $output = $this->createMock(CliOutput::class);
         $output->expects(self::once())
             ->method('error')
@@ -139,7 +139,7 @@ final class CliCommandTest extends TestCase
 
     public function testRunReturnsErrorWhenExecuteThrows(): void
     {
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],

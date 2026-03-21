@@ -103,7 +103,7 @@ final class DebugCommandTest extends TestCase
 
     public function testRunReturnsErrorWhenNoScenariosOrTestsWereFound(): void
     {
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
@@ -136,7 +136,7 @@ final class DebugCommandTest extends TestCase
             ),
         );
 
-        $input = $this->createMock(CliInput::class);
+        $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],

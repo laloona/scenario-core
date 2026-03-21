@@ -33,7 +33,9 @@ final class ApplyScenarioCommand extends CliCommand
     {
         if ($input->option('up') !== null
             && $input->option('down') !== null) {
-            $output->error('You can just use either up or down scenarios.');
+            if ($input->option('quiet') !== true) {
+                $output->error('You can just use either up or down scenarios.');
+            }
             return Command::Error;
         }
 
