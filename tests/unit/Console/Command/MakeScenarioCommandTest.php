@@ -13,7 +13,7 @@ namespace Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
@@ -41,7 +41,7 @@ use function mkdir;
 #[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(SuiteValue::class)]
 #[Group('console')]
-#[Small]
+#[Medium]
 final class MakeScenarioCommandTest extends TestCase
 {
     use ApplicationMock;

@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Scenario\Core\PHPUnit\Configuration\ConfigurationCheck;
 use Scenario\Core\PHPUnit\Configuration\Configurator;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Core\Runtime\Application;
@@ -26,6 +27,7 @@ use function file_put_contents;
 use function is_file;
 
 #[CoversClass(Configurator::class)]
+#[UsesClass(ConfigurationCheck::class)]
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(Extension::class)]
@@ -49,7 +51,9 @@ final class ConfiguratorTest extends TestCase
 
     public function testConfigureDoesNothingWhenNoConfigExists(): void
     {
-        (new Configurator(new ConfigFinder()))->configure();
+        $finder = new ConfigFinder();
+
+        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
 
         self::assertFalse(is_file(Application::getRootDir() . '/phpunit.xml'));
         self::assertFalse(is_file(Application::getRootDir() . '/phpunit.dist.xml'));
@@ -59,7 +63,9 @@ final class ConfiguratorTest extends TestCase
     {
         file_put_contents(Application::getRootDir() . '/phpunit.xml', '<?xml version="1.0"?><phpunit></phpunit>');
 
-        (new Configurator(new ConfigFinder()))->configure();
+        $finder = new ConfigFinder();
+
+        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
 
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
         self::assertIsString($content);
@@ -73,7 +79,9 @@ final class ConfiguratorTest extends TestCase
     {
         file_put_contents(Application::getRootDir() . '/phpunit.xml', '<?xml version="1.0"?><phpunit><extensions/></phpunit>');
 
-        (new Configurator(new ConfigFinder()))->configure();
+        $finder = new ConfigFinder();
+
+        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
 
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
         self::assertIsString($content);
@@ -88,10 +96,24 @@ final class ConfiguratorTest extends TestCase
             '<?xml version="1.0"?><phpunit><extensions><bootstrap class="' . Extension::class . '"/></extensions></phpunit>',
         );
 
-        (new Configurator(new ConfigFinder()))->configure();
+        $finder = new ConfigFinder();
+
+        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
 
         self::assertIsString($content);
         self::assertSame(1, substr_count($content, Extension::class));
+    }
+
+    public function testConfigureDoesNothingWhenPhpUnitNodeIsMissing(): void
+    {
+        file_put_contents(Application::getRootDir() . '/phpunit.xml', '<?xml version="1.0"?><configuration></configuration>');
+
+        $finder = new ConfigFinder();
+
+        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+
+        $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
+        self::assertSame('<?xml version="1.0"?><configuration></configuration>', $content);
     }
 }

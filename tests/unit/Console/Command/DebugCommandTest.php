@@ -13,9 +13,10 @@ namespace Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
@@ -29,6 +30,7 @@ use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
+use Scenario\Core\Runtime\ClassFinder;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\AttributeProcessor;
@@ -44,10 +46,15 @@ use Scenario\Core\Tests\Unit\AttributeContextMock;
 use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use Scenario\Core\Tests\Unit\TestClassStateMock;
 use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use function file_put_contents;
+use function is_dir;
+use function mkdir;
+use function uniqid;
 
 #[CoversClass(DebugCommand::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(ApplicationState::class)]
+#[UsesClass(ApplyScenario::class)]
 #[UsesClass(AttributeContext::class)]
 #[UsesClass(AttributeProcessor::class)]
 #[UsesClass(AsScenario::class)]
@@ -55,6 +62,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
 #[UsesClass(ConfigFinder::class)]
+#[UsesClass(ClassFinder::class)]
 #[UsesClass(DirectoryFinder::class)]
 #[UsesClass(ExecutionType::class)]
 #[UsesClass(HandlerRegistry::class)]
@@ -66,7 +74,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[UsesClass(TestClassState::class)]
 #[UsesClass(TestMethodState::class)]
 #[Group('console')]
-#[Small]
+#[Medium]
 final class DebugCommandTest extends TestCase
 {
     use ApplicationMock;
@@ -170,5 +178,139 @@ final class DebugCommandTest extends TestCase
             Command::Success,
             (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
         );
+    }
+
+    public function testRunDebugsDirectUnitTestFromInput(): void
+    {
+        $className = $this->createPhpUnitTestFixtureWithMethod(
+            'DirectDebugTest',
+            "#[\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]\n    public function testDebuggable(): void\n    {\n    }\n",
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['0', $className],
+                ['1', 'testDebuggable'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::exactly(4))
+            ->method('headline');
+        $output->expects(self::exactly(4))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Error,
+            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    public function testRunSelectsUnitTestWhenNoScenariosExist(): void
+    {
+        $this->createPhpUnitTestFixtureWithClassAttribute(
+            'SelectableDebugTest',
+            "#[\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['0', null],
+                ['1', null],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::exactly(2))
+            ->method('headline');
+        $output->expects(self::exactly(2))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Success,
+            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    /**
+     * @param non-empty-string $classSuffix
+     * @param non-empty-string $body
+     * @return class-string
+     */
+    private function createPhpUnitTestFixtureWithMethod(string $classSuffix, string $body): string
+    {
+        $directory = Application::getRootDir() . '/tests/Debug';
+        if (is_dir(Application::getRootDir() . '/tests') === false) {
+            mkdir(Application::getRootDir() . '/tests');
+        }
+        if (is_dir($directory) === false) {
+            mkdir($directory);
+        }
+
+        $className = 'Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
+        $parts = explode('\\', $className);
+        $shortName = array_pop($parts);
+        $namespace = implode('\\', $parts);
+
+        file_put_contents(
+            $directory . '/' . $shortName . '.php',
+            "<?php declare(strict_types=1);\n\nnamespace {$namespace};\n\nfinal class {$shortName} extends \\PHPUnit\\Framework\\TestCase\n{\n    {$body}}\n",
+        );
+
+        file_put_contents(
+            Application::getRootDir() . '/phpunit.xml',
+            "<?xml version=\"1.0\"?><phpunit><testsuites><testsuite name=\"unit\"><directory>{$directory}</directory></testsuite></testsuites></phpunit>",
+        );
+
+        /** @var class-string $className */
+        return $className;
+    }
+
+    /**
+     * @param non-empty-string $classSuffix
+     * @param non-empty-string $attribute
+     * @return class-string
+     */
+    private function createPhpUnitTestFixtureWithClassAttribute(string $classSuffix, string $attribute): string
+    {
+        $directory = Application::getRootDir() . '/tests/Debug';
+        if (is_dir(Application::getRootDir() . '/tests') === false) {
+            mkdir(Application::getRootDir() . '/tests');
+        }
+        if (is_dir($directory) === false) {
+            mkdir($directory);
+        }
+
+        $className = 'Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
+        $parts = explode('\\', $className);
+        $shortName = array_pop($parts);
+        $namespace = implode('\\', $parts);
+
+        file_put_contents(
+            $directory . '/' . $shortName . '.php',
+            "<?php declare(strict_types=1);\n\nnamespace {$namespace};\n\n{$attribute}\nfinal class {$shortName} extends \\PHPUnit\\Framework\\TestCase\n{\n}\n",
+        );
+
+        file_put_contents(
+            Application::getRootDir() . '/phpunit.xml',
+            "<?xml version=\"1.0\"?><phpunit><testsuites><testsuite name=\"unit\"><directory>{$directory}</directory></testsuite></testsuites></phpunit>",
+        );
+
+        /** @var class-string $className */
+        return $className;
     }
 }

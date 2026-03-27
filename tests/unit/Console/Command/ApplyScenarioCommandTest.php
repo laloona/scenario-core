@@ -13,7 +13,7 @@ namespace Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\ApplyScenario;
@@ -58,7 +58,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[UsesClass(TestClassState::class)]
 #[UsesClass(TestMethodState::class)]
 #[Group('console')]
-#[Small]
+#[Medium]
 final class ApplyScenarioCommandTest extends TestCase
 {
     use AttributeContextMock;

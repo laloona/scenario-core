@@ -18,12 +18,18 @@ use Scenario\Core\PHPUnit\Extension;
 
 final class Configurator
 {
-    public function __construct(private ConfigFinder $finder)
-    {
+    public function __construct(
+        private ConfigFinder $finder,
+        private ConfigurationCheck $check,
+    ) {
     }
 
     public function configure(): void
     {
+        if ($this->check->isConfigured() === true) {
+            return;
+        }
+
         $configFile = $this->finder->find();
 
         if ($configFile === null) {
@@ -37,12 +43,6 @@ final class Configurator
 
         $xpath = new DOMXPath($dom);
         $extensionClass = Extension::class;
-
-        $existing = $xpath->query("//extensions/bootstrap[@class='{$extensionClass}']");
-        if ($existing === false
-            || $existing->length > 0) {
-            return;
-        }
 
         $phpunitNode = $dom->getElementsByTagName('phpunit')->item(0);
         if ($phpunitNode === null) {

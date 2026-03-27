@@ -14,6 +14,7 @@ namespace Scenario\Core\Console;
 use Scenario\Core\Console\Command\ApplyScenarioCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\DebugCommand;
+use Scenario\Core\Console\Command\InstallScenarioCommand;
 use Scenario\Core\Console\Command\ListCommands;
 use Scenario\Core\Console\Command\ListScenariosCommand;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
@@ -51,8 +52,9 @@ final class CliApplication
         }
 
         $commands = [
-            'debug' => new DebugCommand(new ScenarioTestFinder()),
             'apply' => new ApplyScenarioCommand(),
+            'debug' => new DebugCommand(new ScenarioTestFinder()),
+            'install' => new InstallScenarioCommand(),
             'list' => new ListScenariosCommand(),
             'make' => new MakeScenarioCommand(),
             'refresh' => new RefreshDatabaseCommand(),
