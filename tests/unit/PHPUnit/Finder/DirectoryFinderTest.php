@@ -16,12 +16,14 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
 
 #[CoversClass(DirectoryFinder::class)]
+#[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
 #[Group('phpunit')]
 #[Small]
@@ -43,7 +45,7 @@ final class DirectoryFinderTest extends TestCase
 
     public function testReturnEmptyArrayWhenPhpunitXmlDoesNotExist(): void
     {
-        self::assertSame([], (new DirectoryFinder())->all());
+        self::assertSame([], (new DirectoryFinder(new ConfigFinder()))->all());
     }
 
     public function testReadsDirectoriesFromPhpunitXml(): void
@@ -60,14 +62,14 @@ final class DirectoryFinderTest extends TestCase
 </phpunit>
 XML);
 
-        self::assertSame(['tests/unit', 'tests/integration'], (new DirectoryFinder())->all());
+        self::assertSame(['tests/unit', 'tests/integration'], (new DirectoryFinder(new ConfigFinder()))->all());
     }
 
     public function testReturnEmptyArrayFromPhpunitXmlWhenIsInvalid(): void
     {
         file_put_contents(Application::getRootDir() . '/phpunit.xml', '');
 
-        self::assertSame([], (new DirectoryFinder())->all());
+        self::assertSame([], (new DirectoryFinder(new ConfigFinder()))->all());
     }
 
     public function testReturnEmptyArrayFromPhpunitXmlWhenDirectoriesAreMissing(): void
@@ -82,6 +84,6 @@ XML);
 </phpunit>
 XML);
 
-        self::assertSame([], (new DirectoryFinder())->all());
+        self::assertSame([], (new DirectoryFinder(new ConfigFinder()))->all());
     }
 }

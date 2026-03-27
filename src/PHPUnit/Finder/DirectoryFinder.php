@@ -14,25 +14,28 @@ namespace Scenario\Core\PHPUnit\Finder;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Scenario\Core\Runtime\Application;
+use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
 
 final class DirectoryFinder
 {
+    public function __construct(private ConfigFinder $finder)
+    {
+    }
+
     /**
      * @return list<string>
      */
     public function all(): array
     {
-        $files = [ 'phpunit.dist.xml', 'phpunit.xml' ];
-        foreach ($files as $file) {
-            if (is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $file)) {
-                return $this->getDirectories(Application::getRootDir() . DIRECTORY_SEPARATOR . $file);
-            }
+        $configFile = $this->finder->find();
+
+        if ($configFile === null) {
+            return [];
         }
 
-        return [];
+        return $this->getDirectories($configFile);
     }
 
     /**

@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application;
@@ -32,6 +33,7 @@ use function uniqid;
 #[UsesClass(Application::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(ClassFinder::class)]
+#[UsesClass(ConfigFinder::class)]
 #[UsesClass(DirectoryFinder::class)]
 #[UsesClass(RefreshDatabase::class)]
 #[Group('phpunit')]

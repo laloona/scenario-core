@@ -22,6 +22,7 @@ use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\DebugCommand;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
+use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application;
@@ -53,6 +54,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[UsesClass(ClassAttributeParser::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
+#[UsesClass(ConfigFinder::class)]
 #[UsesClass(DirectoryFinder::class)]
 #[UsesClass(ExecutionType::class)]
 #[UsesClass(HandlerRegistry::class)]
