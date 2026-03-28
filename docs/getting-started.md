@@ -65,7 +65,7 @@ Use PHPUnit when:
 
 ## Next Steps
 
-- [Getting Started](docs/getting-started.md)
+- [Scenarios](scenario.md)
 - [CLI Usage](docs/cli.md)
 - [Testing with PHPUnit](docs/testing-with-phpunit.md)
 - [Recipes](docs/recipes.md)
