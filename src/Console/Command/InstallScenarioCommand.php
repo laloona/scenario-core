@@ -14,8 +14,8 @@ namespace Scenario\Core\Console\Command;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Configuration\ConfigurationCheck;
 use Scenario\Core\PHPUnit\Configuration\Configurator;
+use Scenario\Core\PHPUnit\Configuration\Configured;
 
 final class InstallScenarioCommand extends CliCommand
 {
@@ -27,7 +27,7 @@ final class InstallScenarioCommand extends CliCommand
     protected function execute(CliInput $input, CliOutput $output): Command
     {
         $finder = new ConfigFinder();
-        $check = new ConfigurationCheck($finder);
+        $check = new Configured($finder);
         if ($check->isConfigured() === true) {
             if ($input->option('quiet') !== true) {
                 $output->error('The PHPUnit extension is already configured.');

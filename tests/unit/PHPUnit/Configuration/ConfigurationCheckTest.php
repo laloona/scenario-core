@@ -17,13 +17,13 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Configuration\ConfigurationCheck;
+use Scenario\Core\PHPUnit\Configuration\Configured;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
 
-#[CoversClass(ConfigurationCheck::class)]
+#[CoversClass(Configured::class)]
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(Extension::class)]
@@ -47,14 +47,14 @@ final class ConfigurationCheckTest extends TestCase
 
     public function testIsConfiguredReturnsFalseWhenNoConfigExists(): void
     {
-        self::assertFalse((new ConfigurationCheck(new ConfigFinder()))->isConfigured());
+        self::assertFalse((new Configured(new ConfigFinder()))->isConfigured());
     }
 
     public function testIsConfiguredReturnsFalseWhenExtensionIsMissing(): void
     {
         file_put_contents(Application::getRootDir() . '/phpunit.xml', '<?xml version="1.0"?><phpunit><extensions/></phpunit>');
 
-        self::assertFalse((new ConfigurationCheck(new ConfigFinder()))->isConfigured());
+        self::assertFalse((new Configured(new ConfigFinder()))->isConfigured());
     }
 
     public function testIsConfiguredReturnsTrueWhenExtensionExists(): void
@@ -64,7 +64,7 @@ final class ConfigurationCheckTest extends TestCase
             '<?xml version="1.0"?><phpunit><extensions><bootstrap class="' . Extension::class . '"/></extensions></phpunit>',
         );
 
-        self::assertTrue((new ConfigurationCheck(new ConfigFinder()))->isConfigured());
+        self::assertTrue((new Configured(new ConfigFinder()))->isConfigured());
     }
 
     public function testIsConfiguredUsesPhpUnitDistXmlWhenPresent(): void
@@ -74,6 +74,6 @@ final class ConfigurationCheckTest extends TestCase
             '<?xml version="1.0"?><phpunit><extensions><bootstrap class="' . Extension::class . '"/></extensions></phpunit>',
         );
 
-        self::assertTrue((new ConfigurationCheck(new ConfigFinder()))->isConfigured());
+        self::assertTrue((new Configured(new ConfigFinder()))->isConfigured());
     }
 }

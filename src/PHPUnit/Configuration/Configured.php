@@ -15,7 +15,7 @@ use DOMDocument;
 use DOMXPath;
 use Scenario\Core\PHPUnit\Extension;
 
-final class ConfigurationCheck
+final class Configured implements ConfiguredInterface
 {
     public function __construct(private ConfigFinder $finder)
     {

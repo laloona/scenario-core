@@ -20,7 +20,7 @@ final class Configurator
 {
     public function __construct(
         private ConfigFinder $finder,
-        private ConfigurationCheck $check,
+        private Configured   $check,
     ) {
     }
 

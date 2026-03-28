@@ -22,8 +22,8 @@ use Scenario\Core\Console\Command\InstallScenarioCommand;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Configuration\ConfigurationCheck;
 use Scenario\Core\PHPUnit\Configuration\Configurator;
+use Scenario\Core\PHPUnit\Configuration\Configured;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -37,7 +37,7 @@ use function file_put_contents;
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
 #[UsesClass(ConfigFinder::class)]
-#[UsesClass(ConfigurationCheck::class)]
+#[UsesClass(Configured::class)]
 #[UsesClass(Configurator::class)]
 #[UsesClass(Extension::class)]
 #[Group('console')]
@@ -111,7 +111,7 @@ final class InstallScenarioCommandTest extends TestCase
             ->with('The PHPUnit extension is already configured.');
         $output->expects(self::once())
             ->method('confirm')
-            ->with('Do you want to continue?')
+            ->with('Do you want to continue?', false)
             ->willReturn(true);
         $output->expects(self::never())
             ->method('success');
@@ -169,7 +169,8 @@ final class InstallScenarioCommandTest extends TestCase
         $matcher = self::exactly(2);
         $output->expects($matcher)
             ->method('confirm')
-            ->willReturnCallback(function (string $question) use ($matcher) {
+            ->willReturnCallback(function (string $question, bool $default) use ($matcher) {
+                self::assertFalse($default);
                 switch ($matcher->numberOfInvocations()) {
                     case 1:
                         self::assertSame('Do you want to continue?', $question);
@@ -213,7 +214,8 @@ final class InstallScenarioCommandTest extends TestCase
         $matcher = self::exactly(2);
         $output->expects($matcher)
             ->method('confirm')
-            ->willReturnCallback(function (string $question) use ($matcher) {
+            ->willReturnCallback(function (string $question, bool $default) use ($matcher) {
+                self::assertFalse($default);
                 switch ($matcher->numberOfInvocations()) {
                     case 1:
                         self::assertSame('Do you want to continue?', $question);

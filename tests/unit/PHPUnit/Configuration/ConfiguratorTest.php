@@ -17,8 +17,8 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Configuration\ConfigurationCheck;
 use Scenario\Core\PHPUnit\Configuration\Configurator;
+use Scenario\Core\PHPUnit\Configuration\Configured;
 use Scenario\Core\PHPUnit\Extension;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Tests\Unit\ApplicationMock;
@@ -27,7 +27,7 @@ use function file_put_contents;
 use function is_file;
 
 #[CoversClass(Configurator::class)]
-#[UsesClass(ConfigurationCheck::class)]
+#[UsesClass(Configured::class)]
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(Extension::class)]
@@ -53,7 +53,7 @@ final class ConfiguratorTest extends TestCase
     {
         $finder = new ConfigFinder();
 
-        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+        (new Configurator($finder, new Configured($finder)))->configure();
 
         self::assertFalse(is_file(Application::getRootDir() . '/phpunit.xml'));
         self::assertFalse(is_file(Application::getRootDir() . '/phpunit.dist.xml'));
@@ -65,7 +65,7 @@ final class ConfiguratorTest extends TestCase
 
         $finder = new ConfigFinder();
 
-        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+        (new Configurator($finder, new Configured($finder)))->configure();
 
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
         self::assertIsString($content);
@@ -81,7 +81,7 @@ final class ConfiguratorTest extends TestCase
 
         $finder = new ConfigFinder();
 
-        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+        (new Configurator($finder, new Configured($finder)))->configure();
 
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
         self::assertIsString($content);
@@ -98,7 +98,7 @@ final class ConfiguratorTest extends TestCase
 
         $finder = new ConfigFinder();
 
-        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+        (new Configurator($finder, new Configured($finder)))->configure();
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
 
         self::assertIsString($content);
@@ -111,7 +111,7 @@ final class ConfiguratorTest extends TestCase
 
         $finder = new ConfigFinder();
 
-        (new Configurator($finder, new ConfigurationCheck($finder)))->configure();
+        (new Configurator($finder, new Configured($finder)))->configure();
 
         $content = file_get_contents(Application::getRootDir() . '/phpunit.xml');
         self::assertSame('<?xml version="1.0"?><configuration></configuration>', $content);
