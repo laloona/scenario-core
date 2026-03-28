@@ -60,16 +60,16 @@ final class ScenarioTestFinderTest extends TestCase
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            sprintf(<<<XML
+            <<<XML
 <?xml version="1.0"?>
 <phpunit>
   <testsuites>
     <testsuite name="unit">
-      <directory>%s/tests/unit</directory>
+      <directory>tests/unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
-XML, Application::getRootDir()),
+XML
         );
 
         $suffix = 'Fixture' . uniqid();
@@ -159,16 +159,16 @@ PHP);
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            sprintf(<<<XML
+            <<<XML
 <?xml version="1.0"?>
 <phpunit>
   <testsuites>
     <testsuite name="unit">
-      <directory>%s/tests/unit</directory>
+      <directory>tests/unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
-XML, Application::getRootDir()),
+XML
         );
 
         $suffix = 'Fixture' . uniqid();

@@ -18,6 +18,7 @@ use ReflectionMethod;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ClassFinder;
 
 final class ScenarioTestFinder
@@ -31,7 +32,7 @@ final class ScenarioTestFinder
         $classes = [];
         $directories = (new DirectoryFinder(new ConfigFinder()))->all();
         foreach ($directories as $directory) {
-            $classes = array_merge($classes, $this->findTestCLassesUsingScenario($directory));
+            $classes = array_merge($classes, $this->findTestCLassesUsingScenario(Application::getRootDir() . DIRECTORY_SEPARATOR . $directory));
         }
 
         return $classes;

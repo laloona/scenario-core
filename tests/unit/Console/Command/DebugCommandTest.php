@@ -273,7 +273,7 @@ final class DebugCommandTest extends TestCase
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            "<?xml version=\"1.0\"?><phpunit><testsuites><testsuite name=\"unit\"><directory>{$directory}</directory></testsuite></testsuites></phpunit>",
+            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/Debug</directory></testsuite></testsuites></phpunit>',
         );
 
         /** @var class-string $className */
@@ -307,7 +307,7 @@ final class DebugCommandTest extends TestCase
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            "<?xml version=\"1.0\"?><phpunit><testsuites><testsuite name=\"unit\"><directory>{$directory}</directory></testsuite></testsuites></phpunit>",
+            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/Debug</directory></testsuite></testsuites></phpunit>',
         );
 
         /** @var class-string $className */
