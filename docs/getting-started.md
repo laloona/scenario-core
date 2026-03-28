@@ -66,6 +66,6 @@ Use PHPUnit when:
 ## Next Steps
 
 - [Scenarios](scenario.md)
-- [CLI Usage](docs/cli.md)
-- [Testing with PHPUnit](docs/testing-with-phpunit.md)
-- [Recipes](docs/recipes.md)
+- [CLI Usage](cli.md)
+- [Testing with PHPUnit](testing-with-phpunit.md)
+- [Recipes](recipes.md)
