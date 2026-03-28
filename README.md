@@ -127,7 +127,7 @@ level and on Unit Tests or Scenario Classes.
 Scenarios can also be executed directly from the console:
 
 <pre><code>
-php vendor/bin/scenario apply "my-scenario"
+php vendor/bin/scenario apply my-scenario
 </code></pre>
 
 This allows:
@@ -150,3 +150,11 @@ It works particularly well with:
 * Custom test infrastructures using PHPUnit
 
 Framework-specific integration layers may be provided separately.
+
+## Next Steps
+
+- [Scenarios](scenario.md)
+- [Scenarios](scenario.md)
+- [CLI Usage](cli.md)
+- [Testing with PHPUnit](testing-with-phpunit.md)
+- [Recipes](recipes.md)
