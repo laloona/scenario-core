@@ -15,21 +15,24 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Exception\ScenarioBuilderException;
+use Scenario\Core\Contract\ScenarioInterface;
+use Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
+use Scenario\Core\Tests\Files\InvalidScenario;
 
-#[CoversClass(ScenarioBuilderException::class)]
+#[CoversClass(WrongScenarioSubclassException::class)]
 #[Group('runtime')]
 #[Small]
-final class ScenarioBuilderExceptionTest extends TestCase
+final class WrongScenarioSubclassExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new ScenarioBuilderException(
-            'MyScenario',
+        $exception = new WrongScenarioSubclassException(
+            InvalidScenario::class,
+            ScenarioInterface::class,
         );
 
         self::assertSame(
-            'Given class MyScenario doesn\'t implement interface "Scenario\Core\Contract\ScenarioInterface"',
+            'Scenario\Core\Tests\Files\InvalidScenario is not from type Scenario\Core\Contract\ScenarioInterface',
             $exception->getMessage(),
         );
     }

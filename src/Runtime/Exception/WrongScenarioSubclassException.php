@@ -11,17 +11,21 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
-use Scenario\Core\Contract\ScenarioInterface;
+use function sprintf;
 
-final class ScenarioBuilderException extends Exception
+final class WrongScenarioSubclassException extends Exception
 {
-    public function __construct(string $className)
+    /**
+     * @param class-string $scenarioClass
+     * @param class-string $scenarioSubclass
+     */
+    public function __construct(string $scenarioClass, string $scenarioSubclass)
     {
         parent::__construct(
             sprintf(
-                'Given class %s doesn\'t implement interface "%s"',
-                $className,
-                ScenarioInterface::class,
+                '%s is not from type %s',
+                $scenarioClass,
+                $scenarioSubclass,
             ),
         );
     }

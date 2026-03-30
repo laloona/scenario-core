@@ -13,7 +13,7 @@ namespace Scenario\Core\Runtime;
 
 use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\Exception\ScenarioBuilderException;
+use Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
 
 final class ScenarioBuilder implements ScenarioBuilderInterface
 {
@@ -24,7 +24,7 @@ final class ScenarioBuilder implements ScenarioBuilderInterface
     {
         $object = new $scenarioClass();
         if (is_subclass_of($object, ScenarioInterface::class) === false) {
-            throw new ScenarioBuilderException($scenarioClass);
+            throw new WrongScenarioSubclassException($scenarioClass, ScenarioInterface::class);
         }
 
         return $object;

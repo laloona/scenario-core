@@ -17,13 +17,13 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\Exception\ScenarioBuilderException;
+use Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
 use Scenario\Core\Runtime\ScenarioBuilder;
 use Scenario\Core\Tests\Files\InvalidScenario;
 use Scenario\Core\Tests\Files\ValidScenario;
 
 #[CoversClass(ScenarioBuilder::class)]
-#[UsesClass(ScenarioBuilderException::class)]
+#[UsesClass(WrongScenarioSubclassException::class)]
 #[Group('runtime')]
 #[Small]
 final class ScenarioBuilderTest extends TestCase
@@ -38,7 +38,7 @@ final class ScenarioBuilderTest extends TestCase
 
     public function testInvalidScenarioBuild(): void
     {
-        self::expectException(ScenarioBuilderException::class);
+        self::expectException(WrongScenarioSubclassException::class);
 
         new ScenarioBuilder()->build(InvalidScenario::class);
     }
