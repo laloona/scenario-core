@@ -30,7 +30,7 @@ final class StringType
             : null;
     }
 
-    public function asString(mixed $value): string|null
+    public function asString(): string|null
     {
         if ($this->value === null) {
             return null;

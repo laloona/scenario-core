@@ -27,13 +27,13 @@ final class StringTypeTest extends TestCase
         $type = new StringType('value');
 
         self::assertSame('value', $type->value);
-        self::assertSame('value', $type->asString(null));
+        self::assertSame('value', $type->asString());
     }
 
     public function testRemovesWrappingQuotes(): void
     {
         self::assertSame('value', (new StringType('"value"'))->value);
-        self::assertSame('value', (new StringType("'value'"))->asString('ignored'));
+        self::assertSame('value', (new StringType("'value'"))->asString());
     }
 
     public function testReturnsNullForInvalidInput(): void
@@ -41,6 +41,6 @@ final class StringTypeTest extends TestCase
         $type = new StringType(10);
 
         self::assertNull($type->value);
-        self::assertNull($type->asString(null));
+        self::assertNull($type->asString());
     }
 }

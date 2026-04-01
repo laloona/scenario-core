@@ -19,10 +19,18 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
+use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 #[CoversClass(Parameter::class)]
+#[UsesClass(BooleanType::class)]
+#[UsesClass(FloatType::class)]
+#[UsesClass(IntegerType::class)]
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ParameterValueErrorException::class)]
+#[UsesClass(StringType::class)]
 #[Group('attribute')]
 #[Small]
 final class ParameterTest extends TestCase

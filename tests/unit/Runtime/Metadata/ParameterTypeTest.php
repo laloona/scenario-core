@@ -14,10 +14,19 @@ namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Runtime\Metadata\ParameterType;
+use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 #[CoversClass(ParameterType::class)]
+#[UsesClass(BooleanType::class)]
+#[UsesClass(FloatType::class)]
+#[UsesClass(IntegerType::class)]
+#[UsesClass(StringType::class)]
 #[Group('runtime')]
 #[Small]
 final class ParameterTypeTest extends TestCase

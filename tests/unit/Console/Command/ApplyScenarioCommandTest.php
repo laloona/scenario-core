@@ -32,6 +32,7 @@ use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\Metadata\ParameterType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
 use Scenario\Core\Tests\Files\AnotherScenario;
@@ -51,6 +52,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 #[UsesClass(Command::class)]
 #[UsesClass(ExecutionType::class)]
 #[UsesClass(HandlerRegistry::class)]
+#[UsesClass(IntegerType::class)]
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ScenarioDefinition::class)]

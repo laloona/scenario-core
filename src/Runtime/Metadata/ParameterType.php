@@ -11,12 +11,10 @@
 
 namespace Scenario\Core\Runtime\Metadata;
 
-use function filter_var;
-use function is_bool;
-use function is_float;
-use function is_int;
-use function is_string;
-use function strtolower;
+use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 enum ParameterType: string
 {
@@ -37,29 +35,10 @@ enum ParameterType: string
         }
 
         return match ($this) {
-            self::String => is_string($value) === true ? preg_replace('/^["\']|["\']$/', '', $value) : null,
-
-            self::Integer => is_int($value) === true
-                ? $value
-                : (is_string($value) === true && filter_var($value, FILTER_VALIDATE_INT) !== false
-                    ? (int) $value
-                    : null),
-
-            self::Float => is_float($value) === true
-                ? $value
-                : (is_string($value) === true && filter_var($value, FILTER_VALIDATE_FLOAT) !== false
-                    ? (float) $value
-                    : null),
-
-            self::Boolean => is_bool($value) === true
-                ? $value
-                : (is_string($value) === true
-                    ? match (strtolower($value)) {
-                        '1', 'true', 'yes', 'on' => true,
-                        '0', 'false', 'no', 'off' => false,
-                        default => null,
-                    }
-                    : null),
+            self::String => (new StringType($value))->value,
+            self::Integer => (new IntegerType($value))->value,
+            self::Float => (new FloatType($value))->value,
+            self::Boolean => (new BooleanType($value))->value,
         };
     }
 
@@ -71,8 +50,10 @@ enum ParameterType: string
         }
 
         return match ($this) {
-            self::String, self::Integer, self::Float => (string)$value,
-            self::Boolean => $value === true ? '1' : '0',
+            self::String => (new StringType($value))->asString(),
+            self::Integer => (new IntegerType($value))->asString(),
+            self::Float => (new FloatType($value))->asString(),
+            self::Boolean => (new BooleanType($value))->asString(),
         };
     }
 }

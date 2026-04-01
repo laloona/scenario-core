@@ -22,14 +22,22 @@ use Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Scenario\Core\Runtime\Exception\UndefinedParameterException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
+use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Scenario\Core\Runtime\ScenarioParameters;
 
 #[CoversClass(ScenarioParameters::class)]
+#[UsesClass(BooleanType::class)]
+#[UsesClass(FloatType::class)]
+#[UsesClass(IntegerType::class)]
 #[UsesClass(MissingRequiredParametersException::class)]
 #[UsesClass(NotAllowedParametersException::class)]
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ParameterValueErrorException::class)]
+#[UsesClass(StringType::class)]
 #[UsesClass(UndefinedParameterException::class)]
 #[Group('runtime')]
 #[Small]

@@ -29,6 +29,7 @@ use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Scenario\Core\Runtime\ScenarioBuilder;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioParameters;
@@ -38,21 +39,22 @@ use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ApplyScenarioHandler::class)]
 #[UsesClass(Application::class)]
-#[UsesClass(ScenarioBuilder::class)]
-#[UsesClass(ScenarioDefinition::class)]
-#[UsesClass(ScenarioRegistry::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(AsScenario::class)]
+#[UsesClass(AttributeContext::class)]
+#[UsesClass(AttributeProcessor::class)]
+#[UsesClass(ClassAttributeParser::class)]
+#[UsesClass(ExecutionType::class)]
+#[UsesClass(HandlerRegistry::class)]
+#[UsesClass(IntegerType::class)]
+#[UsesClass(MethodAttributeParser::class)]
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
-#[UsesClass(AttributeContext::class)]
-#[UsesClass(ExecutionType::class)]
 #[UsesClass(RegistryException::class)]
-#[UsesClass(AttributeProcessor::class)]
-#[UsesClass(HandlerRegistry::class)]
-#[UsesClass(ClassAttributeParser::class)]
-#[UsesClass(MethodAttributeParser::class)]
+#[UsesClass(ScenarioBuilder::class)]
+#[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioParameters::class)]
+#[UsesClass(ScenarioRegistry::class)]
 #[Group('runtime')]
 #[Small]
 final class ApplyScenarioHandlerTest extends TestCase
