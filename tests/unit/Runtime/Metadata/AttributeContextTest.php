@@ -47,6 +47,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         self::assertSame(ContextTarget::OnClass, $context->target());
@@ -61,6 +62,7 @@ final class AttributeContextTest extends TestCase
             'myMethod',
             ExecutionType::Up,
             false,
+            null,
         );
 
         self::assertSame(ContextTarget::OnMethod, $context->target());
@@ -75,6 +77,7 @@ final class AttributeContextTest extends TestCase
             'myMethod',
             ExecutionType::Down,
             false,
+            null,
         );
 
         self::assertSame(stdClass::class, $context->class);
@@ -89,6 +92,7 @@ final class AttributeContextTest extends TestCase
             'myMethod',
             ExecutionType::Up,
             false,
+            null,
         );
 
         $second = AttributeContext::getInstance(
@@ -96,6 +100,7 @@ final class AttributeContextTest extends TestCase
             'myMethod',
             ExecutionType::Up,
             false,
+            null,
         );
 
         $third = AttributeContext::getInstance(
@@ -103,6 +108,7 @@ final class AttributeContextTest extends TestCase
             'myMethod',
             ExecutionType::Down,
             false,
+            null,
         );
 
         self::assertSame($first, $second);
@@ -116,6 +122,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         $second = AttributeContext::getInstance(
@@ -123,6 +130,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         self::assertNotSame($first, $second);
@@ -135,6 +143,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         $context->audit(ValidScenario::class, ['foo' => 'bar']);
@@ -151,6 +160,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Down,
             false,
+            null,
         );
 
         $context->audit(ValidScenario::class, []);
@@ -165,6 +175,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             true,
+            null,
         );
 
         $down = AttributeContext::getInstance(
@@ -172,6 +183,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Down,
             true,
+            null,
         );
 
         self::assertNotSame($up, $down);
@@ -184,6 +196,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         $second = AttributeContext::getInstance(
@@ -191,6 +204,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         self::assertSame($first, $second);
@@ -203,6 +217,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             true,
+            null,
         );
 
         $this->expectException(SwitchDryRunAttributeContextException::class);
@@ -213,6 +228,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
     }
 
@@ -223,6 +239,7 @@ final class AttributeContextTest extends TestCase
             'up',
             ExecutionType::Up,
             true,
+            null,
         );
 
         $this->expectException(SwitchDryRunAttributeContextException::class);
@@ -233,6 +250,7 @@ final class AttributeContextTest extends TestCase
             'up',
             ExecutionType::Up,
             false,
+            null,
         );
     }
 
@@ -243,6 +261,7 @@ final class AttributeContextTest extends TestCase
             null,
             ExecutionType::Up,
             false,
+            null,
         );
 
         $context->audit(ValidScenario::class, ['foo' => 'bar']);
@@ -258,6 +277,7 @@ final class AttributeContextTest extends TestCase
             'method',
             ExecutionType::Down,
             false,
+            null,
         );
 
         self::assertSame([], $context->getAudits());
@@ -270,6 +290,7 @@ final class AttributeContextTest extends TestCase
             'down',
             ExecutionType::Down,
             true,
+            null,
         );
 
         self::assertTrue($context->dryRun);

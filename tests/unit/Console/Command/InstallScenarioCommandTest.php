@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\InstallScenarioCommand;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
@@ -40,6 +41,7 @@ use function file_put_contents;
 #[UsesClass(Configured::class)]
 #[UsesClass(Configurator::class)]
 #[UsesClass(Extension::class)]
+#[UsesClass(Option::class)]
 #[Group('console')]
 #[Small]
 final class InstallScenarioCommandTest extends TestCase

@@ -20,6 +20,7 @@ use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\RefreshDatabaseCommand;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -35,6 +36,7 @@ use Scenario\Core\Tests\Unit\TestMethodStateMock;
 
 #[CoversClass(RefreshDatabaseCommand::class)]
 #[UsesClass(ApplicationState::class)]
+#[UsesClass(Option::class)]
 #[UsesClass(AttributeContext::class)]
 #[UsesClass(AttributeHandler::class)]
 #[UsesClass(CliCommand::class)]

@@ -20,6 +20,7 @@ use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\ListScenariosCommand;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -34,6 +35,7 @@ use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 #[UsesClass(AsScenario::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
+#[UsesClass(Option::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioRegistry::class)]
 #[Group('console')]

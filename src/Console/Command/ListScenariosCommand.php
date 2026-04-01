@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Console\Command;
 
+use Scenario\Core\Console\Input\InputType;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\ScenarioRegistry;
@@ -20,6 +22,11 @@ final class ListScenariosCommand extends CliCommand
     public function description(): string
     {
         return 'List all available scenarios, use --suite="name of you suite" if you want to see just one suite.';
+    }
+
+    protected function define(CliInput $input): void
+    {
+        $input->defineOption(new Option('suite', InputType::String));
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command

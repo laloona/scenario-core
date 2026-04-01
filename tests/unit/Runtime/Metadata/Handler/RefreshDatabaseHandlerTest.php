@@ -107,6 +107,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
             'testExecutesConfiguredConnection',
             ExecutionType::Up,
             false,
+            null,
         );
 
         $handler->handle($context, new RefreshDatabase('main'));
@@ -125,6 +126,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
             'testDryRunDoesNotExecuteConnection',
             ExecutionType::Up,
             true,
+            null,
         );
 
         $handler->handle($context, new RefreshDatabase('main'));
@@ -140,6 +142,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
             'testMissingConnectionRegistersFailure',
             ExecutionType::Up,
             false,
+            null,
         );
 
         $handler->handle($context, new RefreshDatabase('missing'));

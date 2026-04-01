@@ -8,7 +8,7 @@ $_SERVER['argv'] = [
     'bin/scenario'
 ];
 
-require_once 'bootstrap.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>

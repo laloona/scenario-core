@@ -91,6 +91,7 @@ final class AttributeProcessorTest extends TestCase
                 null,
                 ExecutionType::Down,
                 false,
+                null,
             ),
             (new ReflectionClass(ValidScenario::class))->getAttributes(),
         );
@@ -123,6 +124,7 @@ final class AttributeProcessorTest extends TestCase
                 null,
                 ExecutionType::Up,
                 false,
+                null,
             ),
             (new ReflectionClass(ValidScenario::class))->getAttributes(),
         );
@@ -151,6 +153,7 @@ final class AttributeProcessorTest extends TestCase
                 null,
                 ExecutionType::Up,
                 false,
+                null,
             ),
             (new ReflectionClass(ValidScenario::class))->getAttributes(),
         );

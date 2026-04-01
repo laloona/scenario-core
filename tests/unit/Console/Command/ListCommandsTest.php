@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\ListCommands;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -27,6 +28,7 @@ use Scenario\Core\Runtime\Application\ApplicationState;
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
+#[UsesClass(Option::class)]
 #[Group('console')]
 #[Small]
 final class ListCommandsTest extends TestCase

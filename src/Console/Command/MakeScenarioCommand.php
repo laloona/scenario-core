@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Console\Command;
 
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\InputType;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application;
@@ -22,9 +24,14 @@ final class MakeScenarioCommand extends CliCommand
         return 'Make a scenario or config file.';
     }
 
+    protected function define(CliInput $input): void
+    {
+        $input->defineArgument(new Argument('type', InputType::String));
+    }
+
     protected function execute(CliInput $input, CliOutput $output): Command
     {
-        $type = $input->argument('0') ?? '';
+        $type = $input->argument('type') ?? '';
         $options = ['scenario', 'config'];
         if (in_array($type, $options, true) === false) {
             $type = $options[

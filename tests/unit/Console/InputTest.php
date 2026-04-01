@@ -14,15 +14,42 @@ namespace Scenario\Core\Tests\Unit\Console;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Scenario\Core\Console\Exception\MissingRequiredArgumentsException;
+use Scenario\Core\Console\Exception\NotAllowedArgumentsException;
+use Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Scenario\Core\Console\Exception\UndefinedArgumentException;
+use Scenario\Core\Console\Exception\UndefinedOptionException;
 use Scenario\Core\Console\Input;
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\InputType;
+use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\Parser;
+use Scenario\Core\Console\Input\Resolver;
+use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 #[CoversClass(Input::class)]
+#[UsesClass(Argument::class)]
+#[UsesClass(BooleanType::class)]
+#[UsesClass(InputType::class)]
+#[UsesClass(IntegerType::class)]
+#[UsesClass(MissingRequiredArgumentsException::class)]
+#[UsesClass(NotAllowedArgumentsException::class)]
+#[UsesClass(NotAllowedOptionsException::class)]
+#[UsesClass(Option::class)]
+#[UsesClass(Parser::class)]
+#[UsesClass(Resolver::class)]
+#[UsesClass(StringType::class)]
+#[UsesClass(UndefinedArgumentException::class)]
+#[UsesClass(UndefinedOptionException::class)]
 #[Group('console')]
 #[Small]
 final class InputTest extends TestCase
 {
-    public function testParsesCommand(): void
+    public function testReturnsCommandWithoutResolving(): void
     {
         $input = new Input([
             'scenario',
@@ -32,105 +59,99 @@ final class InputTest extends TestCase
         self::assertSame('apply', $input->command());
     }
 
-    public function testParsesArgumentsAfterCommand(): void
+    public function testReturnsForceFlagWithoutResolving(): void
     {
         $input = new Input([
             'scenario',
+            '--force',
             'apply',
-            'Scenario\\MyClass',
-            'OtherArgument',
         ]);
 
-        self::assertSame('Scenario\\MyClass', $input->argument('0'));
-        self::assertSame('OtherArgument', $input->argument('1'));
-        self::assertNull($input->argument('2'));
+        self::assertTrue($input->force());
     }
 
-    public function testParsesOptionWithValue(): void
+    public function testResolvesDefinedArgumentsAndOptions(): void
     {
         $input = new Input([
             'scenario',
-            'apply',
+            '--down=true',
             '--file=my File',
+            'apply',
+            'Scenario\\MyClass',
+            '10',
         ]);
+        $input->defineArgument(new Argument('scenario', InputType::String, true));
+        $input->defineArgument(new Argument('limit', InputType::Integer, true));
+        $input->defineOption(new Option('down', InputType::Boolean));
+        $input->defineOption(new Option('file', InputType::String));
 
+        $input->resolve();
+
+        self::assertSame('Scenario\\MyClass', $input->argument('scenario'));
+        self::assertSame(10, $input->argument('limit'));
+        self::assertTrue($input->option('down'));
         self::assertSame('my File', $input->option('file'));
     }
 
-    public function testParsesFlagOptionAsTrue(): void
-    {
-        $input = new Input([
-            'scenario',
-            'apply',
-            '--force',
-        ]);
-
-        self::assertTrue($input->option('force'));
-    }
-
-    public function testRemovesOptionsFromArguments(): void
-    {
-        $input = new Input([
-            'scenario',
-            '--force',
-            'apply',
-            '--extend=something',
-            'Scenario\\MyClass',
-        ]);
-
-        self::assertSame('apply', $input->command());
-        self::assertSame('Scenario\\MyClass', $input->argument('0'));
-        self::assertNull($input->argument('1'));
-
-        self::assertTrue($input->option('force'));
-        self::assertSame('something', $input->option('extend'));
-    }
-
-    public function testReturnsNullForUnknownCommandWhenMissing(): void
-    {
-        $input = new Input([
-            'scenario',
-        ]);
-
-        self::assertNull($input->command());
-    }
-
-    public function testReturnsNullForUnknownArgument(): void
+    public function testThrowsForUndefinedArgumentAfterResolve(): void
     {
         $input = new Input([
             'scenario',
             'apply',
         ]);
+        $input->resolve();
 
-        self::assertNull($input->argument('0'));
+        $this->expectException(UndefinedArgumentException::class);
+        $input->argument('missing');
     }
 
-    public function testReturnsNullForUnknownOption(): void
+    public function testThrowsForUndefinedOptionAfterResolve(): void
     {
         $input = new Input([
             'scenario',
             'apply',
         ]);
+        $input->resolve();
 
-        self::assertNull($input->option('unknown'));
+        $this->expectException(UndefinedOptionException::class);
+        $input->option('missing');
     }
 
-    public function testParsesMultipleOptionsAndArgumentsInMixedOrder(): void
+    public function testThrowsWhenRequiredArgumentIsMissing(): void
     {
         $input = new Input([
             'scenario',
-            '--force',
+            'apply',
+        ]);
+        $input->defineArgument(new Argument('scenario', InputType::String, true));
+
+        $this->expectException(MissingRequiredArgumentsException::class);
+        $input->resolve();
+    }
+
+    public function testThrowsWhenAdditionalArgumentsArePassed(): void
+    {
+        $input = new Input([
+            'scenario',
             'apply',
             'Scenario\\MyClass',
-            '--down',
-            'OtherArgument',
+            'extra',
+        ]);
+        $input->defineArgument(new Argument('scenario', InputType::String, true));
+
+        $this->expectException(NotAllowedArgumentsException::class);
+        $input->resolve();
+    }
+
+    public function testThrowsWhenAdditionalOptionsArePassed(): void
+    {
+        $input = new Input([
+            'scenario',
+            'apply',
+            '--unknown=true',
         ]);
 
-        self::assertSame('apply', $input->command());
-        self::assertSame('Scenario\\MyClass', $input->argument('0'));
-        self::assertSame('OtherArgument', $input->argument('1'));
-
-        self::assertTrue($input->option('force'));
-        self::assertTrue($input->option('down'));
+        $this->expectException(NotAllowedOptionsException::class);
+        $input->resolve();
     }
 }

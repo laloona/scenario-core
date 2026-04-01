@@ -11,65 +11,84 @@
 
 namespace Scenario\Core\Console;
 
+use Scenario\Core\Console\Exception\UndefinedArgumentException;
+use Scenario\Core\Console\Exception\UndefinedOptionException;
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\Parser;
+use Scenario\Core\Console\Input\Resolver;
 use Scenario\Core\Contract\CliInput;
-use function array_shift;
-use function array_values;
-use function explode;
-use function str_starts_with;
-use function substr;
+use function array_key_exists;
 
 final class Input implements CliInput
 {
-    private ?string $command;
-
     /**
-     * @var list<bool|string>
+     * @var array<string, null|int|float|bool|string>
      */
-    private array $arguments;
+    private array $arguments = [];
 
     /**
-     * @var array<string, bool|string>
+     * @var array<string, null|int|float|bool|string|list<null|int|float|bool|string>>
      */
     private array $options = [];
+
+    private Parser $parser;
+
+    private Resolver $resolver;
 
     /**
      * @param list<string> $inputArgs
      */
     public function __construct(array $inputArgs)
     {
-        array_shift($inputArgs);
-        $this->parseOptions($inputArgs);
-        $this->arguments = array_values($inputArgs);
-        $this->command = array_shift($this->arguments);
-    }
-
-    /**
-     * @param list<string> $inputArgs
-     * @param-out array<int, string> $inputArgs
-     */
-    private function parseOptions(array &$inputArgs): void
-    {
-        foreach ($inputArgs as $key => $arg) {
-            if (str_starts_with($arg, '--')) {
-                unset($inputArgs[$key]);
-                $option = explode('=', substr($arg, 2));
-                $this->options[$option[0]] = $option[1] ?? true;
-            }
-        }
+        $this->parser = new Parser($inputArgs);
+        $this->resolver = new Resolver($this->parser);
     }
 
     public function command(): ?string
     {
-        return $this->command;
+        return $this->parser->command();
     }
 
-    public function argument(string $name): null|bool|string
+    public function force(): bool
     {
-        return $this->arguments[(int)$name] ?? null;
+        return $this->parser->force();
     }
 
-    public function option(string $name): null|bool|string
+    public function defineArgument(Argument $argument): void
     {
-        return $this->options[$name] ?? null;
+        $this->resolver->defineArgument($argument);
+    }
+
+    public function defineOption(Option $option): void
+    {
+        $this->resolver->defineOption($option);
+    }
+
+    public function resolve(): void
+    {
+        $this->arguments = $this->resolver->resolveArguments();
+        $this->options = $this->resolver->resolveOptions();
+    }
+
+    public function argument(string $name): null|bool|string|int|float
+    {
+        if (array_key_exists($name, $this->arguments) === false) {
+            throw new UndefinedArgumentException($name);
+        }
+
+        return $this->arguments[$name] ?? null;
+    }
+
+    /**
+     * @return null|bool|string|int|float|list<null|int|float|bool|string>
+     */
+    public function option(string $name): null|bool|string|int|float|array
+    {
+        if (array_key_exists($name, $this->options) === false) {
+            throw new UndefinedOptionException($name);
+        }
+
+        return $this->options[$name];
     }
 }

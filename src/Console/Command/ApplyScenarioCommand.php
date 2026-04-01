@@ -12,6 +12,10 @@
 namespace Scenario\Core\Console\Command;
 
 use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\InputType;
+use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\ParameterParser;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestClassState;
@@ -27,6 +31,15 @@ final class ApplyScenarioCommand extends CliCommand
     public function description(): string
     {
         return 'Applies a given scenario, use --up or --down to choose how the scenario should be applied.';
+    }
+
+    protected function define(CliInput $input): void
+    {
+        $input->defineArgument(new Argument('scenario', InputType::String));
+        $input->defineOption(new Option('audit', InputType::Boolean));
+        $input->defineOption(new Option('up', InputType::Boolean));
+        $input->defineOption(new Option('down', InputType::Boolean));
+        $input->defineOption(new Option('parameter', InputType::String, false, true));
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command
@@ -48,7 +61,7 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         $directExecution = false;
-        $scenario = $input->argument('0');
+        $scenario = $input->argument('scenario');
         $executionType = $input->option('down') === true ? ExecutionType::Down : ExecutionType::Up;
         if (is_string($scenario) === true) {
             try {
@@ -57,7 +70,7 @@ final class ApplyScenarioCommand extends CliCommand
             } catch (RegistryException $exception) {
                 $scenario = null;
                 if ($input->option('quiet') !== true) {
-                    $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('0')));
+                    $output->error(sprintf('Given scenario [%s] is not registered.', $input->argument('scenario')));
                 }
             }
         }
@@ -82,13 +95,21 @@ final class ApplyScenarioCommand extends CliCommand
 
         $parameters = [];
         if (is_string($scenario) === true) {
+            $inputParameter = ($directExecution === true)
+                ? (new ParameterParser())->parse($input->option('parameter'))
+                : [];
+
             $definition = $scenarioDefinitions[$scenario];
             if (count($definition->parameters) > 0) {
                 foreach ($definition->parameters as $parameter) {
                     if ($directExecution === true) {
-                        $parameters[$parameter->name] = $parameter->repeatable === true
-                            ? json_decode((string)$input->option($parameter->name), true)
-                            : $input->option($parameter->name);
+                        if (array_key_exists($parameter->name, $inputParameter) === false) {
+                            continue;
+                        }
+
+                        $parameters[$parameter->name] = ($parameter->repeatable === true && is_array($inputParameter[$parameter->name]) === false)
+                            ? [ $inputParameter[$parameter->name] ]
+                            : $inputParameter[$parameter->name];
                         continue;
                     }
 
@@ -128,7 +149,12 @@ final class ApplyScenarioCommand extends CliCommand
         }
 
         /** @var class-string $scenario */
-        $this->applyScenario($scenario, $executionType, $parameters);
+        $this->applyScenario(
+            $input->option('audit') === true ? $output : null,
+            $scenario,
+            $executionType,
+            $parameters,
+        );
 
         (new TestClassState())->throw(__CLASS__);
         (new TestMethodState())->throw(__CLASS__, $executionType->value);
@@ -143,8 +169,12 @@ final class ApplyScenarioCommand extends CliCommand
      * @param class-string $className
      * @param array<string, mixed> $parameters
      */
-    private function applyScenario(string $className, ExecutionType $executionType, array $parameters): void
-    {
+    private function applyScenario(
+        ?CliOutput $output,
+        string $className,
+        ExecutionType $executionType,
+        array $parameters,
+    ): void {
         HandlerRegistry::getInstance()
             ->attributeHandler(ApplyScenario::class)
             ->handle(
@@ -153,6 +183,7 @@ final class ApplyScenarioCommand extends CliCommand
                     $executionType->value,
                     $executionType,
                     false,
+                    $output,
                 ),
                 new ApplyScenario($className, $parameters),
             );

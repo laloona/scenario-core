@@ -11,6 +11,9 @@
 
 namespace Scenario\Core\Console\Command;
 
+use Scenario\Core\Console\Exception\InputException;
+use Scenario\Core\Console\Input\InputType;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -23,6 +26,10 @@ abstract class CliCommand
         try {
             (new ApplicationState())->throw(null);
 
+            $input->defineOption(new Option('quiet', InputType::Boolean));
+            $this->define($input);
+            $input->resolve();
+
             if ($input->option('quiet') === true) {
                 return $this->execute($input, $output);
             }
@@ -32,10 +39,17 @@ abstract class CliCommand
             return $output->confirm('Do you want to continue?', false) === true
                 ? $this->execute($input, $output)
                 : Command::Error;
+        } catch (InputException $exception) {
+            $output->error($exception->getMessage());
         } catch (Throwable $throwable) {
             $output->error('Exception was thrown: ' .  $throwable->getMessage() . PHP_EOL . PHP_EOL. 'Trace:' . PHP_EOL . $throwable->getTraceAsString());
-            return Command::Error;
         }
+
+        return Command::Error;
+    }
+
+    protected function define(CliInput $input): void
+    {
     }
 
     abstract protected function execute(CliInput $input, CliOutput $output): Command;

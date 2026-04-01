@@ -120,8 +120,8 @@ final class DebugCommandTest extends TestCase
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', null],
-                ['1', null],
+                ['class', null],
+                ['method', null],
             ]);
 
         $output = $this->createMock(CliOutput::class);
@@ -153,8 +153,8 @@ final class DebugCommandTest extends TestCase
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', 'debug-scenario'],
-                ['1', null],
+                ['class', 'debug-scenario'],
+                ['method', null],
             ]);
 
         $output = $this->createMock(CliOutput::class);
@@ -194,8 +194,8 @@ final class DebugCommandTest extends TestCase
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', $className],
-                ['1', 'testDebuggable'],
+                ['class', $className],
+                ['method', 'testDebuggable'],
             ]);
 
         $output = $this->createMock(CliOutput::class);

@@ -12,6 +12,8 @@
 namespace Scenario\Core\Console\Command;
 
 use Scenario\Core\Attribute\RefreshDatabase;
+use Scenario\Core\Console\Input\InputType;
+use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\TestMethodState;
@@ -24,6 +26,11 @@ final class RefreshDatabaseCommand extends CliCommand
     public function description(): string
     {
         return 'Executes the database refresh. Use --connection="connection_name" to specify given connection.';
+    }
+
+    protected function define(CliInput $input): void
+    {
+        $input->defineOption(new Option('connection', InputType::String));
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command
@@ -41,6 +48,7 @@ final class RefreshDatabaseCommand extends CliCommand
                     __METHOD__,
                     ExecutionType::Up,
                     false,
+                    null,
                 ),
                 new RefreshDatabase($connection),
             );

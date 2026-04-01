@@ -95,19 +95,20 @@ final class ApplyScenarioCommandTest extends TestCase
 
     public function testRunAppliesScenarioDirectlyWithInputParameters(): void
     {
-        $this->createScenarioRegistry();
+        $this->createScenarioRegistry('my value');
 
         $input = self::createStub(CliInput::class);
         $input->method('option')
             ->willReturnMap([
                 ['quiet', true],
+                ['audit', true],
                 ['up', null],
                 ['down', null],
-                ['param', 'my value'],
+                ['parameter', 'param=my value'],
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', 'my-scenario'],
+                ['scenario', 'my-scenario'],
             ]);
 
         $output = $this->createMock(CliOutput::class);
@@ -116,7 +117,59 @@ final class ApplyScenarioCommandTest extends TestCase
         $output->expects(self::never())->method('choice');
         $output->expects(self::never())->method('ask');
 
-        $result = (new ApplyScenarioCommand())->run($input, $output);
+        (new ApplyScenarioCommand())->run($input, $output);
+    }
+
+    public function testRunAppliesScenarioDirectlyWithInputRepeatableParametersWithOneGiven(): void
+    {
+        $this->createScenarioRegistry(['my value1']);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+                ['up', null],
+                ['down', null],
+                ['parameter', 'param=my value1'],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['scenario', 'my-scenario'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('error');
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+
+        (new ApplyScenarioCommand())->run($input, $output);
+    }
+
+    public function testRunAppliesScenarioDirectlyWithInputRepeatableParametersWithTwoGiven(): void
+    {
+        $this->createScenarioRegistry(['my value1', 'my value2']);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+                ['up', null],
+                ['down', null],
+                ['parameter', ['param=my value1', 'param=my value2']],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['scenario', 'my-scenario'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('error');
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+
+        (new ApplyScenarioCommand())->run($input, $output);
     }
 
     public function testRunReturnsErrorWhenUpAndDownAreBothProvided(): void
@@ -170,7 +223,7 @@ final class ApplyScenarioCommandTest extends TestCase
 
     public function testLeadsThroughAvailableScenariosWhenNoScenarioIsDirectlyGiven(): void
     {
-        $this->createScenarioRegistry();
+        $this->createScenarioRegistry('my value');
 
         $input = self::createStub(CliInput::class);
         $input->method('option')
@@ -202,7 +255,44 @@ final class ApplyScenarioCommandTest extends TestCase
         self::assertSame(Command::Success, (new ApplyScenarioCommand())->run($input, $output));
     }
 
-    private function createScenarioRegistry(): void
+    public function testLeadsThroughAvailableScenariosWithRepeatableParametersWhenNoScenarioIsDirectlyGiven(): void
+    {
+        $this->createScenarioRegistry(['my value1', 'my value2']);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['up', null],
+                ['down', null],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('warn')
+            ->with('Plaese don\'t use these commands on production systems as data will be modified.');
+        $output->expects(self::exactly(3))
+            ->method('confirm')
+            ->with('Do you want to continue?')
+            ->willReturnOnConsecutiveCalls(true, true, false);
+        $output->expects(self::once())
+            ->method('choice')
+            ->with('Which scenario would you like to apply?', self::isArray())
+            ->willReturn('0');
+        $output->expects(self::exactly(2))
+            ->method('ask')
+            ->with('Please insert value for string parameter "param"')
+            ->willReturnOnConsecutiveCalls('my value1', 'my value2');
+        $output->expects(self::once())
+            ->method('success')
+            ->with('Scenario "' . AnotherScenario::class . '::up" was applied successfully.');
+
+        self::assertSame(Command::Success, (new ApplyScenarioCommand())->run($input, $output));
+    }
+
+    /**
+     * @param list<string>|string $parameter
+     */
+    private function createScenarioRegistry(array|string $parameter): void
     {
         $handler = $this->createPartialMock(AttributeHandler::class, ['attributeName','execute']);
         $handler->expects(self::exactly(3))
@@ -210,7 +300,7 @@ final class ApplyScenarioCommandTest extends TestCase
             ->willReturn(ApplyScenario::class);
         $handler->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function (AttributeContext $context, object $metaData) {
+            ->willReturnCallback(function (AttributeContext $context, object $metaData) use ($parameter) {
                 self::assertSame(ApplyScenarioCommand::class, $context->class);
                 self::assertSame('up', $context->method);
                 self::assertSame(ExecutionType::Up, $context->executionType);
@@ -218,7 +308,7 @@ final class ApplyScenarioCommandTest extends TestCase
                 self::assertInstanceOf(ApplyScenario::class, $metaData);
                 self::assertSame(AnotherScenario::class, $metaData->id);
                 self::assertArrayHasKey('param', $metaData->parameters);
-                self::assertSame([ 'param' => 'my value' ], $metaData->parameters);
+                self::assertSame([ 'param' => $parameter ], $metaData->parameters);
             });
 
         ScenarioRegistry::getInstance()->register(
@@ -227,7 +317,7 @@ final class ApplyScenarioCommandTest extends TestCase
                 AnotherScenario::class,
                 new AsScenario('my-scenario'),
                 [
-                    new Parameter('param', ParameterType::String),
+                    new Parameter('param', ParameterType::String, null, false, is_array($parameter)),
                 ],
             ),
         );

@@ -60,6 +60,7 @@ final class AttributeHandlerTest extends TestCase
             'testHandleIgnoresUnsupportedMetaData',
             ExecutionType::Up,
             false,
+            null,
         );
 
         $handler->handle($context, new stdClass());

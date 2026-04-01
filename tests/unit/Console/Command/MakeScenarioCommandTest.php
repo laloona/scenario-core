@@ -97,7 +97,7 @@ PHP,
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', 'scenario'],
+                ['type', 'scenario'],
             ]);
 
         $output = $this->createMock(CliOutput::class);

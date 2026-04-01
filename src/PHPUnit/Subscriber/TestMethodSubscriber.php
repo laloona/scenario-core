@@ -29,6 +29,7 @@ abstract class TestMethodSubscriber
                     $test->methodName(),
                     $executionType,
                     false,
+                    null,
                 ),
                 (new MethodAttributeParser())->parse($test->className(), $test->methodName()),
             );

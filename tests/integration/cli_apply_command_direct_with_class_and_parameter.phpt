@@ -8,12 +8,12 @@ $_SERVER['argv'] = [
     'bin/scenario',
     'apply',
     \Scenario\Main\SecondScenario::class,
-    '--param-1=7',
+    '--parameter=param-1=7',
     '--down',
     '--quiet'
 ];
 
-require_once 'bootstrap.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>

@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Console\Command;
 
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\InputType;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
@@ -33,6 +35,12 @@ final class DebugCommand extends CliCommand
     public function description(): string
     {
         return 'Debugs a given scenario or Unit test.';
+    }
+
+    protected function define(CliInput $input): void
+    {
+        $input->defineArgument(new Argument('class', InputType::String));
+        $input->defineArgument(new Argument('method', InputType::String));
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command
@@ -65,8 +73,8 @@ final class DebugCommand extends CliCommand
      */
     private function handleInput(CliInput $input, CliOutput $output, array $scenarioDefinitions, array $classesMethods): bool|null
     {
-        $className = $input->argument('0');
-        $method = $input->argument('1');
+        $className = $input->argument('class');
+        $method = $input->argument('method');
 
         if ($className === null
             && $method === null) {
@@ -240,6 +248,7 @@ final class DebugCommand extends CliCommand
             null,
             $executionType,
             true,
+            null,
         );
         (new AttributeProcessor())->process(
             $context,
@@ -260,6 +269,7 @@ final class DebugCommand extends CliCommand
             $method,
             $executionType,
             true,
+            null,
         );
         (new AttributeProcessor())->process(
             $context,

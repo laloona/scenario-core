@@ -11,7 +11,7 @@ $_SERVER['argv'] = [
     __DIR__ . '/tests/ScenarioTest.php'
 ];
 
-require_once 'bootstrap.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 (new PHPUnit\TextUI\Application)->run($_SERVER['argv']);
 ?>

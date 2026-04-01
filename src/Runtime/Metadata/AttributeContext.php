@@ -11,6 +11,7 @@
 
 namespace Scenario\Core\Runtime\Metadata;
 
+use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Exception\Metadata\CycleException;
 use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
 
@@ -34,6 +35,7 @@ final class AttributeContext
         ?string $method,
         ExecutionType $executionType,
         bool $dryRun,
+        ?CliOutput $output,
     ): self {
         if (self::$currentClass !== $class) {
             self::$currentClass = $class;
@@ -42,7 +44,7 @@ final class AttributeContext
 
         if ($method === null) {
             if (isset(self::$instances[$executionType->value]) === false) {
-                self::$instances[$executionType->value] = new self($class, $method, $executionType, $dryRun);
+                self::$instances[$executionType->value] = new self($class, $method, $executionType, $dryRun, $output);
             }
 
             if (self::$instances[$executionType->value]->dryRun !== $dryRun) {
@@ -53,7 +55,7 @@ final class AttributeContext
         }
 
         if (isset(self::$instances[$method . '::' . $executionType->value]) === false) {
-            self::$instances[$method . '::' . $executionType->value] = new self($class, $method, $executionType, $dryRun);
+            self::$instances[$method . '::' . $executionType->value] = new self($class, $method, $executionType, $dryRun, $output);
         }
 
         if (self::$instances[$method . '::' . $executionType->value]->dryRun !== $dryRun) {
@@ -74,6 +76,7 @@ final class AttributeContext
         public readonly ?string $method,
         public readonly ExecutionType $executionType,
         public readonly bool $dryRun,
+        public readonly ?CliOutput $output,
     ) {
     }
 
@@ -113,6 +116,10 @@ final class AttributeContext
                 [...$this->audits, $scenario],
                 $this->executionType,
             );
+        }
+
+        if ($this->output !== null) {
+            $this->output->writeln($scenarioSignature);
         }
 
         $this->audits[] = $scenarioSignature;

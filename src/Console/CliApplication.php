@@ -45,7 +45,7 @@ final class CliApplication
 
         $input = new Input($inputArgs);
 
-        if ($input->option('force') !== true
+        if ($input->force() !== true
             && SCENARIO_CLI_DISABLED === true) {
             echo 'CLI DISABLED!' . PHP_EOL;
             return Command::Error->value;

@@ -76,6 +76,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             'testUpExecutesScenarioAndConfiguresParameters',
             ExecutionType::Up,
             false,
+            null,
         );
 
         new ApplyScenarioHandler(new ScenarioBuilder())
@@ -98,6 +99,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             'testDownExecutesScenarioDownAndConfiguresParameters',
             ExecutionType::Down,
             false,
+            null,
         );
 
         new ApplyScenarioHandler(new ScenarioBuilder())
@@ -120,6 +122,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             'testDryRunDoesNotExecuteScenarioUpButConfiguresParameters',
             ExecutionType::Up,
             true,
+            null,
         );
 
         new ApplyScenarioHandler(new ScenarioBuilder())
@@ -142,6 +145,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             'testDryRunDoesNotExecuteScenarioDownButConfiguresParameters',
             ExecutionType::Down,
             true,
+            null,
         );
 
         new ApplyScenarioHandler(new ScenarioBuilder())

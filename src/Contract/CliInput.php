@@ -11,11 +11,27 @@
 
 namespace Scenario\Core\Contract;
 
+use Scenario\Core\Console\Exception\InputException;
+use Scenario\Core\Console\Input\Argument;
+use Scenario\Core\Console\Input\Option;
+
 interface CliInput
 {
     public function command(): ?string;
 
-    public function argument(string $name): null|bool|string;
+    public function argument(string $name): null|bool|string|float|int;
 
-    public function option(string $name): null|bool|string;
+    /**
+     * @return null|bool|string|float|int|list<null|bool|string|float|int>
+     */
+    public function option(string $name): null|bool|string|float|int|array;
+
+    public function defineArgument(Argument $argument): void;
+
+    public function defineOption(Option $option): void;
+
+    /**
+     * @throws InputException
+     */
+    public function resolve(): void;
 }

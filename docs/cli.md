@@ -41,10 +41,11 @@ php vendor/bin/scenario
   ```bash
   --up       Apply the scenario (default)
   --down     Revert the scenario
+  --audit    Prints out the audit
    ```
   Parameters can be passed as CLI options: 
   ```php
-  php vendor/bin/scenario apply create-user --email=test@example.com
+  php vendor/bin/scenario apply create-user --parameter=email=test@example.com
   ```
   If parameters are not provided:
   - you may be prompted interactively
