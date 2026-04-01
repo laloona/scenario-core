@@ -13,6 +13,7 @@ namespace Scenario\Main;
 
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Scenario;
+use const PHP_EOL;
 
 #[AsScenario(
     name: 'first-scenario',

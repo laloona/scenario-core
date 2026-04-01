@@ -15,6 +15,7 @@ use Scenario\Core\Runtime\Application\TestClassState;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Throwable;
+use function get_class;
 
 abstract class AttributeHandler
 {

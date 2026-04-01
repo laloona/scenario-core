@@ -18,6 +18,7 @@ use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
 use Throwable;
+use const PHP_EOL;
 
 abstract class CliCommand
 {

@@ -13,6 +13,7 @@ namespace Scenario\Other;
 
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Scenario;
+use const PHP_EOL;
 
 #[AsScenario('other-scenario')]
 final class OtherScenario extends Scenario

@@ -16,6 +16,8 @@ use Scenario\Core\Console\Input\Option;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\ScenarioRegistry;
+use function array_values;
+use function count;
 
 final class ListScenariosCommand extends CliCommand
 {

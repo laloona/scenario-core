@@ -15,8 +15,10 @@ use DOMDocument;
 use InvalidArgumentException;
 use Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use SplFileInfo;
+use function is_file;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
+use const LIBXML_NONET;
 
 final class XMLParser
 {

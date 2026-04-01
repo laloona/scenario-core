@@ -15,6 +15,7 @@ use DirectoryIterator;
 use Scenario\Core\Runtime\Application;
 use SplFileInfo;
 use UnexpectedValueException;
+use function in_array;
 
 final class ConfigurationFinder
 {

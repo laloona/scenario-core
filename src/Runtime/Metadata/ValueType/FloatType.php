@@ -14,6 +14,7 @@ namespace Scenario\Core\Runtime\Metadata\ValueType;
 use function filter_var;
 use function is_float;
 use function is_string;
+use const FILTER_VALIDATE_FLOAT;
 
 final class FloatType
 {

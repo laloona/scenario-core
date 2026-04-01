@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
+use function sprintf;
+
 final class RegistryException extends Exception
 {
     public function __construct(string $name)

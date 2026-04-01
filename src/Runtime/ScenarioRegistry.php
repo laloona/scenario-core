@@ -16,6 +16,7 @@ use Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
 use Scenario\Core\Runtime\Exception\DefinitionNameAlreadyRegisteredException;
 use Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
 use Scenario\Core\Runtime\Exception\RegistryException;
+use function is_subclass_of;
 
 final class ScenarioRegistry extends Registry
 {

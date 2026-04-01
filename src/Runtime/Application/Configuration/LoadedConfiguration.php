@@ -13,6 +13,7 @@ namespace Scenario\Core\Runtime\Application\Configuration;
 
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use function count;
 
 final class LoadedConfiguration implements Configuration
 {

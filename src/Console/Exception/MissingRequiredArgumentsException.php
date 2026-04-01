@@ -11,6 +11,9 @@
 
 namespace Scenario\Core\Console\Exception;
 
+use function implode;
+use function sprintf;
+
 final class MissingRequiredArgumentsException extends InputException
 {
     /**

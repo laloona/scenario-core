@@ -11,6 +11,12 @@
 
 namespace Scenario\Core\Console\Output;
 
+use function fgets;
+use function fwrite;
+use function rtrim;
+use const STDIN;
+use const STDOUT;
+
 final class NativeTerminalIO implements TerminalIO
 {
     public function read(): string

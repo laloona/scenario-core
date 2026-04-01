@@ -26,6 +26,7 @@ use Scenario\Core\Console\Output\TerminalEnvironment;
 use Scenario\Core\Console\Output\TerminalIO;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\BoxType;
+use const PHP_EOL;
 
 #[CoversClass(Output::class)]
 #[UsesClass(AnsiStyler::class)]

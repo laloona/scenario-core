@@ -17,6 +17,8 @@ use DOMXPath;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
+use function rtrim;
+use const LIBXML_NONET;
 
 final class DirectoryFinder
 {

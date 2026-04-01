@@ -12,6 +12,7 @@
 namespace Scenario\Core\Console\Input;
 
 use Scenario\Core\Console\Exception\ArgumentValueErrorException;
+use function gettype;
 
 final class Argument
 {

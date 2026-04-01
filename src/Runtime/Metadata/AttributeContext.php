@@ -14,6 +14,10 @@ namespace Scenario\Core\Runtime\Metadata;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Exception\Metadata\CycleException;
 use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
+use function count;
+use function in_array;
+use function json_encode;
+use const JSON_THROW_ON_ERROR;
 
 final class AttributeContext
 {

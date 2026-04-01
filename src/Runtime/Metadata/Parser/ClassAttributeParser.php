@@ -15,6 +15,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use Scenario\Core\Runtime\Application;
+use function array_merge;
 
 final class ClassAttributeParser
 {

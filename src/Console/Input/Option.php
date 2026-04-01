@@ -12,6 +12,7 @@
 namespace Scenario\Core\Console\Input;
 
 use Scenario\Core\Console\Exception\OptionValueErrorException;
+use function gettype;
 use function is_array;
 
 final class Option

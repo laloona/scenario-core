@@ -14,7 +14,11 @@ namespace Scenario\Core\Console\Output;
 use function function_exists;
 use function getenv;
 use function is_string;
+use function posix_isatty;
 use function shell_exec;
+use function stream_isatty;
+use const PHP_OS_FAMILY;
+use const STDOUT;
 
 final class SystemTerminal implements TerminalEnvironment
 {

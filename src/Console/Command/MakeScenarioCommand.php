@@ -16,6 +16,19 @@ use Scenario\Core\Console\Input\InputType;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application;
+use function array_keys;
+use function array_map;
+use function count;
+use function explode;
+use function file_get_contents;
+use function file_put_contents;
+use function implode;
+use function in_array;
+use function is_file;
+use function preg_match;
+use function str_replace;
+use function ucfirst;
+use const DIRECTORY_SEPARATOR;
 
 final class MakeScenarioCommand extends CliCommand
 {

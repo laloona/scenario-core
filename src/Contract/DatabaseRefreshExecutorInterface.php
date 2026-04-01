@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-require(
-    __DIR__ . \DIRECTORY_SEPARATOR .
-    '..' . \DIRECTORY_SEPARATOR .
-    '..' . \DIRECTORY_SEPARATOR .
-    'vendor' . \DIRECTORY_SEPARATOR .
-    'autoload.php'
-);
+namespace Scenario\Core\Contract;
+
+use Scenario\Core\Attribute\RefreshDatabase;
+
+interface DatabaseRefreshExecutorInterface
+{
+    public function execute(RefreshDatabase $metaData): void;
+}

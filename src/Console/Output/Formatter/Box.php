@@ -13,6 +13,9 @@ namespace Scenario\Core\Console\Output\Formatter;
 
 use Scenario\Core\Console\Output\Theme\BoxType;
 use Scenario\Core\Console\Output\Theme\FontStyle;
+use function array_push;
+use function array_unshift;
+use function array_values;
 use function sprintf;
 use function str_repeat;
 

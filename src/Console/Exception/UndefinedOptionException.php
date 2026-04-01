@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Console\Exception;
 
+use function sprintf;
+
 final class UndefinedOptionException extends InputException
 {
     public function __construct(string $name)

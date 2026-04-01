@@ -21,6 +21,13 @@ use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
 use Throwable;
+use function array_search;
+use function array_slice;
+use function explode;
+use function implode;
+use function is_file;
+use function is_int;
+use const DIRECTORY_SEPARATOR;
 
 final class Application
 {
@@ -75,7 +82,7 @@ final class Application
         }
 
         try {
-            HandlerRegistry::getInstance()->registerHandler(new RefreshDatabaseHandler());
+            HandlerRegistry::getInstance()->registerHandler(new RefreshDatabaseHandler(new DatabaseRefreshExecutor()));
             HandlerRegistry::getInstance()->registerHandler(new ApplyScenarioHandler(new ScenarioBuilder()));
         } catch (HandlerRegistryException $exception) {
             // default handlers can be overwritten, this exception is ok

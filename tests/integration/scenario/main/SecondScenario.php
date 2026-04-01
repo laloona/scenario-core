@@ -16,6 +16,8 @@ use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Attribute\Parameter;
 use Scenario\Core\Runtime\Metadata\ParameterType;
 use Scenario\Core\Scenario;
+use function is_int;
+use const PHP_EOL;
 
 #[AsScenario(
     name: 'second-scenario',

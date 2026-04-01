@@ -21,15 +21,24 @@ use Scenario\Core\Runtime\Metadata\ParameterType;
 use Throwable;
 use UnexpectedValueException;
 use ValueError;
+use function assert;
+use function class_exists;
+use function count;
 use function dirname;
 use function file_get_contents;
 use function file_put_contents;
+use function is_array;
+use function is_bool;
 use function is_dir;
 use function is_file;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function mkdir;
+use function realpath;
+use function sprintf;
 use function unlink;
+use const DIRECTORY_SEPARATOR;
 
 final class ScenarioLoader
 {

@@ -12,6 +12,8 @@
 namespace Scenario\Core\PHPUnit\Configuration;
 
 use Scenario\Core\Runtime\Application;
+use function is_file;
+use const DIRECTORY_SEPARATOR;
 
 final class ConfigFinder
 {

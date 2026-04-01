@@ -17,6 +17,7 @@ use ReflectionClass;
 use SplFileInfo;
 use function array_filter;
 use function array_values;
+use function get_declared_classes;
 use function md5;
 use function str_starts_with;
 

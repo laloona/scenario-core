@@ -24,6 +24,7 @@ use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use function strlen;
 
 #[CoversClass(LoadedConfiguration::class)]
 #[UsesClass(ApplyScenario::class)]

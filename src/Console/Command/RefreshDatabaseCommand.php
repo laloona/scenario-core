@@ -20,6 +20,7 @@ use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use function is_string;
 
 final class RefreshDatabaseCommand extends CliCommand
 {

@@ -12,6 +12,7 @@
 namespace Scenario\Core\Runtime\Exception\Metadata;
 
 use Scenario\Core\Runtime\Exception\Exception;
+use function sprintf;
 
 final class ConnectionException extends Exception
 {

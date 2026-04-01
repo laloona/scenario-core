@@ -20,9 +20,17 @@ use Scenario\Core\Console\Output\TerminalIO;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
 use Scenario\Core\Contract\CliOutput;
+use function array_keys;
+use function array_values;
+use function count;
 use function in_array;
 use function is_string;
+use function str_pad;
+use function str_repeat;
+use function strlen;
 use function strtolower;
+use const PHP_EOL;
+use const STR_PAD_LEFT;
 
 final class Output implements CliOutput
 {

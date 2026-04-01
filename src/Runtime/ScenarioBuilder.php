@@ -14,6 +14,7 @@ namespace Scenario\Core\Runtime;
 use Scenario\Core\Contract\ScenarioBuilderInterface;
 use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
+use function is_subclass_of;
 
 final class ScenarioBuilder implements ScenarioBuilderInterface
 {

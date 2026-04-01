@@ -22,6 +22,7 @@ use Scenario\Core\Runtime\Application\Configuration\XMLParser;
 use Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use SplFileInfo;
 use function file_put_contents;
+use function mkdir;
 use function rmdir;
 use function scandir;
 use function sys_get_temp_dir;

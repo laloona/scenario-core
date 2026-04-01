@@ -18,6 +18,7 @@ use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use SplFileInfo;
 use function is_dir;
+use function mkdir;
 use function rmdir;
 use function sys_get_temp_dir;
 use function uniqid;

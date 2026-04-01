@@ -16,35 +16,20 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
+use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
 use Scenario\Core\Runtime\Application\TestMethodState;
 use Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
 use Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
-use function file_put_contents;
-use function is_file;
-use function mkdir;
-use function rmdir;
-use function scandir;
-use function sys_get_temp_dir;
-use function uniqid;
-use function unlink;
+use Scenario\Core\Tests\Unit\TestMethodStateMock;
 
 #[CoversClass(RefreshDatabaseHandler::class)]
 #[UsesClass(RefreshDatabase::class)]
 #[UsesClass(AttributeContext::class)]
 #[UsesClass(ExecutionType::class)]
-#[UsesClass(DefaultConfiguration::class)]
-#[UsesClass(LoadedConfiguration::class)]
-#[UsesClass(ConnectionValue::class)]
-#[UsesClass(Application::class)]
 #[UsesClass(TestMethodState::class)]
 #[UsesClass(TestMethodFailureException::class)]
 #[UsesClass(ConnectionException::class)]
@@ -52,56 +37,28 @@ use function unlink;
 #[Small]
 final class RefreshDatabaseHandlerTest extends TestCase
 {
-    private string $tempDir;
+    use TestMethodStateMock;
 
     protected function setUp(): void
     {
-        $this->tempDir = sys_get_temp_dir() . '/scenario_refresh_' . uniqid();
-        mkdir($this->tempDir);
-
-        $reflection = new ReflectionClass(Application::class);
-        $rootDir = $reflection->getProperty('rootDir');
-        $rootDir->setValue(null, $this->tempDir);
-
-        $configuration = new LoadedConfiguration(new DefaultConfiguration());
-        $configuration->setConnections([
-            'main' => new ConnectionValue('main', 'db.php'),
-        ]);
-
-        $configProperty = $reflection->getProperty('configuration');
-        $configProperty->setValue(null, $configuration);
-
         $this->resetTestMethodState();
-        unset($GLOBALS['scenario_core_refresh']);
     }
 
     protected function tearDown(): void
     {
-        foreach (scandir($this->tempDir) as $file) {
-            if ($file !== '.' && $file !== '..') {
-                unlink($this->tempDir . '/' . $file);
-            }
-        }
-
-        rmdir($this->tempDir);
-
-        $reflection = new ReflectionClass(Application::class);
-        $rootDir = $reflection->getProperty('rootDir');
-        $rootDir->setValue(null, null);
-        $configProperty = $reflection->getProperty('configuration');
-        $configProperty->setValue(null, null);
-
         $this->resetTestMethodState();
-        unset($GLOBALS['scenario_core_refresh']);
     }
 
     public function testExecutesConfiguredConnection(): void
     {
-        $configFile = $this->tempDir . '/db.php';
-        file_put_contents($configFile, '<?php $GLOBALS["scenario_core_refresh"] = ($GLOBALS["scenario_core_refresh"] ?? 0) + 1;');
-        self::assertTrue(is_file($configFile));
+        $executor = $this->createMock(DatabaseRefreshExecutorInterface::class);
+        $executor->expects(self::once())
+            ->method('execute')
+            ->with(self::callback(static function (RefreshDatabase $attribute): bool {
+                return $attribute->connection === 'main';
+            }));
 
-        $handler = new RefreshDatabaseHandler();
+        $handler = new RefreshDatabaseHandler($executor);
         $context = AttributeContext::getInstance(
             self::class,
             'testExecutesConfiguredConnection',
@@ -112,15 +69,16 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         $handler->handle($context, new RefreshDatabase('main'));
 
-        self::assertSame(1, $GLOBALS['scenario_core_refresh']);
+        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"main"}'], $context->getAudits());
     }
 
     public function testDryRunDoesNotExecuteConnection(): void
     {
-        $configFile = $this->tempDir . '/db.php';
-        file_put_contents($configFile, '<?php $GLOBALS["scenario_core_refresh"] = ($GLOBALS["scenario_core_refresh"] ?? 0) + 1;');
+        $executor = $this->createMock(DatabaseRefreshExecutorInterface::class);
+        $executor->expects(self::never())
+            ->method('execute');
 
-        $handler = new RefreshDatabaseHandler();
+        $handler = new RefreshDatabaseHandler($executor);
         $context = AttributeContext::getInstance(
             self::class,
             'testDryRunDoesNotExecuteConnection',
@@ -131,12 +89,17 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         $handler->handle($context, new RefreshDatabase('main'));
 
-        self::assertFalse(isset($GLOBALS['scenario_core_refresh']));
+        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"main"}'], $context->getAudits());
     }
 
     public function testMissingConnectionRegistersFailure(): void
     {
-        $handler = new RefreshDatabaseHandler();
+        $executor = $this->createMock(DatabaseRefreshExecutorInterface::class);
+        $executor->expects(self::once())
+            ->method('execute')
+            ->willThrowException(new ConnectionException('missing'));
+
+        $handler = new RefreshDatabaseHandler($executor);
         $context = AttributeContext::getInstance(
             self::class,
             'testMissingConnectionRegistersFailure',
@@ -150,12 +113,6 @@ final class RefreshDatabaseHandlerTest extends TestCase
         $failure = (new TestMethodState())->failure($context->class, $context->method ?? '');
         self::assertInstanceOf(TestMethodFailureException::class, $failure);
         self::assertInstanceOf(ConnectionException::class, $failure->getPrevious());
-    }
-
-    private function resetTestMethodState(): void
-    {
-        $reflection = new ReflectionClass(TestMethodState::class);
-        $throwables = $reflection->getProperty('throwables');
-        $throwables->setValue(null, []);
+        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"missing"}'], $context->getAudits());
     }
 }

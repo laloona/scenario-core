@@ -16,7 +16,10 @@ use Scenario\Core\Console\Exception\MissingRequiredOptionsException;
 use Scenario\Core\Console\Exception\NotAllowedArgumentsException;
 use Scenario\Core\Console\Exception\NotAllowedOptionsException;
 use function array_key_exists;
+use function array_keys;
+use function array_values;
 use function count;
+use function is_array;
 
 final class Resolver
 {

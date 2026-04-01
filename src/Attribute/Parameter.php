@@ -14,6 +14,10 @@ namespace Scenario\Core\Attribute;
 use Attribute;
 use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Scenario\Core\Runtime\Metadata\ParameterType;
+use function array_values;
+use function gettype;
+use function implode;
+use function is_array;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 final class Parameter

@@ -12,7 +12,9 @@
 namespace Scenario\Core\Runtime\Metadata\ValueType;
 
 use function filter_var;
+use function is_int;
 use function is_string;
+use const FILTER_VALIDATE_INT;
 
 final class IntegerType
 {

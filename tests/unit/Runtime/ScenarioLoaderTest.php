@@ -36,6 +36,7 @@ use function is_file;
 use function json_encode;
 use function mkdir;
 use function uniqid;
+use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(ScenarioLoader::class)]
 #[UsesClass(Application::class)]

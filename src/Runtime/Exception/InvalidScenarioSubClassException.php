@@ -12,6 +12,7 @@
 namespace Scenario\Core\Runtime\Exception;
 
 use Scenario\Core\Contract\ScenarioInterface;
+use function sprintf;
 
 final class InvalidScenarioSubClassException extends DefinitionException
 {

@@ -16,6 +16,9 @@ use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use function md5;
+use function microtime;
+use const DIRECTORY_SEPARATOR;
 
 final class DefaultConfiguration implements Configuration
 {

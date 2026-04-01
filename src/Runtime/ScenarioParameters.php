@@ -19,6 +19,7 @@ use Scenario\Core\Runtime\Exception\UndefinedParameterException;
 use function array_diff;
 use function array_keys;
 use function array_values;
+use function count;
 use function gettype;
 
 final class ScenarioParameters

@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
+use function sprintf;
+
 final class ParameterValueErrorException extends Exception
 {
     public function __construct(string $name, string $expected, string $actual, bool $default)

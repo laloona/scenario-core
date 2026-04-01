@@ -12,6 +12,16 @@
 namespace Scenario\Core\Console\Output\Formatter;
 
 use Scenario\Core\Console\Output\Theme\FontStyle;
+use function array_fill;
+use function array_pad;
+use function array_sum;
+use function array_unshift;
+use function array_values;
+use function count;
+use function implode;
+use function max;
+use function min;
+use function str_repeat;
 
 final class Table extends AnsiString
 {

@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Exception\Application;
 
+use function sprintf;
+
 final class SuiteAlreadyExistsException extends FailureException
 {
     public function __construct(string $name)

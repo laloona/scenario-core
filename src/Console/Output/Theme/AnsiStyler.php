@@ -13,9 +13,11 @@ namespace Scenario\Core\Console\Output\Theme;
 
 use Scenario\Core\Console\Output\TerminalEnvironment;
 use function ctype_digit;
+use function floor;
 use function implode;
 use function is_string;
 use function max;
+use function min;
 use function preg_match;
 use function trim;
 

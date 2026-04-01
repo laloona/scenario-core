@@ -13,6 +13,9 @@ namespace Scenario\Core\Runtime\Exception\Metadata;
 
 use Scenario\Core\Runtime\Exception\Exception;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use function array_values;
+use function implode;
+use function sprintf;
 
 final class CycleException extends Exception
 {

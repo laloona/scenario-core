@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Console\Exception;
 
+use function sprintf;
+
 final class ArgumentValueErrorException extends InputException
 {
     public function __construct(string $name, string $expected, string $actual, bool $default)

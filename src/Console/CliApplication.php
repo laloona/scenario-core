@@ -24,6 +24,9 @@ use Scenario\Core\Console\Output\SystemTerminal;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Scenario\Core\Runtime\Application;
+use function define;
+use function defined;
+use const PHP_EOL;
 
 final class CliApplication
 {

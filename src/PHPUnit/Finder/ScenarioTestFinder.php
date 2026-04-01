@@ -20,6 +20,9 @@ use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ClassFinder;
+use function array_merge;
+use function class_exists;
+use const DIRECTORY_SEPARATOR;
 
 final class ScenarioTestFinder
 {

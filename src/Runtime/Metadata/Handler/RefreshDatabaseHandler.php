@@ -12,13 +12,16 @@
 namespace Scenario\Core\Runtime\Metadata\Handler;
 
 use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
+use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
 
 final class RefreshDatabaseHandler extends AttributeHandler
 {
+    public function __construct(private DatabaseRefreshExecutorInterface $refreshExecutor)
+    {
+    }
+
     protected function attributeName(): string
     {
         return RefreshDatabase::class;
@@ -34,14 +37,7 @@ final class RefreshDatabaseHandler extends AttributeHandler
                 return;
             }
 
-            $connections = Application::config()?->getConnections() ?? [];
-            if (isset($connections[$metaData->connection]) === true
-                && is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection]->config) === true) {
-                include(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection]->config);
-                return;
-            }
-
-            throw new ConnectionException($metaData->connection ?? '');
+            $this->refreshExecutor->execute($metaData);
         }
     }
 }

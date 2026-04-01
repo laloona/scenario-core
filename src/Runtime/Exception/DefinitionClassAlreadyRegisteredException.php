@@ -11,6 +11,8 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
+use function sprintf;
+
 final class DefinitionClassAlreadyRegisteredException extends DefinitionException
 {
     /**

@@ -20,6 +20,10 @@ use Scenario\Core\Console\Output\Formatter\AnsiString;
 use Scenario\Core\Console\Output\Formatter\Table;
 use Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Scenario\Core\Console\Output\Theme\FontStyle;
+use function count;
+use function implode;
+use function preg_replace;
+use function str_repeat;
 
 #[CoversClass(Table::class)]
 #[UsesClass(Align::class)]

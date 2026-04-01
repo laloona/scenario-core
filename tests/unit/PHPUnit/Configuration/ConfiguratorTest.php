@@ -25,6 +25,7 @@ use Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_get_contents;
 use function file_put_contents;
 use function is_file;
+use function substr_count;
 
 #[CoversClass(Configurator::class)]
 #[UsesClass(Configured::class)]

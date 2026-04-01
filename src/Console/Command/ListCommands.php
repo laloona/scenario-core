@@ -13,6 +13,7 @@ namespace Scenario\Core\Console\Command;
 
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
+use function sprintf;
 
 final class ListCommands extends CliCommand
 {

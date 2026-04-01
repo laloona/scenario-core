@@ -22,6 +22,9 @@ use Scenario\Core\Console\Output\Theme\BackgroundColor;
 use Scenario\Core\Console\Output\Theme\BoxType;
 use Scenario\Core\Console\Output\Theme\FontStyle;
 use Scenario\Core\Console\Output\Theme\ForegroundColor;
+use function count;
+use function preg_replace;
+use function strlen;
 
 #[CoversClass(Box::class)]
 #[UsesClass(AnsiString::class)]

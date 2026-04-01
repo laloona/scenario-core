@@ -11,6 +11,9 @@
 
 namespace Scenario\Core\Runtime\Exception;
 
+use function implode;
+use function sprintf;
+
 final class NotAllowedParametersException extends Exception
 {
     /**

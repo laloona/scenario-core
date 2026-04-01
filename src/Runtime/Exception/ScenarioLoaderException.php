@@ -12,6 +12,8 @@
 namespace Scenario\Core\Runtime\Exception;
 
 use Throwable;
+use function get_class;
+use function sprintf;
 
 final class ScenarioLoaderException extends Exception
 {

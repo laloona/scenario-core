@@ -25,6 +25,13 @@ use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Scenario\Core\Runtime\ScenarioDefinition;
 use Scenario\Core\Runtime\ScenarioRegistry;
+use function array_keys;
+use function array_shift;
+use function array_unique;
+use function array_values;
+use function count;
+use function is_string;
+use function sprintf;
 
 final class DebugCommand extends CliCommand
 {

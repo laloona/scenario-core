@@ -41,6 +41,7 @@ use Scenario\Core\Tests\Unit\HandlerRegistryMock;
 use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use Scenario\Core\Tests\Unit\TestClassStateMock;
 use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use function is_array;
 
 #[CoversClass(ApplyScenarioCommand::class)]
 #[UsesClass(ApplicationState::class)]

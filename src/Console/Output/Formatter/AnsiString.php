@@ -19,6 +19,7 @@ use function mb_strlen;
 use function mb_substr;
 use function preg_replace;
 use function str_repeat;
+use function str_replace;
 use function wordwrap;
 
 abstract class AnsiString
