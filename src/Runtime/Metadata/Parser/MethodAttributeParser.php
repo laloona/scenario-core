@@ -15,7 +15,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use Scenario\Core\Runtime\Application;
-use function array_merge;
+use function in_array;
 
 final class MethodAttributeParser
 {
@@ -30,11 +30,11 @@ final class MethodAttributeParser
 
         $config = Application::config();
         if ($config !== null) {
-            foreach ($config->getAttributes() as $attribute) {
-                $attributes = array_merge(
-                    $attributes,
-                    (new ReflectionClass($className))->getMethod($methodName)->getAttributes($attribute),
-                );
+            $foundAttributes = (new ReflectionClass($className))->getMethod($methodName)->getAttributes();
+            foreach ($foundAttributes as $attribute) {
+                if (in_array($attribute->getName(), $config->getAttributes(), true)) {
+                    $attributes[] = $attribute;
+                }
             }
         }
 

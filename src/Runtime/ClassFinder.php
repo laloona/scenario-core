@@ -19,6 +19,7 @@ use function array_filter;
 use function array_values;
 use function get_declared_classes;
 use function md5;
+use function realpath;
 use function str_starts_with;
 
 final class ClassFinder
@@ -58,9 +59,15 @@ final class ClassFinder
      */
     private function filterClassesByDirectory(array $classes, string $directory): array
     {
+        $directory = realpath($directory);
+        if ($directory === false) {
+            return [];
+        }
+
         return array_values(array_filter($classes, function ($class) use ($directory) {
-            $file = new ReflectionClass($class)->getFileName();
-            return !($file === false) && str_starts_with($file, $directory);
+            $file = (new ReflectionClass($class))->getFileName();
+            return $file !== false
+                && str_starts_with($file, $directory);
         }));
     }
 

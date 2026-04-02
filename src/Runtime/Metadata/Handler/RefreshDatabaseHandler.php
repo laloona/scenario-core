@@ -15,6 +15,7 @@ use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
 use Scenario\Core\Runtime\Metadata\AttributeContext;
 use Scenario\Core\Runtime\Metadata\ExecutionType;
+use function get_class;
 
 final class RefreshDatabaseHandler extends AttributeHandler
 {
@@ -31,7 +32,7 @@ final class RefreshDatabaseHandler extends AttributeHandler
     {
         /** @var RefreshDatabase $metaData */
         if ($context->executionType === ExecutionType::Up) {
-            $context->audit(__CLASS__, [ 'connection' => $metaData->connection ]);
+            $context->audit(get_class($this->refreshExecutor), [ 'connection' => $metaData->connection ]);
 
             if ($context->dryRun === true) {
                 return;
