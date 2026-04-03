@@ -38,6 +38,7 @@ use Scenario\Core\Tests\Unit\HandlerRegistryMock;
 #[CoversClass(AttributeProcessor::class)]
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(ApplicationFailureException::class)]
+#[UsesClass(ApplyScenario::class)]
 #[UsesClass(AttributeContext::class)]
 #[UsesClass(AttributeHandler::class)]
 #[UsesClass(ExecutionType::class)]

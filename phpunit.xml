@@ -31,9 +31,6 @@
         <exclude>
             <directory>tests</directory>
             <directory>vendor</directory>
-            <file>src/Attribute/ApplyScenario.php</file>
-            <file>src/Attribute/AsScenario.php</file>
-            <file>src/Attribute/RefreshDatabase.php</file>
             <file>src/Output/Formatter/Align.php</file>
             <file>src/Output/Theme/BackgroundColor.php</file>
             <file>src/Output/Theme/FontStyle.php</file>

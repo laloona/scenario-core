@@ -28,8 +28,10 @@ use Scenario\Core\Tests\Unit\ApplicationMock;
 
 #[CoversClass(ClassAttributeParser::class)]
 #[UsesClass(Application::class)]
+#[UsesClass(ApplyScenario::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(RefreshDatabase::class)]
 #[Group('runtime')]
 #[Small]
 final class ClassAttributeParserTest extends TestCase

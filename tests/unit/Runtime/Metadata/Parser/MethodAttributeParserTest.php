@@ -31,6 +31,7 @@ use Scenario\Core\Tests\Unit\ApplicationMock;
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(RefreshDatabase::class)]
 #[Group('runtime')]
 #[Small]
 final class MethodAttributeParserTest extends TestCase
