@@ -35,7 +35,7 @@ use function strlen;
 #[UsesClass(ForegroundColor::class)]
 #[Group('console')]
 #[Small]
-final class BoxCase extends AnsiStylerCase
+final class BoxTest extends AnsiStylerCase
 {
     public function testWarnGeneratesColoredBoxWithPrefix(): void
     {

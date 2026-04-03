@@ -28,7 +28,7 @@ use Scenario\Core\Console\Output\Theme\ForegroundColor;
 #[UsesClass(Text::class)]
 #[Group('console')]
 #[Small]
-final class ConfirmCase extends AnsiStylerCase
+final class ConfirmTest extends AnsiStylerCase
 {
     public function testOptionsDefaultTrueHighlightsYes(): void
     {

@@ -32,7 +32,7 @@ use function str_repeat;
 #[UsesClass(FontStyle::class)]
 #[Group('console')]
 #[Small]
-final class TableCase extends AnsiStylerCase
+final class TableTest extends AnsiStylerCase
 {
     public function testGenerateReturnsNullWhenEmpty(): void
     {
