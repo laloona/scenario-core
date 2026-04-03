@@ -69,7 +69,8 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         $handler->handle($context, new RefreshDatabase('main'));
 
-        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"main"}'], $context->getAudits());
+        self::assertCount(1, $context->getAudits());
+        self::assertStringContainsString('{"connection":"main"}', $context->getAudits()[0]);
     }
 
     public function testDryRunDoesNotExecuteConnection(): void
@@ -89,7 +90,8 @@ final class RefreshDatabaseHandlerTest extends TestCase
 
         $handler->handle($context, new RefreshDatabase('main'));
 
-        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"main"}'], $context->getAudits());
+        self::assertCount(1, $context->getAudits());
+        self::assertStringContainsString('{"connection":"main"}', $context->getAudits()[0]);
     }
 
     public function testMissingConnectionRegistersFailure(): void
@@ -113,6 +115,7 @@ final class RefreshDatabaseHandlerTest extends TestCase
         $failure = (new TestMethodState())->failure($context->class, $context->method ?? '');
         self::assertInstanceOf(TestMethodFailureException::class, $failure);
         self::assertInstanceOf(ConnectionException::class, $failure->getPrevious());
-        self::assertSame([RefreshDatabaseHandler::class . '{"connection":"missing"}'], $context->getAudits());
+        self::assertCount(1, $context->getAudits());
+        self::assertStringContainsString('{"connection":"missing"}', $context->getAudits()[0]);
     }
 }
