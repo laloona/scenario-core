@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\ClassFinder;
 use Scenario\Core\Tests\Unit\ApplicationMock;
@@ -157,5 +158,57 @@ PHP);
             $classes,
         );
         self::assertSame(md5('1700000001'), $finder->getCacheKey());
+    }
+
+    public function testFilterClassesByDirectoryReturnsEmptyArrayForInvalidDirectory(): void
+    {
+        $finder = new ClassFinder();
+        $method = new ReflectionMethod($finder, 'filterClassesByDirectory');
+        $method->setAccessible(true);
+
+        self::assertSame([], $method->invoke($finder, ['stdClass'], Application::getRootDir() . '/missing'));
+    }
+
+    public function testFilterClassesByDirectoryKeepsOnlyClassesFromGivenDirectory(): void
+    {
+        $scanDir = Application::getRootDir() . '/filter';
+        $outsideDir = Application::getRootDir() . '/outside-filter';
+        mkdir($scanDir, 0777, true);
+        mkdir($outsideDir, 0777, true);
+
+        $insideClass = 'FilterInside' . uniqid();
+        $outsideClass = 'FilterOutside' . uniqid();
+
+        $insideFile = $scanDir . '/Inside.php';
+        file_put_contents($insideFile, <<<PHP
+<?php declare(strict_types=1);
+namespace Scenario\Core\Tests\Tmp;
+final class {$insideClass}
+{
+}
+PHP);
+        include_once $insideFile;
+
+        $outsideFile = $outsideDir . '/Outside.php';
+        file_put_contents($outsideFile, <<<PHP
+<?php declare(strict_types=1);
+namespace Scenario\Core\Tests\Tmp;
+final class {$outsideClass}
+{
+}
+PHP);
+        include_once $outsideFile;
+
+        $finder = new ClassFinder();
+        $method = new ReflectionMethod($finder, 'filterClassesByDirectory');
+        $method->setAccessible(true);
+
+        self::assertSame(
+            ['Scenario\\Core\\Tests\\Tmp\\' . $insideClass],
+            $method->invoke($finder, [
+                'Scenario\\Core\\Tests\\Tmp\\' . $insideClass,
+                'Scenario\\Core\\Tests\\Tmp\\' . $outsideClass,
+            ], $scanDir),
+        );
     }
 }
