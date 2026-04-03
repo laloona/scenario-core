@@ -242,6 +242,7 @@ final class ScenarioLoader
      */
     private function readSuites(Configuration $configuration): array
     {
+        $this->cacheKey = '';
         $classFinder = new ClassFinder();
         $suites = [];
         foreach ($configuration->getSuites() as $suite) {
@@ -255,9 +256,10 @@ final class ScenarioLoader
             } catch (UnexpectedValueException|ValueError $exception) {
                 throw new ScenarioLoaderException($suite->directory, $exception);
             }
+
+            $this->cacheKey .= $classFinder->getCacheKey();
         }
 
-        $this->cacheKey = $classFinder->getCacheKey();
         return $suites;
     }
 }
