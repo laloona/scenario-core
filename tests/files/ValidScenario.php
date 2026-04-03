@@ -26,6 +26,7 @@ final class ValidScenario implements ScenarioInterface
     {
     }
 
+    #[RefreshDatabase]
     #[ApplyScenario('my-scenario')]
     public function up(): void
     {

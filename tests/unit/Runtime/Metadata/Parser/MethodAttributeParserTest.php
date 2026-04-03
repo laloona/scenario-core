@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Attribute\ApplyScenario;
+use Scenario\Core\Attribute\RefreshDatabase;
 use Scenario\Core\Runtime\Application;
 use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
@@ -50,9 +51,11 @@ final class MethodAttributeParserTest extends TestCase
     {
         $attributes = new MethodAttributeParser()->parse(ValidScenario::class, 'up');
 
-        self::assertCount(1, $attributes);
-        self::assertSame(ApplyScenario::class, $attributes[0]->getName());
-        self::assertInstanceOf(ApplyScenario::class, $attributes[0]->newInstance());
+        self::assertCount(2, $attributes);
+        self::assertSame(RefreshDatabase::class, $attributes[0]->getName());
+        self::assertInstanceOf(RefreshDatabase::class, $attributes[0]->newInstance());
+        self::assertSame(ApplyScenario::class, $attributes[1]->getName());
+        self::assertInstanceOf(ApplyScenario::class, $attributes[1]->newInstance());
     }
 
     public function testParseReturnsEmptyArrayWhenNoConfiguredAttributeWasFound(): void
