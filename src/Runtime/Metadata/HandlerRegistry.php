@@ -14,16 +14,23 @@ namespace Scenario\Core\Runtime\Metadata;
 use Scenario\Core\Runtime\Exception\HandlerRegistryException;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
-use Scenario\Core\Runtime\Registry;
 
-final class HandlerRegistry extends Registry
+final class HandlerRegistry
 {
-    protected static ?HandlerRegistry $instance = null;
+    private static ?HandlerRegistry $instance = null;
 
     public static function getInstance(): self
     {
         static::$instance = static::$instance ?? new static();
         return static::$instance;
+    }
+
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
     }
 
     /**

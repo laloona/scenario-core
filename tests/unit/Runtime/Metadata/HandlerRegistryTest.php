@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Scenario\Core\Attribute\ApplyScenario;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Runtime\Exception\HandlerRegistryException;
@@ -79,6 +80,20 @@ final class HandlerRegistryTest extends TestCase
         $this->expectExceptionMessage('Attribute ' . AsScenario::class);
 
         HandlerRegistry::getInstance()->attributeHandler(AsScenario::class);
+    }
+
+    public function testConstructMethodIsPrivate(): void
+    {
+        $method = new ReflectionMethod(HandlerRegistry::class, '__construct');
+
+        self::assertTrue($method->isPrivate());
+    }
+
+    public function testCloneMethodIsPrivate(): void
+    {
+        $method = new ReflectionMethod(HandlerRegistry::class, '__clone');
+
+        self::assertTrue($method->isPrivate());
     }
 
     private function getAttributeHandler(): AttributeHandler

@@ -31,21 +31,9 @@
         <exclude>
             <directory>tests</directory>
             <directory>vendor</directory>
-            <file>src/Output/Formatter/Align.php</file>
-            <file>src/Output/Theme/BackgroundColor.php</file>
-            <file>src/Output/Theme/FontStyle.php</file>
-            <file>src/Output/Theme/ForegroundColor.php</file>
             <file>src/PHPUnit/Extension.php</file>
             <file>src/PHPUnit/Emitter.php</file>
             <file>src/PHPUnit/SubscriberLoader.php</file>
-            <file>src/Runtime/Registry.php</file>
-            <file>src/Runtime/Application/Configuration/Value/ConnectionValue.php</file>
-            <file>src/Runtime/Application/Configuration/Value/SuiteValue.php</file>
-            <file>src/Runtime/Exception/FailureException.php</file>
-            <file>src/Runtime/Exception/HandlerRegistryException.php</file>
-            <file>src/Runtime/Exception/XMLParserException.php</file>
-            <file>src/Runtime/Metadata/ContextTarget.php</file>
-            <file>src/Runtime/Metadata/ExecutionType.php</file>
         </exclude>
     </source>
 </phpunit>

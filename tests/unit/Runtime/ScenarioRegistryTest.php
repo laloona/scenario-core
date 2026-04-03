@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Contract\ScenarioInterface;
 use Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
@@ -257,5 +258,19 @@ final class ScenarioRegistryTest extends TestCase
 
         self::assertSame($secondDefinition, $registry->resolve(ValidScenario::class));
         self::assertSame($firstDefinition, $registry->resolve('first'));
+    }
+
+    public function testConstructMethodIsPrivate(): void
+    {
+        $method = new ReflectionMethod(ScenarioRegistry::class, '__construct');
+
+        self::assertTrue($method->isPrivate());
+    }
+
+    public function testCloneMethodIsPrivate(): void
+    {
+        $method = new ReflectionMethod(ScenarioRegistry::class, '__clone');
+
+        self::assertTrue($method->isPrivate());
     }
 }

@@ -18,14 +18,22 @@ use Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
 use Scenario\Core\Runtime\Exception\RegistryException;
 use function is_subclass_of;
 
-final class ScenarioRegistry extends Registry
+final class ScenarioRegistry
 {
-    protected static ?ScenarioRegistry $instance = null;
+    private static ?ScenarioRegistry $instance = null;
 
     public static function getInstance(): self
     {
         static::$instance = static::$instance ?? new static();
         return static::$instance;
+    }
+
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
     }
 
     /**
