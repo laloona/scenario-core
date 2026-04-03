@@ -53,7 +53,7 @@ final class ParserTest extends TestCase
         self::assertSame([], $parser->options());
     }
 
-    public function xxtestCollectsRepeatedOptions(): void
+    public function testCollectsRepeatedOptions(): void
     {
         $parser = new Parser([
             'scenario',

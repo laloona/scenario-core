@@ -84,6 +84,14 @@ final class OptionTest extends TestCase
         new Option('tag', InputType::String, false, true, null, 'single');
     }
 
+    public function testConstructorThrowsWhenRepeatableDefaultContainsInvalidValue(): void
+    {
+        $this->expectException(OptionValueErrorException::class);
+        $this->expectExceptionMessage('wrong default value for option limit, expected type integer but got string');
+
+        new Option('limit', InputType::Integer, false, true, null, ['10', 'ten']);
+    }
+
     public function testCastThrowsForMissingRequiredValue(): void
     {
         $option = new Option('path', InputType::String, true);

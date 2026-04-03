@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
+use ReflectionMethod;
 use PHPUnit\Framework\TestCase;
 use Scenario\Core\Runtime\Exception\Metadata\CycleException;
 use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
@@ -294,5 +295,22 @@ final class AttributeContextTest extends TestCase
         );
 
         self::assertTrue($context->dryRun);
+    }
+
+    public function testCloneMethodCanBeInvokedViaReflection(): void
+    {
+        $context = AttributeContext::getInstance(
+            AnotherScenario::class,
+            'down',
+            ExecutionType::Down,
+            true,
+            null,
+        );
+
+        $cloneMethod = new ReflectionMethod($context, '__clone');
+        $cloneMethod->setAccessible(true);
+        $cloneMethod->invoke($context);
+
+        self::addToAssertionCount(1);
     }
 }
