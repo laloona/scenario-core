@@ -19,7 +19,11 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\ListCommands;
+use Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Scenario\Core\Console\Input;
 use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\Parser;
+use Scenario\Core\Console\Input\Resolver;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -28,7 +32,11 @@ use Scenario\Core\Runtime\Application\ApplicationState;
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
+#[UsesClass(Input::class)]
+#[UsesClass(NotAllowedOptionsException::class)]
 #[UsesClass(Option::class)]
+#[UsesClass(Parser::class)]
+#[UsesClass(Resolver::class)]
 #[Group('console')]
 #[Small]
 final class ListCommandsTest extends TestCase
@@ -39,6 +47,23 @@ final class ListCommandsTest extends TestCase
             'List all available commands',
             (new ListCommands([]))->description(),
         );
+    }
+
+    public function testRunReturnsErrorWhenResolveRejectsFooOption(): void
+    {
+        $input = new Input([
+            'scenario',
+            '--foo=bar',
+        ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+        $output->expects(self::once())
+            ->method('error');
+
+        self::assertSame(Command::Error, (new ListCommands([]))->run($input, $output));
     }
 
     public function testRunListsAllDefinedCommands(): void

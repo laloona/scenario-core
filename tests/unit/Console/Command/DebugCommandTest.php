@@ -21,6 +21,7 @@ use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\DebugCommand;
+use Scenario\Core\Console\Input;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
@@ -112,6 +113,24 @@ final class DebugCommandTest extends TestCase
             'Debugs a given scenario or Unit test.',
             (new DebugCommand(new ScenarioTestFinder()))->description(),
         );
+    }
+
+    public function testRunReturnsErrorWhenResolveRejectsFooOption(): void
+    {
+        $input = new Input([
+            'scenario',
+            'debug',
+            '--foo=bar',
+        ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+        $output->expects(self::once())
+            ->method('error');
+
+        self::assertSame(Command::Error, (new DebugCommand(new ScenarioTestFinder()))->run($input, $output));
     }
 
     public function testRunReturnsErrorWhenNoScenariosOrTestsWereFound(): void

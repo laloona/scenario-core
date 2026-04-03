@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\MakeScenarioCommand;
+use Scenario\Core\Console\Input;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application;
@@ -64,6 +65,24 @@ final class MakeScenarioCommandTest extends TestCase
             'Make a scenario or config file.',
             (new MakeScenarioCommand())->description(),
         );
+    }
+
+    public function testRunReturnsErrorWhenResolveRejectsFooOption(): void
+    {
+        $input = new Input([
+            'scenario',
+            'make',
+            '--foo=bar',
+        ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+        $output->expects(self::once())
+            ->method('error');
+
+        self::assertSame(Command::Error, (new MakeScenarioCommand())->run($input, $output));
     }
 
     public function testRunGeneratesScenarioFile(): void

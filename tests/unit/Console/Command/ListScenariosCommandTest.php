@@ -20,7 +20,11 @@ use Scenario\Core\Attribute\AsScenario;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\ListScenariosCommand;
+use Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Scenario\Core\Console\Input;
 use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\Parser;
+use Scenario\Core\Console\Input\Resolver;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\Runtime\Application\ApplicationState;
@@ -35,7 +39,11 @@ use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 #[UsesClass(AsScenario::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
+#[UsesClass(Input::class)]
+#[UsesClass(NotAllowedOptionsException::class)]
 #[UsesClass(Option::class)]
+#[UsesClass(Parser::class)]
+#[UsesClass(Resolver::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioRegistry::class)]
 #[Group('console')]
@@ -55,6 +63,24 @@ final class ListScenariosCommandTest extends TestCase
             'List all available scenarios, use --suite="name of you suite" if you want to see just one suite.',
             (new ListScenariosCommand())->description(),
         );
+    }
+
+    public function testRunReturnsErrorWhenResolveRejectsFooOption(): void
+    {
+        $input = new Input([
+            'scenario',
+            'list',
+            '--foo=bar',
+        ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+        $output->expects(self::once())
+            ->method('error');
+
+        self::assertSame(Command::Error, (new ListScenariosCommand())->run($input, $output));
     }
 
     public function testRunWarnsWhenNoScenariosAreRegistered(): void

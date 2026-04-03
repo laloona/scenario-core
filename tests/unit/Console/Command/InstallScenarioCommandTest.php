@@ -19,7 +19,11 @@ use PHPUnit\Framework\TestCase;
 use Scenario\Core\Console\Command\CliCommand;
 use Scenario\Core\Console\Command\Command;
 use Scenario\Core\Console\Command\InstallScenarioCommand;
+use Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Scenario\Core\Console\Input;
 use Scenario\Core\Console\Input\Option;
+use Scenario\Core\Console\Input\Parser;
+use Scenario\Core\Console\Input\Resolver;
 use Scenario\Core\Contract\CliInput;
 use Scenario\Core\Contract\CliOutput;
 use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
@@ -41,7 +45,11 @@ use function file_put_contents;
 #[UsesClass(Configured::class)]
 #[UsesClass(Configurator::class)]
 #[UsesClass(Extension::class)]
+#[UsesClass(Input::class)]
+#[UsesClass(NotAllowedOptionsException::class)]
 #[UsesClass(Option::class)]
+#[UsesClass(Parser::class)]
+#[UsesClass(Resolver::class)]
 #[Group('console')]
 #[Small]
 final class InstallScenarioCommandTest extends TestCase
@@ -66,6 +74,24 @@ final class InstallScenarioCommandTest extends TestCase
             'Configure the extension for PHPUnit.',
             (new InstallScenarioCommand())->description(),
         );
+    }
+
+    public function testRunReturnsErrorWhenResolveRejectsFooOption(): void
+    {
+        $input = new Input([
+            'scenario',
+            'install',
+            '--foo=bar',
+        ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::never())->method('success');
+        $output->expects(self::never())->method('choice');
+        $output->expects(self::never())->method('ask');
+        $output->expects(self::once())
+            ->method('error');
+
+        self::assertSame(Command::Error, (new InstallScenarioCommand())->run($input, $output));
     }
 
     public function testRunReturnsErrorWithQuietWhenExtensionIsAlreadyConfigured(): void
