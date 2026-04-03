@@ -156,4 +156,66 @@ PHP,
         self::assertTrue(is_file($configFile));
         self::assertSame("<scenario></scenario>\n", file_get_contents($configFile));
     }
+
+    public function testRunReturnsErrorWhenScenarioNameIsInvalid(): void
+    {
+        mkdir(Application::getRootDir() . '/vendor/scenario/core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/app/scenarios', 0777, true);
+
+        file_put_contents(
+            Application::getRootDir() . '/vendor/scenario/core/blueprint/scenario.blueprint',
+            '<?php final class %className% {}',
+        );
+
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $config->setSuites([
+            'main' => new SuiteValue('main', 'app/scenarios'),
+        ]);
+        $this->setConfiguration($config);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['type', 'scenario'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('ask')
+            ->with('Please insert a class name for the new scenario', null, self::isCallable())
+            ->willReturn(null);
+        $output->expects(self::once())
+            ->method('error')
+            ->with('Invalid Scenario name.');
+        $output->expects(self::never())
+            ->method('success');
+
+        self::assertSame(Command::Error, (new MakeScenarioCommand())->run($input, $output));
+    }
+
+    public function testRunReturnsErrorWhenConfigBlueprintDoesNotExist(): void
+    {
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['type', 'config'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('error')
+            ->with('Config file generation failed.');
+        $output->expects(self::never())
+            ->method('success');
+
+        self::assertSame(Command::Error, (new MakeScenarioCommand())->run($input, $output));
+    }
 }
