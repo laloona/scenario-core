@@ -77,7 +77,6 @@ final class ScenarioTestFinder
                         $testClasses[$className] = [];
                     }
                     $testClasses[$className][] = $method->getName();
-                    break;
                 }
             }
         }
