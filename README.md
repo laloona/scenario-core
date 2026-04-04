@@ -154,7 +154,7 @@ Framework-specific integration layers may be provided separately.
 ## Next Steps
 
 - [Getting Started](docs/getting-started.md)
-- [Scenarios](docs/scenario.md)
+- [Scenarios](docs/scenarios.md)
 - [CLI Usage](docs/cli.md)
 - [Testing with PHPUnit](docs/testing-with-phpunit.md)
 - [Recipes](docs/recipes.md)

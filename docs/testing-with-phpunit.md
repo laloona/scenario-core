@@ -25,7 +25,7 @@ Instead of writing setup code, you describe the desired state:
 Make sure the Scenario PHPUnit extension is registered:
 ```xml
 <extensions>
-    <bootstrap class="Scenario\Core\PHPUnit\Extension" />
+    <bootstrap class="Stateforge\Scenario\Core\PHPUnit\Extension" />
 </extensions>
 ```
 As alternative the cli install command can configure PHPUnit.
