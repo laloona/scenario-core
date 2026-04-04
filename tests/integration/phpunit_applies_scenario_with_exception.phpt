@@ -19,7 +19,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 PHPUnit %s by Sebastian Bergmann and contributors.
 
 Runtime:       PHP %s
-Configuration: /app/tests/integration/phpunit.xml
+Configuration: %s/tests/integration/phpunit.xml
 
 first scenario was applied with up
 second scenario was applied with up and parameter 5

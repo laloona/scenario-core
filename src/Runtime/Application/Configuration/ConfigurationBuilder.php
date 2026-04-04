@@ -24,7 +24,7 @@ final class ConfigurationBuilder
 {
     public function __construct(
         private ConfigurationFinder $finder,
-        private XMLParser           $parser,
+        private XMLParser $parser,
     ) {
     }
 
@@ -78,11 +78,11 @@ final class ConfigurationBuilder
             }
 
             $name = $connectionNode->attributes->getNamedItem('name')?->nodeValue;
-            if (isset($connectionObjects[$name]) === true) {
+            if (isset($connectionObjects[$name ?? '']) === true) {
                 throw new ConnectionAlreadyExistsException($name ?? '');
             }
 
-            $connectionObjects[$name] = new ConnectionValue(
+            $connectionObjects[$name ?? ''] = new ConnectionValue(
                 $name,
                 $connectionNode->textContent,
             );

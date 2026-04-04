@@ -62,11 +62,11 @@ final class Table extends AnsiString
         if ($border !== null) {
             $table[] = $border;
         }
-        foreach ($rows as $i => $row) {
+        foreach ($rows as $index => $row) {
             $table[] = $this->row($row, $sizes, $align ?? []);
             if ($border !== null
                 && $headers !== null
-                && $i === 0) {
+                && $index === 0) {
                 $table[] = $border;
             }
         }

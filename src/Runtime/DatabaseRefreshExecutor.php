@@ -22,9 +22,9 @@ final class DatabaseRefreshExecutor implements DatabaseRefreshExecutorInterface
     public function execute(RefreshDatabase $metaData): void
     {
         $connections = Application::config()?->getConnections() ?? [];
-        if (isset($connections[$metaData->connection]) === true
-            && is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection]->config) === true) {
-            include(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection]->config);
+        if (isset($connections[$metaData->connection ?? '']) === true
+            && is_file(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection ?? '']->config) === true) {
+            include(Application::getRootDir() . DIRECTORY_SEPARATOR . $connections[$metaData->connection ?? '']->config);
             return;
         }
 
