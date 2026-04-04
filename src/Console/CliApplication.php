@@ -26,6 +26,7 @@ use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Stateforge\Scenario\Core\Runtime\Application;
 use function define;
 use function defined;
+use function fopen;
 use const PHP_EOL;
 
 final class CliApplication
