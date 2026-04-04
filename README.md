@@ -5,25 +5,21 @@ execution.
 
 ## Requirements
 Scenario Core requires the following:
-
-* PHP >= 8.2.
-* ext-dom *
-* [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) >= 11
+- PHP >= 8.2.
+- ext-dom *
+- [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) >= 11
 
 ## Installation
 
 > This package is intended for test and development use only.
 
-Install it via Composer as a development dependency. 
-
-<pre><code>
+Install it via Composer as a development dependency.
+```bash
 composer require --dev stateforge/scenario-core
-</code></pre>
+```
 
 ## PHPUnit Integration
-
-It
-integrates seamlessly with PHPUnit-based test suites and console tooling.
+It integrates seamlessly with PHPUnit-based test suites and console tooling.
 To enable scenario processing in your test suite, register the PHPUnit
 extension in your ``phpunit.xml``:
 
@@ -38,14 +34,13 @@ that all scenario-related attributes are processed before test
 execution.
 
 ## Defining a Scenario
-
 A scenario represents a reproducible application data state.
 Scenarios:
-* Implement ``ScenarioInterface``
-* Are marked with ```#[AsScenario]```
-* Are automatically discovered and registered
+- Implement ``ScenarioInterface``
+- Are marked with ```#[AsScenario]```
+- Are automatically discovered and registered
 
-<pre><code type="php">&lt;?php
+```php
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Contract\ScenarioInterface;
 
@@ -63,14 +58,13 @@ final class MyScenario implements ScenarioInterface
     }
 }
 </code></pre>
-
+```
 No manual registry interaction is required.
 
 ## Applying a Scenario in a Unit Test
-
 Scenarios can be applied declaratively using the ```#[ApplyScenario]``` attribute:
 
-<pre><code type="php">&lt;?php
+```php
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('my-scenario')]
@@ -82,13 +76,11 @@ final class MyTest extends TestCase
         // scenario has already been applied, data can be tested
     }
 }
-</code></pre>
-
+```
 Multiple scenarios may be applied at class or method level. A scenario class can apply other scenarios.
 
-## Example Use Case ##
-
-<pre><code type="php">
+## Example Use Case
+```php
 #[ApplyScenario(UserExists::class, [ 'id' => 42 ])]
 #[ApplyScenario(UserHasSubscription::class, [ 'id' => 42 ])]
 final class SubscriptionTest extends TestCase
@@ -99,21 +91,19 @@ final class SubscriptionTest extends TestCase
         $this->assertTrue($this->service->userHasAccess(42));
     }
 }
-</code></pre>
-
+```
 
 ## Resetting the Database
-
 Use the ```#[RefreshDatabase]``` attribute to reset the database before scenario execution:
 
-<pre><code type="php">&lt;?php
+```php
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
 
 #[RefreshDatabase]
 final class MyFreshDatabaseTest extends TestCase
 {
 }
-</code></pre>
+```
 
 This ensures clean and deterministic test state. This can be applied on class or method
 level and on Unit Tests or Scenario Classes.
@@ -123,31 +113,28 @@ level and on Unit Tests or Scenario Classes.
 >Instead, a custom PHP file can be configured to perform the reset according to your application's infrastructure.
 
 ## Console Usage
-
 Scenarios can also be executed directly from the console:
-
-<pre><code>
+```bash
 php vendor/bin/scenario apply my-scenario
-</code></pre>
+```
 
 This allows:
-* local state setup
-* reproducible development fixtures
-* CI preparation workflows
+- local state setup
+- reproducible development fixtures
+- CI preparation workflows
 
 Get all available CLI Commands:
-<pre><code>
+```bash
 php vendor/bin/scenario
-</code></pre>
+```
 
 ## Framework Integration
-
 Scenario Core is framework-agnostic and can be integrated into any PHP application.
 
 It works particularly well with:
-* Symfony-based applications: ([stateforge/scenario-symfony](https://github.com/laloona/scenario-symfony))
-* Laravel-based applications: ([stateforge/scenario-laravel](https://github.com/laloona/scenario-laravel))
-* Custom test infrastructures using PHPUnit
+- Symfony-based applications: ([stateforge/scenario-symfony](https://github.com/laloona/scenario-symfony))
+- Laravel-based applications: ([stateforge/scenario-laravel](https://github.com/laloona/scenario-laravel))
+- Custom test infrastructures using PHPUnit
 
 Framework-specific integration layers may be provided separately.
 
