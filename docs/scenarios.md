@@ -40,7 +40,6 @@ final class CreateUserScenario implements ScenarioInterface
 ```
 
 ## Scenario Naming
-
 The name defined in `#[AsScenario]` is used:
 - in CLI (scenario apply create-user)
 - in `#[ApplyScenario]`
@@ -52,7 +51,6 @@ The name defined in `#[AsScenario]` is used:
 - prefer kebab-case or snake_case
 
 ## Applying Scenarios
-
 Scenarios are applied using the `#[ApplyScenario]` attribute.
 
 ```php
@@ -70,7 +68,6 @@ You can also reference the class directly:
 ```
 
 ## Scenario Composition
-
 Scenarios can apply other scenarios.
 ```php
 #[ApplyScenario(UserExists::class)]
@@ -87,7 +84,6 @@ final class UserReadyScenario implements ScenarioInterface
 - keep scenarios focused
 
 ### Execution Order
-
 Scenarios are executed in the order they are applied.
 - class-level attributes run before method-level attributes
 - composed scenarios run before the current scenario
