@@ -56,9 +56,9 @@ php vendor/bin/scenario
   ```
 - __debug__: Inspect a scenario or test. Arguments (optional): `class` `method`<br>
   Use this to:
-  - verify scenario resolution
-  - inspect applied scenarios
-  - debug execution flow
+    - verify scenario resolution
+    - inspect applied scenarios
+    - debug execution flow
 - __make__: Generate a new scenario. This command helps to create new scenarios quickly.
 - __refresh__: Execute database or environment refresh logic.<br>
   Available options (optional):
