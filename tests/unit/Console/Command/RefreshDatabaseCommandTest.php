@@ -110,7 +110,7 @@ final class RefreshDatabaseCommandTest extends TestCase
             ->willReturn(RefreshDatabase::class);
         $handler->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function (AttributeContext $context, object $metaData) {
+            ->willReturnCallback(function (AttributeContext $context, object $metaData): void {
                 self::assertSame(RefreshDatabaseCommand::class, $context->class);
                 self::assertSame(RefreshDatabaseCommand::class . '::execute', $context->method);
                 self::assertSame(ExecutionType::Up, $context->executionType);
@@ -146,7 +146,7 @@ final class RefreshDatabaseCommandTest extends TestCase
             ->willReturn(RefreshDatabase::class);
         $handler->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function (AttributeContext $context, object $metaData) {
+            ->willReturnCallback(function (AttributeContext $context, object $metaData): void {
                 self::assertSame(RefreshDatabaseCommand::class, $context->class);
                 self::assertSame(RefreshDatabaseCommand::class . '::execute', $context->method);
                 self::assertSame(ExecutionType::Up, $context->executionType);

@@ -64,7 +64,7 @@ final class ClassFinder
             return [];
         }
 
-        return array_values(array_filter($classes, function ($class) use ($directory) {
+        return array_values(array_filter($classes, function (string $class) use ($directory): bool {
             $file = (new ReflectionClass($class))->getFileName();
             return $file !== false
                 && str_starts_with($file, $directory);

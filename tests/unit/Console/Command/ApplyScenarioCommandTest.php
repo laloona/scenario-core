@@ -322,7 +322,7 @@ final class ApplyScenarioCommandTest extends TestCase
             ->willReturn(ApplyScenario::class);
         $handler->expects(self::once())
             ->method('execute')
-            ->willReturnCallback(function (AttributeContext $context, object $metaData) use ($parameter) {
+            ->willReturnCallback(function (AttributeContext $context, object $metaData) use ($parameter): void {
                 self::assertSame(ApplyScenarioCommand::class, $context->class);
                 self::assertSame('up', $context->method);
                 self::assertSame(ExecutionType::Up, $context->executionType);

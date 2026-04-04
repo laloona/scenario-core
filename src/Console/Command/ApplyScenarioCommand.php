@@ -127,8 +127,8 @@ final class ApplyScenarioCommand extends CliCommand
                         $parameter->required === true ? ' (required)' : '',
                     );
                     $validator = $parameter->required === true
-                        ? fn ($input) => $parameter->type->valid($input)
-                        : fn ($input) => $input === null || $parameter->type->valid($input);
+                        ? fn ($input): bool => $parameter->type->valid($input)
+                        : fn ($input): bool => $input === null || $parameter->type->valid($input);
                     $default = $parameter->asString($parameter->default);
                     $answer = $output->ask($ask, $default, $validator);
                     if ($parameter->repeatable === true) {

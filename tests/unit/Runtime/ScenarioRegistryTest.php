@@ -64,7 +64,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario(null, null),
+            new AsScenario(),
             [],
         );
 
@@ -80,7 +80,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('my-scenario', null),
+            new AsScenario('my-scenario'),
             [],
         );
 
@@ -97,7 +97,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario(null, null),
+            new AsScenario(),
             [],
         );
 
@@ -117,7 +117,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('', null),
+            new AsScenario(''),
             [],
         );
 
@@ -143,7 +143,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('my-scenario', null),
+            new AsScenario('my-scenario'),
             [],
         );
 
@@ -165,7 +165,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('my-scenario', null),
+            new AsScenario('my-scenario'),
             [],
         );
 
@@ -196,7 +196,7 @@ final class ScenarioRegistryTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             InvalidScenario::class,
-            new AsScenario('my-scenario', null),
+            new AsScenario('my-scenario'),
             [],
         );
 
@@ -213,7 +213,7 @@ final class ScenarioRegistryTest extends TestCase
         $firstDefinition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('alias', null),
+            new AsScenario('alias'),
             [],
         );
         $registry->register($firstDefinition);
@@ -221,7 +221,7 @@ final class ScenarioRegistryTest extends TestCase
         $secondDefinition = new ScenarioDefinition(
             'main',
             AnotherScenario::class,
-            new AsScenario('alias', null),
+            new AsScenario('alias'),
             [],
         );
 
@@ -238,14 +238,14 @@ final class ScenarioRegistryTest extends TestCase
         $firstDefinition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('first', null),
+            new AsScenario('first'),
             [],
         );
 
         $secondDefinition = new ScenarioDefinition(
             'main',
             ValidScenario::class,
-            new AsScenario('second', null),
+            new AsScenario('second'),
             [],
         );
 

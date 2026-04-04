@@ -87,9 +87,9 @@ final class ScenarioParametersTest extends TestCase
     {
         $parameters = new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, false, null),
-                new Parameter('mybool', ParameterType::Boolean, null, false, false, null),
-                new Parameter('myfloat', ParameterType::Float, null, false, false, null),
+                new Parameter('myint', ParameterType::Integer, null, false, false),
+                new Parameter('mybool', ParameterType::Boolean, null, false, false),
+                new Parameter('myfloat', ParameterType::Float, null, false, false),
             ],
             [
                 'myint' => '42',
@@ -136,7 +136,7 @@ final class ScenarioParametersTest extends TestCase
 
         new ScenarioParameters(
             [
-                new Parameter('myint', ParameterType::Integer, null, false, false, null),
+                new Parameter('myint', ParameterType::Integer, null, false, false),
             ],
             [
                 'myint' => 'abc',
@@ -149,7 +149,7 @@ final class ScenarioParametersTest extends TestCase
         $parameters = new ScenarioParameters(
             [
                 new Parameter('myint', ParameterType::Integer, null, false, false, 1),
-                new Parameter('mybool', ParameterType::Boolean, null, false, false, null),
+                new Parameter('mybool', ParameterType::Boolean, null, false, false),
             ],
             [
                 'myint' => '2',

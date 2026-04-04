@@ -197,7 +197,7 @@ final class InstallScenarioCommandTest extends TestCase
         $matcher = self::exactly(2);
         $output->expects($matcher)
             ->method('confirm')
-            ->willReturnCallback(function (string $question, bool $default) use ($matcher) {
+            ->willReturnCallback(function (string $question, bool $default) use ($matcher): bool {
                 self::assertFalse($default);
                 switch ($matcher->numberOfInvocations()) {
                     case 1:
@@ -242,7 +242,7 @@ final class InstallScenarioCommandTest extends TestCase
         $matcher = self::exactly(2);
         $output->expects($matcher)
             ->method('confirm')
-            ->willReturnCallback(function (string $question, bool $default) use ($matcher) {
+            ->willReturnCallback(function (string $question, bool $default) use ($matcher): bool {
                 self::assertFalse($default);
                 switch ($matcher->numberOfInvocations()) {
                     case 1:

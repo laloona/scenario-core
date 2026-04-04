@@ -166,7 +166,7 @@ final class ApplyScenarioHandlerTest extends TestCase
         $definition = new ScenarioDefinition(
             'main',
             TrackingScenario::class,
-            new AsScenario('tracking', null),
+            new AsScenario('tracking'),
             [
                 new Parameter('id', ParameterType::Integer),
             ],
