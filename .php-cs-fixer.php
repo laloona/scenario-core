@@ -4,7 +4,7 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $header = <<<'HEADER'
-This file is part of Scenario\Core package.
+This file is part of Stateforge\Scenario\Core package.
 
 (c) Christina Koenig <christina.koenig@looriva.de>
 

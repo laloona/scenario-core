@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Metadata\ParameterType;
-use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
-use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
-use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
-use Scenario\Core\Runtime\Metadata\ValueType\StringType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 #[CoversClass(ParameterType::class)]
 #[UsesClass(BooleanType::class)]

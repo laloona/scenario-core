@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Application\Configuration;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Application\Configuration;
 
 use DOMDocument;
 use InvalidArgumentException;
@@ -18,9 +18,9 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Application\Configuration\XMLParser;
-use Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use SplFileInfo;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use function file_put_contents;
 use function mkdir;
 use function rmdir;

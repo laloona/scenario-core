@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Metadata;
 
-use Scenario\Core\Runtime\Exception\HandlerRegistryException;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
+use Stateforge\Scenario\Core\Runtime\Exception\HandlerRegistryException;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 
 final class HandlerRegistry
 {

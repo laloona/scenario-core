@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,27 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Console\Exception\MissingRequiredArgumentsException;
-use Scenario\Core\Console\Exception\NotAllowedArgumentsException;
-use Scenario\Core\Console\Exception\NotAllowedOptionsException;
-use Scenario\Core\Console\Exception\UndefinedArgumentException;
-use Scenario\Core\Console\Exception\UndefinedOptionException;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Console\Input\Argument;
-use Scenario\Core\Console\Input\InputType;
-use Scenario\Core\Console\Input\Option;
-use Scenario\Core\Console\Input\Parser;
-use Scenario\Core\Console\Input\Resolver;
-use Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
-use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
-use Scenario\Core\Runtime\Metadata\ValueType\StringType;
+use Stateforge\Scenario\Core\Console\Exception\MissingRequiredArgumentsException;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedArgumentsException;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Stateforge\Scenario\Core\Console\Exception\UndefinedArgumentException;
+use Stateforge\Scenario\Core\Console\Exception\UndefinedOptionException;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Console\Input\Argument;
+use Stateforge\Scenario\Core\Console\Input\InputType;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\Input\Parser;
+use Stateforge\Scenario\Core\Console\Input\Resolver;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 #[CoversClass(Input::class)]
 #[UsesClass(Argument::class)]

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Output\Formatter;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Output\Formatter;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
-use Scenario\Core\Console\Output\Formatter\AnsiString;
-use Scenario\Core\Console\Output\Formatter\Box;
-use Scenario\Core\Console\Output\Theme\AnsiStyler;
-use Scenario\Core\Console\Output\Theme\BackgroundColor;
-use Scenario\Core\Console\Output\Theme\BoxType;
-use Scenario\Core\Console\Output\Theme\FontStyle;
-use Scenario\Core\Console\Output\Theme\ForegroundColor;
+use Stateforge\Scenario\Core\Console\Output\Formatter\AnsiString;
+use Stateforge\Scenario\Core\Console\Output\Formatter\Box;
+use Stateforge\Scenario\Core\Console\Output\Theme\AnsiStyler;
+use Stateforge\Scenario\Core\Console\Output\Theme\BackgroundColor;
+use Stateforge\Scenario\Core\Console\Output\Theme\BoxType;
+use Stateforge\Scenario\Core\Console\Output\Theme\FontStyle;
+use Stateforge\Scenario\Core\Console\Output\Theme\ForegroundColor;
 use function count;
 use function preg_replace;
 use function strlen;

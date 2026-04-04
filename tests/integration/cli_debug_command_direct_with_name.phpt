@@ -13,31 +13,31 @@ $_SERVER['argv'] = [
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
-Main Scenario Suite: Scenario\Main\ThirdScenario
-------------------------------------------------
+Main Scenario Suite: Stateforge\Scenario\Main\ThirdScenario
+-----------------------------------------------------------
 
 
   third-scenario   My third scenario  
 
 
-Audits from Scenario\Main\ThirdScenario with execution up
----------------------------------------------------------
+Audits from Stateforge\Scenario\Main\ThirdScenario with execution up
+--------------------------------------------------------------------
 
 
-Audits from Scenario\Main\ThirdScenario::up with execution up
--------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\ThirdScenario::up with execution up
+------------------------------------------------------------------------
 
-Scenario\Main\FirstScenario
+Stateforge\Scenario\Main\FirstScenario
 
-Audits from Scenario\Main\ThirdScenario with execution down
------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\ThirdScenario with execution down
+----------------------------------------------------------------------
 
 
-Audits from Scenario\Main\ThirdScenario::down with execution down
------------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\ThirdScenario::down with execution down
+----------------------------------------------------------------------------
 
-Scenario\Main\FirstScenario
-Scenario\Main\SecondScenario{"param-1":5}
+Stateforge\Scenario\Main\FirstScenario
+Stateforge\Scenario\Main\SecondScenario{"param-1":5}

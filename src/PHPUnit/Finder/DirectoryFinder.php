@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit\Finder;
+namespace Stateforge\Scenario\Core\PHPUnit\Finder;
 
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;
 use function rtrim;

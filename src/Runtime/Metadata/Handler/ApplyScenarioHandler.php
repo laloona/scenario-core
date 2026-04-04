@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Metadata\Handler;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Handler;
 
 use ReflectionException;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Contract\ScenarioBuilderInterface;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\AttributeProcessor;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
-use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
-use Scenario\Core\Runtime\ScenarioParameters;
-use Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioBuilderInterface;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
+use Stateforge\Scenario\Core\Runtime\ScenarioParameters;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 
 final class ApplyScenarioHandler extends AttributeHandler
 {

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Output\Theme;
+namespace Stateforge\Scenario\Core\Console\Output\Theme;
 
-use Scenario\Core\Console\Output\TerminalEnvironment;
+use Stateforge\Scenario\Core\Console\Output\TerminalEnvironment;
 use function ctype_digit;
 use function floor;
 use function implode;

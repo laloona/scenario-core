@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Exception\Application;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Exception\Application;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
 
 #[CoversClass(ApplicationFailureException::class)]
 #[Group('runtime')]

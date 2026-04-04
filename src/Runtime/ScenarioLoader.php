@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime;
+namespace Stateforge\Scenario\Core\Runtime;
 
 use DirectoryIterator;
 use ReflectionClass;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Runtime\Application\Configuration\Configuration;
-use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
-use Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
+use Stateforge\Scenario\Core\Runtime\Exception\ScenarioLoaderException;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
 use Throwable;
 use UnexpectedValueException;
 use ValueError;

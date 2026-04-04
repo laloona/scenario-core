@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata\ValueType;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata\ValueType;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Runtime\Metadata\ValueType\FloatType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 
 #[CoversClass(FloatType::class)]
 #[Group('runtime')]

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\PHPUnit\Finder;
+namespace Stateforge\Scenario\Core\Tests\Unit\PHPUnit\Finder;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
-use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\ClassFinder;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\PHPUnit\Finder\DirectoryFinder;
+use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\ClassFinder;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
 use function mkdir;
 use function uniqid;
@@ -76,10 +76,10 @@ XML
         file_put_contents(Application::getRootDir() . '/tests/unit/ClassLevelScenarioTest.php', <<<PHP
 <?php declare(strict_types=1);
 
-namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+namespace Stateforge\\Scenario\\Core\\Tests\\Fixtures\\{$suffix};
 
 use PHPUnit\\Framework\\TestCase;
-use Scenario\\Core\\Attribute\\ApplyScenario;
+use Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario;
 
 #[ApplyScenario('class-level')]
 final class ClassLevelScenarioTest extends TestCase
@@ -93,11 +93,11 @@ PHP);
         file_put_contents(Application::getRootDir() . '/tests/unit/MethodLevelScenarioTest.php', <<<PHP
 <?php declare(strict_types=1);
 
-namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+namespace Stateforge\\Scenario\\Core\\Tests\\Fixtures\\{$suffix};
 
 use PHPUnit\\Framework\\TestCase;
-use Scenario\\Core\\Attribute\\ApplyScenario;
-use Scenario\\Core\\Attribute\\RefreshDatabase;
+use Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario;
+use Stateforge\\Scenario\\Core\\Attribute\\RefreshDatabase;
 
 final class MethodLevelScenarioTest extends TestCase
 {
@@ -116,10 +116,10 @@ PHP);
         file_put_contents(Application::getRootDir() . '/tests/unit/AbstractScenarioTest.php', <<<PHP
 <?php declare(strict_types=1);
 
-namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+namespace Stateforge\\Scenario\\Core\\Tests\\Fixtures\\{$suffix};
 
 use PHPUnit\\Framework\\TestCase;
-use Scenario\\Core\\Attribute\\ApplyScenario;
+use Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario;
 
 #[ApplyScenario('abstract')]
 abstract class AbstractScenarioTest extends TestCase
@@ -130,9 +130,9 @@ PHP);
         file_put_contents(Application::getRootDir() . '/tests/unit/Helper.php', <<<PHP
 <?php declare(strict_types=1);
 
-namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+namespace Stateforge\\Scenario\\Core\\Tests\\Fixtures\\{$suffix};
 
-use Scenario\\Core\\Attribute\\ApplyScenario;
+use Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario;
 
 #[ApplyScenario('helper')]
 final class Helper
@@ -143,11 +143,11 @@ PHP);
         $classes = (new ScenarioTestFinder())->all();
 
         self::assertCount(2, $classes);
-        self::assertArrayHasKey('Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\ClassLevelScenarioTest', $classes);
-        self::assertSame([], $classes['Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\ClassLevelScenarioTest']);
-        self::assertArrayHasKey('Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest', $classes);
-        self::assertContains('testRefreshesDatabase', $classes['Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest']);
-        self::assertContains('testAppliesScenario', $classes['Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest']);
+        self::assertArrayHasKey('Stateforge\\Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\ClassLevelScenarioTest', $classes);
+        self::assertSame([], $classes['Stateforge\\Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\ClassLevelScenarioTest']);
+        self::assertArrayHasKey('Stateforge\\Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest', $classes);
+        self::assertContains('testRefreshesDatabase', $classes['Stateforge\\Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest']);
+        self::assertContains('testAppliesScenario', $classes['Stateforge\\Scenario\\Core\\Tests\\Fixtures\\' . $suffix . '\\MethodLevelScenarioTest']);
     }
 
     public function xxtestIgnoresConcreteTestCasesWithoutScenarioAttributes(): void
@@ -173,7 +173,7 @@ XML
         file_put_contents(Application::getRootDir() . '/tests/unit/PlainTest.php', <<<PHP
 <?php declare(strict_types=1);
 
-namespace Scenario\\Core\\Tests\\Fixtures\\{$suffix};
+namespace Stateforge\\Scenario\\Core\\Tests\\Fixtures\\{$suffix};
 
 use PHPUnit\\Framework\\TestCase;
 

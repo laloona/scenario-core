@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,44 +9,44 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Command;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Console\Command\CliCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Command\DebugCommand;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
-use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Application\TestMethodState;
-use Scenario\Core\Runtime\ClassFinder;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\AttributeProcessor;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
-use Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Core\Tests\Files\ValidScenario;
-use Scenario\Core\Tests\Unit\ApplicationMock;
-use Scenario\Core\Tests\Unit\AttributeContextMock;
-use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
-use Scenario\Core\Tests\Unit\TestClassStateMock;
-use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Command\DebugScenarioCommand;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\PHPUnit\Finder\DirectoryFinder;
+use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\Runtime\ClassFinder;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Tests\Unit\AttributeContextMock;
+use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestClassStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestMethodStateMock;
 use function array_pop;
 use function explode;
 use function file_put_contents;
@@ -55,7 +55,7 @@ use function is_dir;
 use function mkdir;
 use function uniqid;
 
-#[CoversClass(DebugCommand::class)]
+#[CoversClass(DebugScenarioCommand::class)]
 #[UsesClass(Application::class)]
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(ApplyScenario::class)]
@@ -79,7 +79,7 @@ use function uniqid;
 #[UsesClass(TestMethodState::class)]
 #[Group('console')]
 #[Medium]
-final class DebugCommandTest extends TestCase
+final class DebugScenarioCommandTest extends TestCase
 {
     use ApplicationMock;
     use AttributeContextMock;
@@ -111,7 +111,7 @@ final class DebugCommandTest extends TestCase
     {
         self::assertSame(
             'Debugs a given scenario or Unit test.',
-            (new DebugCommand(new ScenarioTestFinder()))->description(),
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->description(),
         );
     }
 
@@ -130,7 +130,7 @@ final class DebugCommandTest extends TestCase
         $output->expects(self::once())
             ->method('error');
 
-        self::assertSame(Command::Error, (new DebugCommand(new ScenarioTestFinder()))->run($input, $output));
+        self::assertSame(Command::Error, (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output));
     }
 
     public function testRunReturnsErrorWhenNoScenariosOrTestsWereFound(): void
@@ -153,7 +153,7 @@ final class DebugCommandTest extends TestCase
 
         self::assertSame(
             Command::Error,
-            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
         );
     }
 
@@ -198,7 +198,7 @@ final class DebugCommandTest extends TestCase
 
         self::assertSame(
             Command::Success,
-            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
         );
     }
 
@@ -206,7 +206,7 @@ final class DebugCommandTest extends TestCase
     {
         $className = $this->createPhpUnitTestFixtureWithMethod(
             'DirectDebugTest',
-            "#[\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]\n    public function testDebuggable(): void\n    {\n    }\n",
+            "#[\\Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]\n    public function testDebuggable(): void\n    {\n    }\n",
         );
 
         $input = self::createStub(CliInput::class);
@@ -231,7 +231,7 @@ final class DebugCommandTest extends TestCase
 
         self::assertSame(
             Command::Error,
-            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
         );
     }
 
@@ -239,7 +239,7 @@ final class DebugCommandTest extends TestCase
     {
         $this->createPhpUnitTestFixtureWithClassAttribute(
             'SelectableDebugTest',
-            "#[\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
+            "#[\\Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
         );
 
         $input = self::createStub(CliInput::class);
@@ -264,7 +264,7 @@ final class DebugCommandTest extends TestCase
 
         self::assertSame(
             Command::Success,
-            (new DebugCommand(new ScenarioTestFinder()))->run($input, $output),
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
         );
     }
 
@@ -275,7 +275,7 @@ final class DebugCommandTest extends TestCase
      */
     private function createPhpUnitTestFixtureWithMethod(string $classSuffix, string $body): string
     {
-        $directory = Application::getRootDir() . '/tests/Debug';
+        $directory = Application::getRootDir() . '/tests/debug';
         if (is_dir(Application::getRootDir() . '/tests') === false) {
             mkdir(Application::getRootDir() . '/tests');
         }
@@ -283,7 +283,7 @@ final class DebugCommandTest extends TestCase
             mkdir($directory);
         }
 
-        $className = 'Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
+        $className = 'Stateforge\\Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
         $parts = explode('\\', $className);
         $shortName = array_pop($parts);
         $namespace = implode('\\', $parts);
@@ -295,7 +295,7 @@ final class DebugCommandTest extends TestCase
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/Debug</directory></testsuite></testsuites></phpunit>',
+            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/debug</directory></testsuite></testsuites></phpunit>',
         );
 
         /** @var class-string $className */
@@ -309,7 +309,7 @@ final class DebugCommandTest extends TestCase
      */
     private function createPhpUnitTestFixtureWithClassAttribute(string $classSuffix, string $attribute): string
     {
-        $directory = Application::getRootDir() . '/tests/Debug';
+        $directory = Application::getRootDir() . '/tests/debug';
         if (is_dir(Application::getRootDir() . '/tests') === false) {
             mkdir(Application::getRootDir() . '/tests');
         }
@@ -317,7 +317,7 @@ final class DebugCommandTest extends TestCase
             mkdir($directory);
         }
 
-        $className = 'Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
+        $className = 'Stateforge\\Scenario\\Core\\Tests\\Temp\\' . $classSuffix . uniqid();
         $parts = explode('\\', $className);
         $shortName = array_pop($parts);
         $namespace = implode('\\', $parts);
@@ -329,7 +329,7 @@ final class DebugCommandTest extends TestCase
 
         file_put_contents(
             Application::getRootDir() . '/phpunit.xml',
-            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/Debug</directory></testsuite></testsuites></phpunit>',
+            '<?xml version="1.0"?><phpunit><testsuites><testsuite name="unit"><directory>tests/debug</directory></testsuite></testsuites></phpunit>',
         );
 
         /** @var class-string $className */

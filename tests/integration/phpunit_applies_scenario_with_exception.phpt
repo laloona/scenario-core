@@ -35,8 +35,8 @@ There was 1 PHPUnit test runner warning:
 
 There was 1 error:
 
-1) ScenarioTests\ScenarioExceptionTest::testScenario
-Scenario\Core\Runtime\Exception\Application\TestMethodFailureException: OnMethod "ScenarioTests\ScenarioExceptionTest::testScenario" failure: [Exception]: some error happend in up.
+1) Stateforge\ScenarioTests\ScenarioExceptionTest::testScenario
+Stateforge\Scenario\Core\Runtime\Exception\Application\TestMethodFailureException: OnMethod "Stateforge\ScenarioTests\ScenarioExceptionTest::testScenario" failure: [Exception]: some error happend in up.
 
 %A
 

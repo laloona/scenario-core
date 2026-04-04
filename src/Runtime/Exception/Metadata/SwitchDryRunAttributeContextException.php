@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Exception\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Exception\Metadata;
 
-use Scenario\Core\Runtime\Exception\Exception;
+use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
 final class SwitchDryRunAttributeContextException extends Exception

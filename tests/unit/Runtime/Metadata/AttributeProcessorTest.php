@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,22 +18,22 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\AttributeProcessor;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
-use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Tests\Files\AnotherScenario;
-use Scenario\Core\Tests\Files\ValidScenario;
-use Scenario\Core\Tests\Unit\ApplicationStateMock;
-use Scenario\Core\Tests\Unit\AttributeContextMock;
-use Scenario\Core\Tests\Unit\HandlerRegistryMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeProcessor;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\AttributeContextMock;
+use Stateforge\Scenario\Core\Tests\Unit\HandlerRegistryMock;
 
 #[CoversClass(AttributeProcessor::class)]
 #[UsesClass(ApplicationState::class)]

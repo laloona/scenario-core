@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,25 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Command;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Console\Command\CliCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Command\MakeScenarioCommand;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Command\MakeScenarioCommand;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_get_contents;
 use function file_put_contents;
 use function is_file;

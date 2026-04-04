@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Application\Configuration;
+namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
 use DirectoryIterator;
-use Scenario\Core\Runtime\Application;
 use SplFileInfo;
+use Stateforge\Scenario\Core\Runtime\Application;
 use UnexpectedValueException;
 use function in_array;
 

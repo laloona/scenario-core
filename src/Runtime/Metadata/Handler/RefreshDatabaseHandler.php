@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Metadata\Handler;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Handler;
 
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
 use function get_class;
 
 final class RefreshDatabaseHandler extends AttributeHandler

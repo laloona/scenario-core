@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console;
+namespace Stateforge\Scenario\Core\Console;
 
-use Scenario\Core\Console\Exception\UndefinedArgumentException;
-use Scenario\Core\Console\Exception\UndefinedOptionException;
-use Scenario\Core\Console\Input\Argument;
-use Scenario\Core\Console\Input\Option;
-use Scenario\Core\Console\Input\Parser;
-use Scenario\Core\Console\Input\Resolver;
-use Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Console\Exception\UndefinedArgumentException;
+use Stateforge\Scenario\Core\Console\Exception\UndefinedOptionException;
+use Stateforge\Scenario\Core\Console\Input\Argument;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\Input\Parser;
+use Stateforge\Scenario\Core\Console\Input\Resolver;
+use Stateforge\Scenario\Core\Contract\CliInput;
 use function array_key_exists;
 
 final class Input implements CliInput

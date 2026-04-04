@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata\Handler;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata\Handler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
-use Scenario\Core\Runtime\Application\TestMethodState;
-use Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
-use Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
-use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Contract\DatabaseRefreshExecutorInterface;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ConnectionException;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
+use Stateforge\Scenario\Core\Tests\Unit\TestMethodStateMock;
 
 #[CoversClass(RefreshDatabaseHandler::class)]
 #[UsesClass(RefreshDatabase::class)]

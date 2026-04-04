@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Command;
+namespace Stateforge\Scenario\Core\Console\Command;
 
-use Scenario\Core\Console\Input\InputType;
-use Scenario\Core\Console\Input\Option;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Console\Input\InputType;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use function array_values;
 use function count;
 

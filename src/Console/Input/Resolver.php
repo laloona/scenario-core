@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Input;
+namespace Stateforge\Scenario\Core\Console\Input;
 
-use Scenario\Core\Console\Exception\MissingRequiredArgumentsException;
-use Scenario\Core\Console\Exception\MissingRequiredOptionsException;
-use Scenario\Core\Console\Exception\NotAllowedArgumentsException;
-use Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Stateforge\Scenario\Core\Console\Exception\MissingRequiredArgumentsException;
+use Stateforge\Scenario\Core\Console\Exception\MissingRequiredOptionsException;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedArgumentsException;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedOptionsException;
 use function array_key_exists;
 use function array_keys;
 use function array_values;

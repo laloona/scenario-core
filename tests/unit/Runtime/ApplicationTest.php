@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,38 +9,38 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
-use Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Scenario\Core\Runtime\Application\Configuration\XMLParser;
-use Scenario\Core\Runtime\ClassFinder;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
-use Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
-use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Runtime\Metadata\ParameterType;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioLoader;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Core\Tests\Unit\ApplicationMock;
-use Scenario\Core\Tests\Unit\ApplicationStateMock;
-use Scenario\Core\Tests\Unit\HandlerRegistryMock;
-use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
+use Stateforge\Scenario\Core\Runtime\ClassFinder;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioLoader;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\HandlerRegistryMock;
+use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
 use function mkdir;
@@ -158,10 +158,10 @@ final class ApplicationTest extends TestCase
         mkdir(Application::getRootDir() . '/scenarios');
         file_put_contents(Application::getRootDir() . '/scenarios/ScenarioY.php', <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\\Core\\Tests\\Tmp;
-use Scenario\\Core\\Attribute\\AsScenario;
-use Scenario\\Core\\Contract\\ScenarioInterface;
-use Scenario\\Core\\Runtime\\ScenarioParameters;
+namespace Stateforge\\Scenario\\Core\\Tests\\Tmp;
+use Stateforge\\Scenario\\Core\\Attribute\\AsScenario;
+use Stateforge\\Scenario\\Core\\Contract\\ScenarioInterface;
+use Stateforge\\Scenario\\Core\\Runtime\\ScenarioParameters;
 #[AsScenario('prepared')]
 final class ScenarioY implements ScenarioInterface
 {
@@ -185,7 +185,7 @@ XML);
         (new Application())->prepare();
 
         self::assertNotNull(Application::config());
-        self::assertInstanceOf(ScenarioDefinition::class, ScenarioRegistry::getInstance()->resolve('Scenario\\Core\\Tests\\Tmp\\ScenarioY'));
+        self::assertInstanceOf(ScenarioDefinition::class, ScenarioRegistry::getInstance()->resolve('Stateforge\\Scenario\\Core\\Tests\\Tmp\\ScenarioY'));
     }
 
     public function testGetRootDirComputesWhenNotCached(): void

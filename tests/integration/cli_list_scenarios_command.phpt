@@ -12,30 +12,30 @@ $_SERVER['argv'] = [
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
 Main Scenario Suite
 -------------------
 
 
- ────────────────────────────── ───────────────── ──────────────────── 
-  class                          name              description         
- ────────────────────────────── ───────────────── ──────────────────── 
-  Scenario\Main\ThirdScenario    third-scenario    My third scenario   
-  Scenario\Main\FirstScenario    first-scenario    My first scenario   
-  Scenario\Main\FourthScenario   fourth-scenario   My fourth scenario  
-  Scenario\Main\SecondScenario   second-scenario   My second scenario  
- ────────────────────────────── ───────────────── ──────────────────── 
+ ───────────────────────────────────────── ───────────────── ──────────────────── 
+  class                                     name              description         
+ ───────────────────────────────────────── ───────────────── ──────────────────── 
+  Stateforge\Scenario\Main\ThirdScenario    third-scenario    My third scenario   
+  Stateforge\Scenario\Main\FirstScenario    first-scenario    My first scenario   
+  Stateforge\Scenario\Main\FourthScenario   fourth-scenario   My fourth scenario  
+  Stateforge\Scenario\Main\SecondScenario   second-scenario   My second scenario  
+ ───────────────────────────────────────── ───────────────── ──────────────────── 
 
 
 Other Scenario Suite
 --------------------
 
 
- ─────────────────────────────── ───────────────── ───────────── 
-  class                           name              description  
- ─────────────────────────────── ───────────────── ───────────── 
-  Scenario\Other\FailedScenario   failed-scenario                
-  Scenario\Other\OtherScenario    other-scenario                 
- ─────────────────────────────── ───────────────── ─────────────
+ ────────────────────────────────────────── ───────────────── ───────────── 
+  class                                      name              description  
+ ────────────────────────────────────────── ───────────────── ───────────── 
+  Stateforge\Scenario\Other\FailedScenario   failed-scenario                
+  Stateforge\Scenario\Other\OtherScenario    other-scenario                 
+ ────────────────────────────────────────── ───────────────── ─────────────

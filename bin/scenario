@@ -2,7 +2,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -67,7 +67,7 @@ if (strstr(__FILE__, 'vendor') === false) {
 }
 
 try {
-    exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+    exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 } catch (\Throwable $e) {
     fwrite(
         STDERR,

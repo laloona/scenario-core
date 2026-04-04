@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit\Configuration;
+namespace Stateforge\Scenario\Core\PHPUnit\Configuration;
 
 use DOMDocument;
 use DOMXPath;
-use Scenario\Core\PHPUnit\Extension;
+use Stateforge\Scenario\Core\PHPUnit\Extension;
 
 final class Configured implements ConfiguredInterface
 {

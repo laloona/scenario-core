@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit;
+namespace Stateforge\Scenario\Core\Tests\Unit;
 
 use ReflectionClass;
-use Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
 
 trait TestMethodStateMock
 {

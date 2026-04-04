@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Metadata\Parser;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Parser;
 
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
-use Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application;
 use function in_array;
 
 final class ClassAttributeParser

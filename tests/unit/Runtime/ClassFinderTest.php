@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,9 +17,9 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\ClassFinder;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\ClassFinder;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
 use function md5;
 use function mkdir;
@@ -60,7 +60,7 @@ final class ClassFinderTest extends TestCase
 
         file_put_contents($scanDir . '/InDirectory.php', <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$inDirectoryClass}
 {
 }
@@ -68,7 +68,7 @@ PHP);
 
         file_put_contents($nestedDir . '/InNestedDirectory.php', <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$nestedClass}
 {
 }
@@ -77,7 +77,7 @@ PHP);
         $outsideFile = $outsideDir . '/Outside.php';
         file_put_contents($outsideFile, <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$outsideClass}
 {
 }
@@ -89,8 +89,8 @@ PHP);
 
         self::assertSame(
             [
-                'Scenario\\Core\\Tests\\Tmp\\' . $inDirectoryClass,
-                'Scenario\\Core\\Tests\\Tmp\\' . $nestedClass,
+                'Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $inDirectoryClass,
+                'Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $nestedClass,
             ],
             $classes,
         );
@@ -105,7 +105,7 @@ PHP);
         $className = 'CacheFixture' . uniqid();
         file_put_contents($file, <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$className}
 {
 }
@@ -140,7 +140,7 @@ PHP);
 
         file_put_contents($phpFile, <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$className}
 {
 }
@@ -154,7 +154,7 @@ PHP);
         $classes = $finder->findClassesInDirectory($scanDir);
 
         self::assertSame(
-            ['Scenario\\Core\\Tests\\Tmp\\' . $className],
+            ['Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $className],
             $classes,
         );
         self::assertSame(md5('1700000001'), $finder->getCacheKey());
@@ -164,7 +164,6 @@ PHP);
     {
         $finder = new ClassFinder();
         $method = new ReflectionMethod($finder, 'filterClassesByDirectory');
-        $method->setAccessible(true);
 
         self::assertSame([], $method->invoke($finder, ['stdClass'], Application::getRootDir() . '/missing'));
     }
@@ -182,7 +181,7 @@ PHP);
         $insideFile = $scanDir . '/Inside.php';
         file_put_contents($insideFile, <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$insideClass}
 {
 }
@@ -192,7 +191,7 @@ PHP);
         $outsideFile = $outsideDir . '/Outside.php';
         file_put_contents($outsideFile, <<<PHP
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class {$outsideClass}
 {
 }
@@ -201,13 +200,12 @@ PHP);
 
         $finder = new ClassFinder();
         $method = new ReflectionMethod($finder, 'filterClassesByDirectory');
-        $method->setAccessible(true);
 
         self::assertSame(
-            ['Scenario\\Core\\Tests\\Tmp\\' . $insideClass],
+            ['Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $insideClass],
             $method->invoke($finder, [
-                'Scenario\\Core\\Tests\\Tmp\\' . $insideClass,
-                'Scenario\\Core\\Tests\\Tmp\\' . $outsideClass,
+                'Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $insideClass,
+                'Stateforge\\Scenario\\Core\\Tests\\Tmp\\' . $outsideClass,
             ], $scanDir),
         );
     }

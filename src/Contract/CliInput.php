@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Contract;
+namespace Stateforge\Scenario\Core\Contract;
 
-use Scenario\Core\Console\Exception\InputException;
-use Scenario\Core\Console\Input\Argument;
-use Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\Exception\InputException;
+use Stateforge\Scenario\Core\Console\Input\Argument;
+use Stateforge\Scenario\Core\Console\Input\Option;
 
 interface CliInput
 {

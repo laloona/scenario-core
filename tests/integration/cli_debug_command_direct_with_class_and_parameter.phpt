@@ -7,17 +7,17 @@ define('SCENARIO_CLI_DISABLED', false);
 $_SERVER['argv'] = [
     'bin/scenario',
     'debug',
-    \Scenario\Main\SecondScenario::class,
+    \Stateforge\Scenario\Main\SecondScenario::class,
     '--quiet'
 ];
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
-Main Scenario Suite: Scenario\Main\SecondScenario
--------------------------------------------------
+Main Scenario Suite: Stateforge\Scenario\Main\SecondScenario
+------------------------------------------------------------
 
 
   second-scenario   My second scenario  
@@ -34,20 +34,19 @@ The following parameters are defined:
  ───────── ───────── ──────────────────── ────────── ──────────── ───────── 
 
 
-Audits from Scenario\Main\SecondScenario with execution up
-----------------------------------------------------------
+Audits from Stateforge\Scenario\Main\SecondScenario with execution up
+---------------------------------------------------------------------
 
-Scenario\Main\FirstScenario
+Stateforge\Scenario\Main\FirstScenario
 
-Audits from Scenario\Main\SecondScenario::up with execution up
---------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\SecondScenario::up with execution up
+-------------------------------------------------------------------------
 
 
-Audits from Scenario\Main\SecondScenario with execution down
-------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\SecondScenario with execution down
+-----------------------------------------------------------------------
 
-Scenario\Main\FirstScenario
+Stateforge\Scenario\Main\FirstScenario
 
-Audits from Scenario\Main\SecondScenario::down with execution down
-------------------------------------------------------------------
-
+Audits from Stateforge\Scenario\Main\SecondScenario::down with execution down
+-----------------------------------------------------------------------------

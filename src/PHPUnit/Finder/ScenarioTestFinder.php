@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit\Finder;
+namespace Stateforge\Scenario\Core\PHPUnit\Finder;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\ClassFinder;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use function array_merge;
 use function class_exists;
 use const DIRECTORY_SEPARATOR;

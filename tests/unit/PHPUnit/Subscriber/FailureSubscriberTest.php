@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\PHPUnit\Subscriber;
+namespace Stateforge\Scenario\Core\Tests\Unit\PHPUnit\Subscriber;
 
 use PHPUnit\Event\Code\TestDox;
 use PHPUnit\Event\Code\TestMethod;
@@ -28,19 +28,19 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\MetadataCollection;
 use RuntimeException;
-use Scenario\Core\PHPUnit\ErrorEmitter;
-use Scenario\Core\PHPUnit\Subscriber\FailureSubscriber;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Application\TestMethodState;
-use Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
-use Scenario\Core\Runtime\Exception\Application\TestClassFailureException;
-use Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
-use Scenario\Core\Tests\Files\AnotherScenario;
-use Scenario\Core\Tests\Files\ValidScenario;
-use Scenario\Core\Tests\Unit\ApplicationStateMock;
-use Scenario\Core\Tests\Unit\TestClassStateMock;
-use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use Stateforge\Scenario\Core\PHPUnit\ErrorEmitter;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\FailureSubscriber;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ApplicationFailureException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\TestClassFailureException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\TestMethodFailureException;
+use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestClassStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestMethodStateMock;
 
 #[CoversClass(FailureSubscriber::class)]
 #[UsesClass(ApplicationState::class)]

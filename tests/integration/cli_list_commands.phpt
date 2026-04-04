@@ -11,7 +11,7 @@ $_SERVER['argv'] = [
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
 available commands

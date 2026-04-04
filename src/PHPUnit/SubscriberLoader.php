@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit;
+namespace Stateforge\Scenario\Core\PHPUnit;
 
 use PHPUnit\Runner\Extension\Facade;
-use Scenario\Core\PHPUnit\Subscriber\FailureSubscriber;
-use Scenario\Core\PHPUnit\Subscriber\TestClassDownSubscriber;
-use Scenario\Core\PHPUnit\Subscriber\TestClassUpSubscriber;
-use Scenario\Core\PHPUnit\Subscriber\TestMethodDownSubscriber;
-use Scenario\Core\PHPUnit\Subscriber\TestMethodUpSubscriber;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\FailureSubscriber;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\TestClassDownSubscriber;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\TestClassUpSubscriber;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\TestMethodDownSubscriber;
+use Stateforge\Scenario\Core\PHPUnit\Subscriber\TestMethodUpSubscriber;
 
 final class SubscriberLoader
 {

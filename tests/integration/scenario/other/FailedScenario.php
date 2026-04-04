@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Other;
+namespace Stateforge\Scenario\Other;
 
 use Exception;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Scenario;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Scenario;
 
 #[AsScenario('failed-scenario')]
 final class FailedScenario extends Scenario

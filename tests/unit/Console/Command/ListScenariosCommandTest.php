@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,30 +9,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Command;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Console\Command\CliCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Command\ListScenariosCommand;
-use Scenario\Core\Console\Exception\NotAllowedOptionsException;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Console\Input\Option;
-use Scenario\Core\Console\Input\Parser;
-use Scenario\Core\Console\Input\Resolver;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Core\Tests\Files\AnotherScenario;
-use Scenario\Core\Tests\Files\ValidScenario;
-use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Command\ListScenariosCommand;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\Input\Parser;
+use Stateforge\Scenario\Core\Console\Input\Resolver;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ListScenariosCommand::class)]
 #[UsesClass(ApplicationState::class)]

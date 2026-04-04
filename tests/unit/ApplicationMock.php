@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit;
+namespace Stateforge\Scenario\Core\Tests\Unit;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use SplFileInfo;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use function is_dir;
 use function mkdir;
 use function rmdir;

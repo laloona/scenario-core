@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Attribute;
+namespace Stateforge\Scenario\Core\Attribute;
 
 use Attribute;
-use Scenario\Core\Runtime\Exception\ParameterValueErrorException;
-use Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
 use function array_values;
 use function gettype;
 use function implode;

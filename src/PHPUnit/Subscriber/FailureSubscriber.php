@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\PHPUnit\Subscriber;
+namespace Stateforge\Scenario\Core\PHPUnit\Subscriber;
 
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Test\Finished;
 use PHPUnit\Event\Test\FinishedSubscriber;
-use Scenario\Core\PHPUnit\ErrorEmitter;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\PHPUnit\ErrorEmitter;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
 use Throwable;
 
 final class FailureSubscriber implements FinishedSubscriber

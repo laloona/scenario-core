@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Metadata;
 
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Runtime\Exception\Metadata\CycleException;
-use Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\CycleException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\SwitchDryRunAttributeContextException;
 use function count;
 use function in_array;
 use function json_encode;

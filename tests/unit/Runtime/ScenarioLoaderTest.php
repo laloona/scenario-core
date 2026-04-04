@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,27 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
-use Scenario\Core\Runtime\Exception\RegistryException;
-use Scenario\Core\Runtime\Exception\ScenarioLoaderException;
-use Scenario\Core\Runtime\Metadata\ParameterType;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioLoader;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Core\Tests\Unit\ApplicationMock;
-use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Runtime\Exception\ScenarioLoaderException;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioLoader;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
 use function is_file;
@@ -208,7 +208,7 @@ final class ScenarioLoaderTest extends TestCase
         mkdir(Application::getRootDir() . '/scenarios');
         file_put_contents(Application::getRootDir() . '/scenarios/Helper.php', <<<'PHP'
 <?php declare(strict_types=1);
-namespace Scenario\Core\Tests\Tmp;
+namespace Stateforge\Scenario\Core\Tests\Tmp;
 final class Helper
 {
 }
@@ -238,17 +238,17 @@ PHP);
         $scenarioDir = Application::getRootDir() . '/scenarios';
         mkdir($scenarioDir);
 
-        $namespace = 'Scenario\\Core\\Tests\\Tmp' . uniqid();
+        $namespace = 'Stateforge\\Scenario\\Core\\Tests\\Tmp' . uniqid();
         $className = 'ScenarioA' . uniqid();
 
         $fileContent = <<<PHP
 <?php declare(strict_types=1);
 namespace {$namespace};
-use Scenario\\Core\\Attribute\\AsScenario;
-use Scenario\\Core\\Attribute\\Parameter;
-use Scenario\\Core\\Contract\\ScenarioInterface;
-use Scenario\\Core\\Runtime\\Metadata\\ParameterType;
-use Scenario\\Core\\Runtime\\ScenarioParameters;
+use Stateforge\\Scenario\\Core\\Attribute\\AsScenario;
+use Stateforge\\Scenario\\Core\\Attribute\\Parameter;
+use Stateforge\\Scenario\\Core\\Contract\\ScenarioInterface;
+use Stateforge\\Scenario\\Core\\Runtime\\Metadata\\ParameterType;
+use Stateforge\\Scenario\\Core\\Runtime\\ScenarioParameters;
 
 #[AsScenario('my-scenario')]
 #[Parameter('id', ParameterType::Integer, required: true, repeatable: true, default: null)]

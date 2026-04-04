@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,22 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
-use Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
-use Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
-use Scenario\Core\Tests\Files\AnotherScenario;
-use Scenario\Core\Tests\Files\ValidScenario;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
+use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 
 #[CoversClass(ClassAttributeParser::class)]
 #[UsesClass(Application::class)]

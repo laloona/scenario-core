@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,39 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Command;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Console\Command\ApplyScenarioCommand;
-use Scenario\Core\Console\Command\CliCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Runtime\Application\TestClassState;
-use Scenario\Core\Runtime\Application\TestMethodState;
-use Scenario\Core\Runtime\Metadata\AttributeContext;
-use Scenario\Core\Runtime\Metadata\ExecutionType;
-use Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
-use Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Scenario\Core\Runtime\Metadata\ParameterType;
-use Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
-use Scenario\Core\Runtime\ScenarioDefinition;
-use Scenario\Core\Runtime\ScenarioRegistry;
-use Scenario\Core\Tests\Files\AnotherScenario;
-use Scenario\Core\Tests\Unit\AttributeContextMock;
-use Scenario\Core\Tests\Unit\HandlerRegistryMock;
-use Scenario\Core\Tests\Unit\ScenarioRegistryMock;
-use Scenario\Core\Tests\Unit\TestClassStateMock;
-use Scenario\Core\Tests\Unit\TestMethodStateMock;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Console\Command\ApplyScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
+use Stateforge\Scenario\Core\Runtime\Application\TestMethodState;
+use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
+use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
+use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
+use Stateforge\Scenario\Core\Tests\Unit\AttributeContextMock;
+use Stateforge\Scenario\Core\Tests\Unit\HandlerRegistryMock;
+use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestClassStateMock;
+use Stateforge\Scenario\Core\Tests\Unit\TestMethodStateMock;
 use function is_array;
 
 #[CoversClass(ApplyScenarioCommand::class)]

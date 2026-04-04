@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\PHPUnit\Finder;
+namespace Stateforge\Scenario\Core\Tests\Unit\PHPUnit\Finder;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Finder\DirectoryFinder;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\PHPUnit\Finder\DirectoryFinder;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
 
 #[CoversClass(DirectoryFinder::class)]

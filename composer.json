@@ -1,5 +1,5 @@
 {
-  "name": "scenario/core",
+  "name": "stateforge/scenario-core",
   "description": "Core library for declarative, attribute-driven scenario orchestration for reproducible test data states in PHP.",
   "type": "library",
   "license": "BSD-3-Clause",
@@ -20,12 +20,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "Scenario\\Core\\": "src/"
+      "Stateforge\\Scenario\\Core\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Scenario\\Core\\Tests\\Unit\\": "tests/unit/"
+      "Stateforge\\Scenario\\Core\\Tests\\Unit\\": "tests/unit/"
     },
     "classmap": ["tests/files"]
   },

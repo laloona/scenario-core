@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Output\Theme;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Output\Theme;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Console\Output\Theme\BackgroundColor;
-use Scenario\Core\Console\Output\Theme\BoxType;
-use Scenario\Core\Console\Output\Theme\ForegroundColor;
+use Stateforge\Scenario\Core\Console\Output\Theme\BackgroundColor;
+use Stateforge\Scenario\Core\Console\Output\Theme\BoxType;
+use Stateforge\Scenario\Core\Console\Output\Theme\ForegroundColor;
 
 #[CoversClass(BoxType::class)]
 #[UsesClass(BackgroundColor::class)]

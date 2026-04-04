@@ -13,38 +13,39 @@ $_SERVER['argv'] = [
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-exit((new Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
+exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
-Main Scenario Suite: Scenario\Main\FourthScenario
--------------------------------------------------
+Main Scenario Suite: Stateforge\Scenario\Main\FourthScenario
+------------------------------------------------------------
 
 
   fourth-scenario   My fourth scenario  
 
 
-Audits from Scenario\Main\FourthScenario with execution up
-----------------------------------------------------------
+Audits from Stateforge\Scenario\Main\FourthScenario with execution up
+---------------------------------------------------------------------
 
 
-Audits from Scenario\Main\FourthScenario::up with execution up
---------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\FourthScenario::up with execution up
+-------------------------------------------------------------------------
 
-Scenario\Main\FirstScenario
-Scenario\Main\ThirdScenario
+Stateforge\Scenario\Main\FirstScenario
+Stateforge\Scenario\Main\ThirdScenario
 
                                                                                                    
-    [ERROR] OnMethod "Scenario\Core\Runtime\Application\TestMethodState::up" failure:              
-  [Scenario\Core\Runtime\Exception\Metadata\CycleException]:                                       
-  Scenario\Core\Runtime\Application\TestMethodState::up: Scenario\Main\FirstScenario caused        
-  cycle in applied stack [Scenario\Main\FirstScenario => Scenario\Main\ThirdScenario =>            
-  Scenario\Main\FirstScenario] while applying up                                                   
+    [ERROR] OnMethod "Stateforge\Scenario\Core\Runtime\Application\TestMethodState::up" failure:   
+  [Stateforge\Scenario\Core\Runtime\Exception\Metadata\CycleException]:                            
+  Stateforge\Scenario\Core\Runtime\Application\TestMethodState::up:                                
+  Stateforge\Scenario\Main\FirstScenario caused cycle in applied stack                             
+  [Stateforge\Scenario\Main\FirstScenario => Stateforge\Scenario\Main\ThirdScenario =>             
+  Stateforge\Scenario\Main\FirstScenario] while applying up                                        
                                                                                                    
 
 
-Audits from Scenario\Main\FourthScenario with execution down
-------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\FourthScenario with execution down
+-----------------------------------------------------------------------
 
 
-Audits from Scenario\Main\FourthScenario::down with execution down
-------------------------------------------------------------------
+Audits from Stateforge\Scenario\Main\FourthScenario::down with execution down
+-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,30 +9,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Console\Command;
+namespace Stateforge\Scenario\Core\Tests\Unit\Console\Command;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Console\Command\CliCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Command\InstallScenarioCommand;
-use Scenario\Core\Console\Exception\NotAllowedOptionsException;
-use Scenario\Core\Console\Input;
-use Scenario\Core\Console\Input\Option;
-use Scenario\Core\Console\Input\Parser;
-use Scenario\Core\Console\Input\Resolver;
-use Scenario\Core\Contract\CliInput;
-use Scenario\Core\Contract\CliOutput;
-use Scenario\Core\PHPUnit\Configuration\ConfigFinder;
-use Scenario\Core\PHPUnit\Configuration\Configurator;
-use Scenario\Core\PHPUnit\Configuration\Configured;
-use Scenario\Core\PHPUnit\Extension;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\ApplicationState;
-use Scenario\Core\Tests\Unit\ApplicationMock;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Command\InstallScenarioCommand;
+use Stateforge\Scenario\Core\Console\Exception\NotAllowedOptionsException;
+use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\Input\Parser;
+use Stateforge\Scenario\Core\Console\Input\Resolver;
+use Stateforge\Scenario\Core\Contract\CliInput;
+use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\Configurator;
+use Stateforge\Scenario\Core\PHPUnit\Configuration\Configured;
+use Stateforge\Scenario\Core\PHPUnit\Extension;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_get_contents;
 use function file_put_contents;
 

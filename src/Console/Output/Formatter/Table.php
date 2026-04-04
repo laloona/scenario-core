@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console\Output\Formatter;
+namespace Stateforge\Scenario\Core\Console\Output\Formatter;
 
-use Scenario\Core\Console\Output\Theme\FontStyle;
+use Stateforge\Scenario\Core\Console\Output\Theme\FontStyle;
 use function array_fill;
 use function array_pad;
 use function array_sum;

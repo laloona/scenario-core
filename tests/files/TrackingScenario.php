@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Files;
+namespace Stateforge\Scenario\Core\Tests\Files;
 
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\ScenarioParameters;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Runtime\ScenarioParameters;
 
 #[AsScenario('tracking')]
 final class TrackingScenario implements ScenarioInterface

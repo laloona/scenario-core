@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime;
+namespace Stateforge\Scenario\Core\Runtime;
 
-use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
-use Scenario\Core\Runtime\Exception\DefinitionNameAlreadyRegisteredException;
-use Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
-use Scenario\Core\Runtime\Exception\RegistryException;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Runtime\Exception\DefinitionClassAlreadyRegisteredException;
+use Stateforge\Scenario\Core\Runtime\Exception\DefinitionNameAlreadyRegisteredException;
+use Stateforge\Scenario\Core\Runtime\Exception\InvalidScenarioSubClassException;
+use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use function is_subclass_of;
 
 final class ScenarioRegistry

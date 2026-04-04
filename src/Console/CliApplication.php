@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Console;
+namespace Stateforge\Scenario\Core\Console;
 
-use Scenario\Core\Console\Command\ApplyScenarioCommand;
-use Scenario\Core\Console\Command\Command;
-use Scenario\Core\Console\Command\DebugCommand;
-use Scenario\Core\Console\Command\InstallScenarioCommand;
-use Scenario\Core\Console\Command\ListCommands;
-use Scenario\Core\Console\Command\ListScenariosCommand;
-use Scenario\Core\Console\Command\MakeScenarioCommand;
-use Scenario\Core\Console\Command\RefreshDatabaseCommand;
-use Scenario\Core\Console\Output\NativeTerminalIO;
-use Scenario\Core\Console\Output\SystemTerminal;
-use Scenario\Core\Console\Output\Theme\AnsiStyler;
-use Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
-use Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Console\Command\ApplyScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\Command;
+use Stateforge\Scenario\Core\Console\Command\DebugScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\InstallScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\ListCommands;
+use Stateforge\Scenario\Core\Console\Command\ListScenariosCommand;
+use Stateforge\Scenario\Core\Console\Command\MakeScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\RefreshDatabaseCommand;
+use Stateforge\Scenario\Core\Console\Output\NativeTerminalIO;
+use Stateforge\Scenario\Core\Console\Output\SystemTerminal;
+use Stateforge\Scenario\Core\Console\Output\Theme\AnsiStyler;
+use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
+use Stateforge\Scenario\Core\Runtime\Application;
 use function define;
 use function defined;
 use const PHP_EOL;
@@ -56,7 +56,7 @@ final class CliApplication
 
         $commands = [
             'apply' => new ApplyScenarioCommand(),
-            'debug' => new DebugCommand(new ScenarioTestFinder()),
+            'debug' => new DebugScenarioCommand(new ScenarioTestFinder()),
             'install' => new InstallScenarioCommand(),
             'list' => new ListScenariosCommand(),
             'make' => new MakeScenarioCommand(),

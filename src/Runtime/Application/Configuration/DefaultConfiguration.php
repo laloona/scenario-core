@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Application\Configuration;
+namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
-use Scenario\Core\Attribute\ApplyScenario;
-use Scenario\Core\Attribute\RefreshDatabase;
-use Scenario\Core\Runtime\Application;
-use Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
-use Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use function md5;
 use function microtime;
 use const DIRECTORY_SEPARATOR;

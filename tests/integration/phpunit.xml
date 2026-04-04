@@ -5,6 +5,6 @@
          cacheResult="false"
 >
     <extensions>
-        <bootstrap class="Scenario\Core\PHPUnit\Extension" />
+        <bootstrap class="Stateforge\Scenario\Core\PHPUnit\Extension" />
     </extensions>
 </phpunit>

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Runtime\Application\Configuration;
+namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
 use DOMDocument;
 use InvalidArgumentException;
-use Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use SplFileInfo;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use function is_file;
 use function libxml_clear_errors;
 use function libxml_use_internal_errors;

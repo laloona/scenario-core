@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of Scenario\Core package.
+ * This file is part of Stateforge\Scenario\Core package.
  *
  * (c) Christina Koenig <christina.koenig@looriva.de>
  *
@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Scenario\Core\Tests\Unit\Runtime;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Scenario\Core\Contract\ScenarioInterface;
-use Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
-use Scenario\Core\Runtime\ScenarioBuilder;
-use Scenario\Core\Tests\Files\InvalidScenario;
-use Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Runtime\Exception\WrongScenarioSubclassException;
+use Stateforge\Scenario\Core\Runtime\ScenarioBuilder;
+use Stateforge\Scenario\Core\Tests\Files\InvalidScenario;
+use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
 
 #[CoversClass(ScenarioBuilder::class)]
 #[UsesClass(WrongScenarioSubclassException::class)]
