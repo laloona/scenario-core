@@ -127,6 +127,74 @@ php vendor/bin/scenario apply create-user --email=test@example.com
 - invalid values throw exceptions
 - optional parameters may define defaults
 
+## Repeatable Parameters
+In some cases, a parameter may be provided multiple times.
+
+This is useful when a scenario needs to work with a list of values.
+
+### Example
+```php
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+
+#[AsScenario('create-users')]
+#[Parameter('email', ParameterType::String, repeatable: true)]
+final class CreateUsersScenario implements ScenarioInterface
+{
+    /**
+     * @param list<string|null> $email
+     */
+    public function up(array $email): void
+    {
+        foreach ($email as $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            // create user for each email
+        }
+    }
+}
+```
+
+### Passing Repeatable Parameters
+
+#### CLI
+You can pass the same parameter multiple times:
+```bash
+php vendor/bin/scenario apply create-users --parameter=email=first@example.com --parameter=email=second@example.com
+```
+
+#### PHPUnit
+
+Provide values as a list:
+```php
+#[ApplyScenario(CreateUsersScenario::class, [
+    'email' => [
+        'first@example.com',
+        'second@example.com',
+    ],
+])]
+```
+
+### Behavior
+- repeatable parameters are always passed as a list
+- each occurrence is added to the list in order
+- values may be null if no value was provided
+- validation is applied to each individual value
+
+### When to use repeatable parameters
+Use repeatable parameters when:
+- creating multiple entities of the same type
+- applying bulk operations
+- working with flexible input sets
+
+### Best Practices
+- Prefer repeatable parameters over comma-separated strings
+- Keep parameter names singular (email, not emails)
+- Always handle null values explicitly if allowed
+- Keep logic simple — iterate over values and apply the same operation
+
 ## Up and Down Methods
 
 ### `up()`
@@ -144,14 +212,12 @@ Use when:
 - scenarios are used in reversible workflows
 
 ## Idempotency
-
 Scenarios should ideally be idempotent:
 - running them multiple times should not break the system
 - avoid duplicate data creation
 - check existing state when needed
 
 ## Error Handling
-
 Scenario Core handles:
 - invalid parameters
 - missing scenarios
