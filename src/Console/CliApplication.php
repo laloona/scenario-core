@@ -35,6 +35,14 @@ final class CliApplication
      */
     public function run(array $inputArgs): int
     {
+        if (defined('STDIN') === false) {
+            define('STDIN', fopen('php://stdin', 'r'));
+        }
+
+        if (defined('STDOUT') === false) {
+            define('STDOUT', fopen('php://stdout', 'w'));
+        }
+
         (new Application())->bootstrap();
 
         if (Application::isBooted() === false
