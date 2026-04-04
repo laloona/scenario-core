@@ -95,7 +95,7 @@ final class MakeScenarioCommandTest extends TestCase
             <<<'PHP'
 <?php declare(strict_types=1);
 
-namespace Stateforge\%nameSpace%;
+namespace Stateforge\Suite\%nameSpace%;
 
 final class %className%
 {
@@ -135,7 +135,7 @@ PHP,
         $scenarioFile = Application::getRootDir() . '/app/scenarios/MyScenario.php';
         self::assertSame(Command::Success, $result);
         self::assertTrue(is_file($scenarioFile));
-        self::assertStringContainsString('namespace Stateforge\\App\\Scenarios;', (string) file_get_contents($scenarioFile));
+        self::assertStringContainsString('namespace Stateforge\\Suite\\App\\Scenarios;', (string) file_get_contents($scenarioFile));
         self::assertStringContainsString('final class MyScenario', (string) file_get_contents($scenarioFile));
     }
 
