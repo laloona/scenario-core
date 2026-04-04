@@ -81,7 +81,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             null,
         );
 
-        new ApplyScenarioHandler(new ScenarioBuilder())
+        (new ApplyScenarioHandler(new ScenarioBuilder()))
             ->handle(
                 $context,
                 new ApplyScenario('tracking', ['id' => '42']),
@@ -104,7 +104,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             null,
         );
 
-        new ApplyScenarioHandler(new ScenarioBuilder())
+        (new ApplyScenarioHandler(new ScenarioBuilder()))
             ->handle(
                 $context,
                 new ApplyScenario('tracking', ['id' => '7']),
@@ -127,7 +127,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             null,
         );
 
-        new ApplyScenarioHandler(new ScenarioBuilder())
+        (new ApplyScenarioHandler(new ScenarioBuilder()))
             ->handle(
                 $context,
                 new ApplyScenario('tracking', ['id' => '5']),
@@ -150,7 +150,7 @@ final class ApplyScenarioHandlerTest extends TestCase
             null,
         );
 
-        new ApplyScenarioHandler(new ScenarioBuilder())
+        (new ApplyScenarioHandler(new ScenarioBuilder()))
             ->handle(
                 $context,
                 new ApplyScenario('tracking', ['id' => '5']),

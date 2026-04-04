@@ -77,10 +77,10 @@ final class ConfigurationBuilderTest extends TestCase
 XML;
         file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
-        $config = new ConfigurationBuilder(
+        $config = (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
 
         self::assertSame('bootstrap.php', $config->getBootstrap());
         self::assertSame('.cache', $config->getCacheDirectory());
@@ -111,10 +111,10 @@ XML;
 XML;
         file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
-        $config = new ConfigurationBuilder(
+        $config = (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
         $default = new DefaultConfiguration();
 
         self::assertSame($default->getBootstrap(), $config->getBootstrap());
@@ -123,10 +123,10 @@ XML;
 
     public function testBuildReturnsDefaultConfigurationWhenNoFileExists(): void
     {
-        $config = new ConfigurationBuilder(
+        $config = (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
 
         self::assertInstanceOf(DefaultConfiguration::class, $config);
     }
@@ -180,10 +180,10 @@ XML;
         $this->expectException(ConnectionAlreadyExistsException::class);
         $this->expectExceptionMessage('connection with name "db" already exists');
 
-        new ConfigurationBuilder(
+        (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
     }
 
     public function testBuildThrowsOnDuplicateConnectionNamesWhenNameIsMissing(): void
@@ -207,10 +207,10 @@ XML;
         $this->expectException(ConnectionAlreadyExistsException::class);
         $this->expectExceptionMessage('connection with name "" already exists');
 
-        new ConfigurationBuilder(
+        (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
     }
 
     public function testBuildThrowsWhenSuiteDirectoryIsMissing(): void
@@ -230,10 +230,10 @@ XML;
         $this->expectException(XMLParserException::class);
         $this->expectExceptionMessage('configuration xml does not validate');
 
-        new ConfigurationBuilder(
+        (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
     }
 
     public function testBuildUsesMainAsDefaultSuiteNameWhenNameAttributeIsMissing(): void
@@ -250,10 +250,10 @@ XML;
 XML;
         file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
 
-        $config = new ConfigurationBuilder(
+        $config = (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->xsdPath()),
-        )->build();
+        ))->build();
 
         $suites = $config->getSuites();
         self::assertArrayHasKey('main', $suites);

@@ -54,7 +54,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(null);
         $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = new AnsiStyler($terminal)->bgText('X', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
+        $result = (new AnsiStyler($terminal))->bgText('X', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
         self::assertSame("\033[41;32;1mX\033[0m", $result);
     }
 
@@ -65,7 +65,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = new AnsiStyler($terminal)->text('MyText', ForegroundColor::Blue, FontStyle::Underline);
+        $result = (new AnsiStyler($terminal))->text('MyText', ForegroundColor::Blue, FontStyle::Underline);
 
         self::assertSame("\033[94;4mMyText\033[0m", $result);
     }
@@ -77,7 +77,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = new AnsiStyler($terminal)->bgText('Plain', null, null, null);
+        $result = (new AnsiStyler($terminal))->bgText('Plain', null, null, null);
 
         self::assertSame('Plain', $result);
     }
@@ -91,7 +91,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(180, new AnsiStyler($terminal)->outputWidth);
+        self::assertSame(180, (new AnsiStyler($terminal))->outputWidth);
     }
 
     public function testWidthFallsBackOnWindowsShellOutput(): void
@@ -103,7 +103,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
+        self::assertSame(150, (new AnsiStyler($terminal))->outputWidth);
     }
 
     public function testWidthUsesUnixShellOutput(): void
@@ -115,7 +115,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(190, new AnsiStyler($terminal)->outputWidth);
+        self::assertSame(190, (new AnsiStyler($terminal))->outputWidth);
     }
 
     public function testWidthFallsBackOnUnixShellOutput(): void
@@ -127,7 +127,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(true);
         $terminal->method('noColorEnv')->willReturn(true);
 
-        self::assertSame(150, new AnsiStyler($terminal)->outputWidth);
+        self::assertSame(150, (new AnsiStyler($terminal))->outputWidth);
     }
 
     public function testTtyFalseDisablesFormatting(): void
@@ -137,7 +137,7 @@ final class AnsiStylerTest extends TestCase
         $terminal->method('isTty')->willReturn(false);
         $terminal->method('noColorEnv')->willReturn(false);
 
-        $result = new AnsiStyler($terminal)->bgText('Plain', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
+        $result = (new AnsiStyler($terminal))->bgText('Plain', BackgroundColor::Red, ForegroundColor::Green, FontStyle::Bold);
         self::assertSame('Plain', $result);
     }
 }

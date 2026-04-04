@@ -18,7 +18,7 @@ trait HandlerRegistryMock
 {
     private function resetHandlerRegistry(): void
     {
-        $property = new ReflectionClass(HandlerRegistry::class)->getProperty('instance');
+        $property = (new ReflectionClass(HandlerRegistry::class))->getProperty('instance');
         $property->setValue(null, null);
     }
 }

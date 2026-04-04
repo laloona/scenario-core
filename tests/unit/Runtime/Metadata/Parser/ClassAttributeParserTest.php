@@ -50,7 +50,7 @@ final class ClassAttributeParserTest extends TestCase
 
     public function testParseReturnsOnlyConfiguredClassAttributes(): void
     {
-        $attributes = new ClassAttributeParser()->parse(ValidScenario::class);
+        $attributes = (new ClassAttributeParser())->parse(ValidScenario::class);
 
         self::assertCount(2, $attributes);
         self::assertSame(RefreshDatabase::class, $attributes[0]->getName());
@@ -61,7 +61,7 @@ final class ClassAttributeParserTest extends TestCase
 
     public function testParseReturnsEmptyArrayWhenNoConfiguredAttributeWasFound(): void
     {
-        $attributes = new ClassAttributeParser()->parse(AnotherScenario::class);
+        $attributes = (new ClassAttributeParser())->parse(AnotherScenario::class);
 
         self::assertCount(0, $attributes);
     }

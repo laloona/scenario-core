@@ -37,7 +37,7 @@ final class TableTest extends AnsiStylerCase
     public function testGenerateReturnsNullWhenEmpty(): void
     {
         self::assertNull(
-            new Table($this->styler())->generate(null, []),
+            (new Table($this->styler()))->generate(null, []),
         );
     }
 
@@ -48,7 +48,7 @@ final class TableTest extends AnsiStylerCase
             ['Bob', null],
         ];
         $headers = ['Name', 'Score'];
-        $lines = new Table($this->styler())
+        $lines = (new Table($this->styler()))
             ->generate($headers, $rows, [Align::Left, Align::Right], true);
 
         self::assertNotNull($lines);
@@ -67,7 +67,7 @@ final class TableTest extends AnsiStylerCase
 
     public function testGenerateWithoutBorder(): void
     {
-        $lines = new Table($this->styler())
+        $lines = (new Table($this->styler()))
             ->generate(null, [['A', 'B']], null, false);
 
         self::assertNotNull($lines);
@@ -84,7 +84,7 @@ final class TableTest extends AnsiStylerCase
             [$long, $long, $long, $long],
         ];
 
-        $lines = new Table($this->styler('150'))
+        $lines = (new Table($this->styler('150')))
             ->generate($headers, $rows, [Align::Left, Align::Center], true);
 
         self::assertNotNull($lines);

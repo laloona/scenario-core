@@ -81,7 +81,7 @@ final class OutputTest extends TestCase
                 };
             });
 
-        $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
+        $result = (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
             ->ask('Enter value', 'default', static fn (string $input): bool => $input === 'accepted');
 
         self::assertSame('accepted', $result);
@@ -106,7 +106,7 @@ final class OutputTest extends TestCase
                 };
             });
 
-        $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
+        $result = (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
             ->confirm('Continue?', true);
 
         self::assertTrue($result);
@@ -134,7 +134,7 @@ final class OutputTest extends TestCase
                 };
             });
 
-        $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
+        $result = (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
             ->choice('Select one', ['first', 'second']);
 
         self::assertSame('0', $result);
@@ -162,7 +162,7 @@ final class OutputTest extends TestCase
                 };
             });
 
-        $result = new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO)
+        $result = (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
             ->choice('Choose one', ['first', 'second'], 'second');
 
         self::assertSame('second', $result);

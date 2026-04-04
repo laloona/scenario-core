@@ -308,7 +308,6 @@ final class AttributeContextTest extends TestCase
         );
 
         $cloneMethod = new ReflectionMethod($context, '__clone');
-        $cloneMethod->setAccessible(true);
         $cloneMethod->invoke($context);
 
         self::addToAssertionCount(1);

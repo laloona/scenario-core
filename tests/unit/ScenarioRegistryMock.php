@@ -18,7 +18,7 @@ trait ScenarioRegistryMock
 {
     private function resetScenarioRegistry(): void
     {
-        $property = new ReflectionClass(ScenarioRegistry::class)->getProperty('instance');
+        $property = (new ReflectionClass(ScenarioRegistry::class))->getProperty('instance');
         $property->setValue(null, null);
     }
 }

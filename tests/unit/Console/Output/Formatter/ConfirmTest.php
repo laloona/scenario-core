@@ -32,7 +32,7 @@ final class ConfirmTest extends AnsiStylerCase
 {
     public function testOptionsDefaultTrueHighlightsYes(): void
     {
-        $result = new Confirm($this->styler())->options(true);
+        $result = (new Confirm($this->styler()))->options(true);
 
         self::assertStringContainsString("\033[33mYes\033[0m", $result);
         self::assertStringContainsString("\033[33mno\033[0m", $result);
@@ -40,7 +40,7 @@ final class ConfirmTest extends AnsiStylerCase
 
     public function testOptionsDefaultFalseHighlightsNo(): void
     {
-        $result = new Confirm($this->styler())->options(false);
+        $result = (new Confirm($this->styler()))->options(false);
 
         self::assertStringContainsString("\033[33myes\033[0m", $result);
         self::assertStringContainsString("\033[33mNo\033[0m", $result);
@@ -48,7 +48,7 @@ final class ConfirmTest extends AnsiStylerCase
 
     public function testQuestionWrapsTextAndAppendsColon(): void
     {
-        $result = new Confirm($this->styler())->question('Proceed?');
+        $result = (new Confirm($this->styler()))->question('Proceed?');
 
         self::assertStringContainsString("\033[32mProceed?\033[0m", $result);
         self::assertStringContainsString("\033[32m:\033[0m", $result);
@@ -56,7 +56,7 @@ final class ConfirmTest extends AnsiStylerCase
 
     public function testErrorAddsPrefixAndOptions(): void
     {
-        $result = new Confirm($this->styler())->error();
+        $result = (new Confirm($this->styler()))->error();
 
         self::assertStringContainsString("\033[91mPlease answer with: \033[0m", $result);
         self::assertStringContainsString("\033[33mYes\033[0m", $result);

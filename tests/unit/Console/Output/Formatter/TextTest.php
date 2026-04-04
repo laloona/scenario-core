@@ -32,7 +32,7 @@ final class TextTest extends AnsiStylerCase
     {
         self::assertSame(
             'Hello',
-            new Text($this->styler())->text('Hello', null),
+            (new Text($this->styler()))->text('Hello', null),
         );
     }
 
@@ -40,7 +40,7 @@ final class TextTest extends AnsiStylerCase
     {
         self::assertSame(
             "\033[32mInfo\033[0m",
-            new Text($this->styler())->info('Info'),
+            (new Text($this->styler()))->info('Info'),
         );
     }
 
@@ -48,7 +48,7 @@ final class TextTest extends AnsiStylerCase
     {
         self::assertSame(
             "\033[90mNote\033[0m",
-            new Text($this->styler())->comment('Note'),
+            (new Text($this->styler()))->comment('Note'),
         );
     }
 
@@ -56,7 +56,7 @@ final class TextTest extends AnsiStylerCase
     {
         self::assertSame(
             "\033[94mHi\033[0m",
-            new Text($this->styler())->text('Hi', ForegroundColor::Blue),
+            (new Text($this->styler()))->text('Hi', ForegroundColor::Blue),
         );
     }
 }

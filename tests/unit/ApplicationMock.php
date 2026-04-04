@@ -63,7 +63,7 @@ trait ApplicationMock
 
     private function setConfiguration(LoadedConfiguration $config): void
     {
-        $property = new ReflectionClass(Application::class)->getProperty('configuration');
+        $property = (new ReflectionClass(Application::class))->getProperty('configuration');
         $property->setValue(null, $config);
     }
 

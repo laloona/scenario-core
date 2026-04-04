@@ -18,7 +18,7 @@ trait TestClassStateMock
 {
     private function resetClassMethodState(): void
     {
-        $throwables = new ReflectionClass(TestClassState::class)->getProperty('throwables');
+        $throwables = (new ReflectionClass(TestClassState::class))->getProperty('throwables');
         $throwables->setValue(null, []);
     }
 }

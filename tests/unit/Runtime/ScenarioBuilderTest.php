@@ -32,7 +32,7 @@ final class ScenarioBuilderTest extends TestCase
     {
         self::assertInstanceOf(
             ScenarioInterface::class,
-            new ScenarioBuilder()->build(ValidScenario::class),
+            (new ScenarioBuilder())->build(ValidScenario::class),
         );
     }
 
@@ -40,6 +40,6 @@ final class ScenarioBuilderTest extends TestCase
     {
         self::expectException(WrongScenarioSubclassException::class);
 
-        new ScenarioBuilder()->build(InvalidScenario::class);
+        (new ScenarioBuilder())->build(InvalidScenario::class);
     }
 }
