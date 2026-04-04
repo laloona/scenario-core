@@ -29,19 +29,18 @@ php vendor/bin/scenario
 ```
 
 ## Available Commands
-
 - __install__: Adds the scenario extension to PHPUnit.
-- __list__: List all available scenarios.
+- __list__: List all available scenarios.<br>
   Available options (optional):
   ```bash
   --suite=<name>
   ```
-- __apply__: Apply a scenario. Argument (optional): `scenario`
+- __apply__: Apply a scenario. Argument (optional): `scenario`<br>
   Available options (optional):
   ```bash
   --up       Apply the scenario (default)
   --down     Revert the scenario
-  --audit    Prints out the audit
+  --audit    Print out the audit
    ```
   Parameters can be passed as CLI options: 
   ```php
@@ -55,13 +54,13 @@ php vendor/bin/scenario
   Please insert value for string parameter "email" (required)
   >
   ```
-- __debug__: Inspect a scenario or test. Arguments (optional): `class` `method`
+- __debug__: Inspect a scenario or test. Arguments (optional): `class` `method`<br>
   Use this to:
   - verify scenario resolution
   - inspect applied scenarios
   - debug execution flow
 - __make__: Generate a new scenario. This command helps to create new scenarios quickly.
-- __refresh__: Execute database or environment refresh logic.
+- __refresh__: Execute database or environment refresh logic.<br>
   Available options (optional):
   ```bash
   --connection=<name>

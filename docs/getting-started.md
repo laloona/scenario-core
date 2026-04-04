@@ -1,11 +1,9 @@
 # Getting Started
-
 This guide complements the README and focuses on practical usage patterns.
 
 ---
 
 ## When to use Scenario
-
 Scenario is useful when:
 
 - test setup becomes complex
@@ -14,15 +12,12 @@ Scenario is useful when:
 - debugging requires consistent environments
 
 ## Typical Workflow
-
 1. Define a scenario
 2. Apply it in tests or via CLI
 3. Compose scenarios for more complex states
 
 ## Using Parameters Effectively
-
 Example:
-
 ```php
 #[Parameter('userId', ParameterType::Integer, required: true)]
 ```
@@ -32,8 +27,7 @@ Tips:
 - Prefer explicit values over hidden defaults
 - Validate inputs using ParameterType
 
-Scenario Composition
-
+## Scenario Composition
 Scenarios can apply other scenarios:
 ```php
 #[ApplyScenario(UserExists::class)]
@@ -45,7 +39,6 @@ This allows building complex states from smaller building blocks.
 ---
 
 ## CLI vs PHPUnit
-
 Use CLI when:
 - preparing local state
 - debugging
@@ -64,7 +57,6 @@ Use PHPUnit when:
 ---
 
 ## Next Steps
-
 - [Scenarios](scenarios.md)
 - [CLI Usage](cli.md)
 - [Testing with PHPUnit](testing-with-phpunit.md)

@@ -7,11 +7,9 @@ This document contains practical examples of how to use Scenario in real-world s
 ## Create a User for Tests
 
 ### Problem
-
 Many tests require a user to exist.
 
 ### Solution
-
 ```php
 #[AsScenario('user-exists')]
 #[Parameter('id', ParameterType::Integer, required: true)]
@@ -31,11 +29,9 @@ Use in tests:
 ## User with Subscription
 
 ### Problem
-
 You need a user with an active subscription.
 
 ### Solution
-
 Compose scenarios:
 ```php
 #[AsScenario('user-with-subscription')]
@@ -52,11 +48,9 @@ final class UserHasSubscription implements ScenarioInterface
 ## Combine Multiple States
 
 ### Problem
-
 Tests require a fully prepared system state.
 
 ### Solution
-
 ```php
 #[ApplyScenario(UserExists::class, ['id' => 42])]
 #[ApplyScenario(UserHasSubscription::class)]
@@ -68,11 +62,9 @@ final class SubscriptionTest extends TestCase
 ## Reset Database Before Test
 
 ### Problem
-
 Tests interfere with each other.
 
 ### Solution
-
 ```php
 #[RefreshDatabase]
 final class MyTest extends TestCase
@@ -83,7 +75,6 @@ final class MyTest extends TestCase
 ## Reproduce a Bug Locally
 
 ### Problem
-
 A bug only occurs with specific data.
 
 ### Solution

@@ -5,9 +5,7 @@ This document explains how Scenario integrates with PHPUnit and how to use it ef
 ---
 
 ## Why use Scenario in tests?
-
 Traditional test setup often involves:
-
 - manual fixture creation
 - duplicated setup logic
 - hard-to-maintain test data
@@ -21,7 +19,6 @@ Instead of writing setup code, you describe the desired state:
 ```
 
 ## Enabling PHPUnit Integration
-
 Make sure the Scenario PHPUnit extension is registered:
 ```xml
 <extensions>
@@ -105,7 +102,6 @@ This keeps tests:
 - focused
 
 ## Error Handling
-
 If a scenario fails:
 - the test fails immediately
 - the exception is wrapped and reported via PHPUnit
