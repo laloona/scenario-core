@@ -21,8 +21,8 @@ It is a PHP class that:
 ```php
 <?php declare(strict_types=1);
 
-use Scenario\Core\Attribute\AsScenario;
-use Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Contract\ScenarioInterface;
 
 #[AsScenario('create-user')]
 final class CreateUserScenario implements ScenarioInterface
@@ -56,7 +56,7 @@ The name defined in `#[AsScenario]` is used:
 Scenarios are applied using the `#[ApplyScenario]` attribute.
 
 ```php
-use Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario('create-user')]
 final class MyTest extends TestCase
@@ -96,8 +96,8 @@ Scenarios are executed in the order they are applied.
 Scenarios can define parameters using `#[Parameter]`.
 
 ```php
-use Scenario\Core\Attribute\Parameter;
-use Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
 
 #[AsScenario('create-user')]
 #[Parameter('email', ParameterType::String, required: true)]

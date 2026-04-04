@@ -35,7 +35,7 @@ This ensures that all scenario attributes are processed before test execution.
 
 ### At class level
 ```php
-use Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 
 #[ApplyScenario(UserExists::class)]
 final class MyTest extends TestCase
@@ -77,7 +77,7 @@ Parameters are validated before execution.
 
 Use `#[RefreshDatabase]` to ensure a clean environment:
 ```php
-use Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
 
 #[RefreshDatabase]
 final class MyTest extends TestCase
