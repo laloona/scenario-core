@@ -18,6 +18,7 @@ use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use function array_values;
 use function count;
+use function ksort;
 
 final class ListScenariosCommand extends CliCommand
 {
@@ -48,6 +49,7 @@ final class ListScenariosCommand extends CliCommand
             $scenarios = $filtered;
             unset($filtered);
         }
+        ksort($scenarios);
 
         $tables = [];
         foreach ($scenarios as $scenario) {

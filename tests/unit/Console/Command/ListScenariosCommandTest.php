@@ -132,8 +132,8 @@ final class ListScenariosCommandTest extends TestCase
             ->method('headline')
             ->willReturnCallback(function (string $suite) use ($matcher): void {
                 match ($matcher->numberOfInvocations()) {
-                    1 => self::assertSame('main', $suite),
-                    2 => self::assertSame('other', $suite),
+                    1 => self::assertSame('other', $suite),
+                    2 => self::assertSame('main', $suite),
                     default => null,
                 };
             });
@@ -146,11 +146,11 @@ final class ListScenariosCommandTest extends TestCase
 
                 match ($matcher->numberOfInvocations()) {
                     1 => self::assertSame(
-                        [[ValidScenario::class, 'first', 'my first scenario in main']],
+                        [[AnotherScenario::class, 'second', 'my second scenario in other']],
                         $rows,
                     ),
                     2 => self::assertSame(
-                        [[AnotherScenario::class, 'second', 'my second scenario in other']],
+                        [[ValidScenario::class, 'first', 'my first scenario in main']],
                         $rows,
                     ),
                     default => null,
