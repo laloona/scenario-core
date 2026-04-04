@@ -41,8 +41,8 @@ final class Application
     {
         $vendorPath = self::getRootDir() . DIRECTORY_SEPARATOR .
             'vendor' . DIRECTORY_SEPARATOR .
-            'scenario' . DIRECTORY_SEPARATOR .
-            'core' . DIRECTORY_SEPARATOR .
+            'stateforge' . DIRECTORY_SEPARATOR .
+            'scenario-core' . DIRECTORY_SEPARATOR .
             'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
 
         if (is_file($vendorPath)) {

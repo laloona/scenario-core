@@ -152,8 +152,8 @@ final class ApplicationTest extends TestCase
         $xsdSource = file_get_contents(__DIR__ . '/../../../xsd/scenario.xsd');
         self::assertIsString($xsdSource);
 
-        mkdir(Application::getRootDir() . '/vendor/scenario/core/xsd', 0777, true);
-        file_put_contents(Application::getRootDir() . '/vendor/scenario/core/xsd/scenario.xsd', $xsdSource);
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/xsd', 0777, true);
+        file_put_contents(Application::getRootDir() . '/vendor/stateforge/scenario-core/xsd/scenario.xsd', $xsdSource);
 
         mkdir(Application::getRootDir() . '/scenarios');
         file_put_contents(Application::getRootDir() . '/scenarios/ScenarioY.php', <<<PHP

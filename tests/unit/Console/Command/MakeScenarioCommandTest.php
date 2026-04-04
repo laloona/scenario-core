@@ -87,11 +87,11 @@ final class MakeScenarioCommandTest extends TestCase
 
     public function testRunGeneratesScenarioFile(): void
     {
-        mkdir(Application::getRootDir() . '/vendor/scenario/core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
         mkdir(Application::getRootDir() . '/app/scenarios', 0777, true);
 
         file_put_contents(
-            Application::getRootDir() . '/vendor/scenario/core/blueprint/scenario.blueprint',
+            Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint/scenario.blueprint',
             <<<'PHP'
 <?php declare(strict_types=1);
 
@@ -141,9 +141,9 @@ PHP,
 
     public function testRunGeneratesConfigFileWhenChosenInteractively(): void
     {
-        mkdir(Application::getRootDir() . '/vendor/scenario/core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
         file_put_contents(
-            Application::getRootDir() . '/vendor/scenario/core/blueprint/config.blueprint',
+            Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint/config.blueprint',
             "<scenario></scenario>\n",
         );
 
@@ -178,11 +178,11 @@ PHP,
 
     public function testRunReturnsErrorWhenScenarioNameIsInvalid(): void
     {
-        mkdir(Application::getRootDir() . '/vendor/scenario/core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
         mkdir(Application::getRootDir() . '/app/scenarios', 0777, true);
 
         file_put_contents(
-            Application::getRootDir() . '/vendor/scenario/core/blueprint/scenario.blueprint',
+            Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint/scenario.blueprint',
             '<?php final class %className% {}',
         );
 

@@ -148,8 +148,8 @@ final class MakeScenarioCommand extends CliCommand
     {
         return Application::getRootDir() . DIRECTORY_SEPARATOR .
             'vendor' . DIRECTORY_SEPARATOR .
-            'scenario' . DIRECTORY_SEPARATOR .
-            'core' . DIRECTORY_SEPARATOR .
+            'stateforge' . DIRECTORY_SEPARATOR .
+            'scenario-core' . DIRECTORY_SEPARATOR .
             'blueprint' . DIRECTORY_SEPARATOR .
             $name . '.blueprint';
     }
