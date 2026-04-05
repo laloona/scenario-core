@@ -22,6 +22,7 @@ use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use function array_merge;
 use function class_exists;
+use function ksort;
 use const DIRECTORY_SEPARATOR;
 
 final class ScenarioTestFinder
@@ -37,6 +38,7 @@ final class ScenarioTestFinder
         foreach ($directories as $directory) {
             $classes = array_merge($classes, $this->findTestCLassesUsingScenario(Application::getRootDir() . DIRECTORY_SEPARATOR . $directory));
         }
+        ksort($classes);
 
         return $classes;
     }
