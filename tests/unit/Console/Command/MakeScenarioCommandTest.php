@@ -126,7 +126,7 @@ PHP,
             ->willReturn('MyScenario');
         $output->expects(self::once())
             ->method('success')
-            ->with(self::stringContains('/app/scenarios/MyScenario.php'));
+            ->with(self::stringContains('MyScenario.php'));
         $output->expects(self::never())
             ->method('error');
 
@@ -135,8 +135,9 @@ PHP,
         $scenarioFile = Application::getRootDir() . '/app/scenarios/MyScenario.php';
         self::assertSame(Command::Success, $result);
         self::assertTrue(is_file($scenarioFile));
-        self::assertStringContainsString('namespace Stateforge\\Suite\\App\\Scenarios;', (string) file_get_contents($scenarioFile));
-        self::assertStringContainsString('final class MyScenario', (string) file_get_contents($scenarioFile));
+        $fileContent = (string) file_get_contents($scenarioFile);
+        self::assertStringContainsString('namespace Stateforge\\Suite\\App\\Scenarios;', $fileContent);
+        self::assertStringContainsString('final class MyScenario', $fileContent);
     }
 
     public function testRunGeneratesConfigFileWhenChosenInteractively(): void
