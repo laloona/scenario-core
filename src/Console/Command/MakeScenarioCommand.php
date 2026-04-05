@@ -107,7 +107,7 @@ final class MakeScenarioCommand extends CliCommand
                 [
                     implode('\\', array_map(function ($part): string {
                         return ucfirst($part);
-                    }, explode(DIRECTORY_SEPARATOR, $suite->directory))),
+                    }, explode('/', str_replace('\\', '/', $suite->directory)))),
                     ucfirst($name),
                 ],
                 (string)file_get_contents($file),
