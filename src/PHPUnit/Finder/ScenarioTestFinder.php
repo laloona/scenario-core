@@ -38,8 +38,8 @@ final class ScenarioTestFinder
         foreach ($directories as $directory) {
             $classes = array_merge($classes, $this->findTestCLassesUsingScenario(Application::getRootDir() . DIRECTORY_SEPARATOR . $directory));
         }
+        
         ksort($classes);
-
         return $classes;
     }
 
