@@ -23,6 +23,7 @@ use function rmdir;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unlink;
+use const DIRECTORY_SEPARATOR;
 
 trait ApplicationMock
 {
@@ -30,7 +31,7 @@ trait ApplicationMock
 
     private function createRootDir(): void
     {
-        $this->rootDir = sys_get_temp_dir() . '/scenario_core_' . uniqid();
+        $this->rootDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'scenario_core_' . uniqid();
         mkdir($this->rootDir);
 
         $reflection = new ReflectionClass(Application::class);

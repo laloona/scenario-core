@@ -23,6 +23,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfigurat
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
+use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(DefaultConfiguration::class)]
 #[UsesClass(ApplyScenario::class)]
@@ -54,13 +55,13 @@ final class DefaultConfigurationTest extends TestCase
         $cacheKey = $configuration->getCacheKey();
 
         self::assertSame('', $configuration->getBootstrap());
-        self::assertSame(Application::getRootDir() . '/.scenario.cache', $configuration->getCacheDirectory());
+        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR .'.scenario.cache', $configuration->getCacheDirectory());
         self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $cacheKey);
 
         $suites = $configuration->getSuites();
         self::assertArrayHasKey('main', $suites);
         self::assertSame('main', $suites['main']->name);
-        self::assertSame(Application::getRootDir() . '/scenario', $suites['main']->directory);
+        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR . 'scenario', $suites['main']->directory);
 
         self::assertSame([], $configuration->getConnections());
         self::assertSame([

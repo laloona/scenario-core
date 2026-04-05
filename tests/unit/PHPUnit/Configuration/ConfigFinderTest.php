@@ -20,6 +20,7 @@ use Stateforge\Scenario\Core\PHPUnit\Configuration\ConfigFinder;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function file_put_contents;
+use const DIRECTORY_SEPARATOR;
 
 #[CoversClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
@@ -48,16 +49,16 @@ final class ConfigFinderTest extends TestCase
 
     public function testPrefersPhpUnitDistXmlWhenPresent(): void
     {
-        file_put_contents(Application::getRootDir() . '/phpunit.dist.xml', '<phpunit/>');
-        file_put_contents(Application::getRootDir() . '/phpunit.xml', '<phpunit/>');
+        file_put_contents(Application::getRootDir() . DIRECTORY_SEPARATOR . 'phpunit.dist.xml', '<phpunit/>');
+        file_put_contents(Application::getRootDir() . DIRECTORY_SEPARATOR . 'phpunit.xml', '<phpunit/>');
 
-        self::assertSame(Application::getRootDir() . '/phpunit.dist.xml', (new ConfigFinder())->find());
+        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR . 'phpunit.dist.xml', (new ConfigFinder())->find());
     }
 
     public function testFallsBackToPhpUnitXml(): void
     {
-        file_put_contents(Application::getRootDir() . '/phpunit.xml', '<phpunit/>');
+        file_put_contents(Application::getRootDir() . DIRECTORY_SEPARATOR . 'phpunit.xml', '<phpunit/>');
 
-        self::assertSame(Application::getRootDir() . '/phpunit.xml', (new ConfigFinder())->find());
+        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR . 'phpunit.xml', (new ConfigFinder())->find());
     }
 }
