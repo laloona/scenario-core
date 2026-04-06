@@ -158,7 +158,7 @@ final class FailureSubscriberTest extends TestCase
                     HRTime::fromSecondsAndNanoseconds(1, 0),
                     MemoryUsage::fromBytes(1),
                     MemoryUsage::fromBytes(1),
-                    new GarbageCollectorStatus(0, 0, 0, 0, null, null, null, null, null, null, null, null),
+                    new GarbageCollectorStatus(0, 0, 0, 0, 0, 0, 0, 0, false, false, false, 0),
                 ),
                 Duration::fromSecondsAndNanoseconds(0, 0),
                 MemoryUsage::fromBytes(0),

@@ -44,7 +44,6 @@ use function file_put_contents;
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Configured::class)]
 #[UsesClass(Configurator::class)]
-#[UsesClass(Extension::class)]
 #[UsesClass(Input::class)]
 #[UsesClass(NotAllowedOptionsException::class)]
 #[UsesClass(Option::class)]

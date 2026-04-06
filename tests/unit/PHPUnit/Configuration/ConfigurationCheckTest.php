@@ -26,7 +26,6 @@ use function file_put_contents;
 #[CoversClass(Configured::class)]
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
-#[UsesClass(Extension::class)]
 #[Group('phpunit')]
 #[Small]
 final class ConfigurationCheckTest extends TestCase

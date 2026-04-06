@@ -31,7 +31,6 @@ use function substr_count;
 #[UsesClass(Configured::class)]
 #[UsesClass(ConfigFinder::class)]
 #[UsesClass(Application::class)]
-#[UsesClass(Extension::class)]
 #[Group('phpunit')]
 #[Small]
 final class ConfiguratorTest extends TestCase
