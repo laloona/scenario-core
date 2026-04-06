@@ -12,12 +12,14 @@
 namespace Stateforge\Scenario\Core\Attribute;
 
 use Attribute;
-use Stateforge\Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterNameErrorException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
 use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
 use function array_values;
 use function gettype;
 use function implode;
 use function is_array;
+use function preg_match;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 final class Parameter
@@ -35,6 +37,10 @@ final class Parameter
         public readonly bool $repeatable = false,
         mixed $default = null,
     ) {
+        if ($this->isValidName($name) === false) {
+            throw new ParameterNameErrorException($name);
+        }
+
         if ($default !== null) {
             if ($this->repeatable === true) {
                 if (is_array($default) === false) {
@@ -119,5 +125,25 @@ final class Parameter
         }
 
         return $this->type->asString($value);
+    }
+
+    private function isValidName(string $name): bool
+    {
+        // snake_case: foo_bar_baz
+        if (preg_match('/^[a-z0-9]+(_[a-z0-9]+)*$/', $name) === 1) {
+            return true;
+        }
+
+        // kebab-case: foo-bar-baz
+        if (preg_match('/^[a-z0-9]+(-[a-z0-9]+)*$/', $name) === 1) {
+            return true;
+        }
+
+        // camelCase: FooBarBaz
+        if (preg_match('/^[a-z][a-zA-Z0-9]*$/', $name) === 1) {
+            return true;
+        }
+
+        return false;
     }
 }

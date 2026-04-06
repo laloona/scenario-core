@@ -17,7 +17,8 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterNameErrorException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
 use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
@@ -29,12 +30,41 @@ use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 #[UsesClass(FloatType::class)]
 #[UsesClass(IntegerType::class)]
 #[UsesClass(ParameterType::class)]
+#[UsesClass(ParameterNameErrorException::class)]
 #[UsesClass(ParameterValueErrorException::class)]
 #[UsesClass(StringType::class)]
 #[Group('attribute')]
 #[Small]
 final class ParameterTest extends TestCase
 {
+    public function testCastsValidParameterNameSnakeCase(): void
+    {
+        $parameter = new Parameter('my_int', ParameterType::Integer);
+
+        self::assertSame('my_int', $parameter->name);
+    }
+
+    public function testCastsValidParameterNameKebapCase(): void
+    {
+        $parameter = new Parameter('my-int', ParameterType::Integer);
+
+        self::assertSame('my-int', $parameter->name);
+    }
+
+    public function testCastsValidParameterNameCamelCase(): void
+    {
+        $parameter = new Parameter('myInt', ParameterType::Integer);
+
+        self::assertSame('myInt', $parameter->name);
+    }
+
+    public function testThrowsExceptionForInvalidParameterName(): void
+    {
+        $this->expectException(ParameterNameErrorException::class);
+
+        new Parameter('My Int?', ParameterType::Integer);
+    }
+
     public function testCastsValidDefaultValue(): void
     {
         $parameter = new Parameter('myint', ParameterType::Integer, default: '100');

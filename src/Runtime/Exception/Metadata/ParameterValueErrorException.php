@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Runtime\Exception;
+namespace Stateforge\Scenario\Core\Runtime\Exception\Metadata;
 
+use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
 final class ParameterValueErrorException extends Exception

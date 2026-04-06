@@ -2,6 +2,7 @@
   "name": "stateforge/scenario-core",
   "description": "Core library for declarative, attribute-driven scenario orchestration for reproducible test data states in PHP.",
   "type": "library",
+  "keywords": ["testing", "scenario", "state", "framework"],
   "license": "BSD-3-Clause",
   "authors": [
     {

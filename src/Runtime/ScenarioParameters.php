@@ -12,9 +12,9 @@
 namespace Stateforge\Scenario\Core\Runtime;
 
 use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
 use Stateforge\Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Stateforge\Scenario\Core\Runtime\Exception\NotAllowedParametersException;
-use Stateforge\Scenario\Core\Runtime\Exception\ParameterValueErrorException;
 use Stateforge\Scenario\Core\Runtime\Exception\UndefinedParameterException;
 use function array_diff;
 use function array_keys;

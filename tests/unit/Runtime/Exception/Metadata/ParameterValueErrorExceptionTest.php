@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Exception;
+namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Exception\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Exception\ParameterValueErrorException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
 
 #[CoversClass(ParameterValueErrorException::class)]
 #[Group('runtime')]
