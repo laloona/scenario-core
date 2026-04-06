@@ -94,7 +94,7 @@ jobs:
         run: vendor/bin/phpstan analyse --error-format=github
 
   phpunit:
-    name: PHPUnit (PHP ${{ matrix.php }}) (OS ${{ matrix.os }})
+    name: PHPUnit (PHP ${{ matrix.php }}) (OS ${{ matrix.os }}) (${{ matrix.dependencies }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -132,11 +132,12 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.dependencies }}-composer-
             ${{ runner.os }}-php-${{ matrix.php }}-composer-
             ${{ runner.os }}-composer-
 
@@ -158,9 +159,10 @@ jobs:
           vendor/bin/phpunit --coverage-text --coverage-clover coverage.xml | tee coverage.txt
 
       - name: Upload coverage artifact
+        if: matrix.dependencies == 'highest' && matrix.os == 'ubuntu-latest' && matrix.php == '8.4'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.os }}-php-${{ matrix.php }}
+          name: coverage-${{ matrix.os }}-php-${{ matrix.php }}-${{ matrix.dependencies }}
           path: |
             coverage.xml
             coverage.txt
