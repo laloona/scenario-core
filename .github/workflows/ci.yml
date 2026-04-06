@@ -166,6 +166,7 @@ jobs:
             coverage.txt
 
       - name: Add coverage summary
+        if: matrix.dependencies == 'highest' && matrix.os == 'ubuntu-latest' && matrix.php == '8.4'
         shell: bash
         run: |
           echo "## PHPUnit coverage (PHP ${{ matrix.php }}, OS ${{ matrix.os }})" >> "$GITHUB_STEP_SUMMARY"
