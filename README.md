@@ -1,3 +1,7 @@
+<img src="docs/scenario.png" alt="Stateforge\Scenario\Core" width="600px" />
+
+---
+
 # Scenario Core
 Scenario Core is a declarative, attribute-driven framework for reproducible data states in PHP.
 It replaces manual test setup and fixture orchestration with structured, metadata-based scenario
