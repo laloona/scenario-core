@@ -28,6 +28,11 @@ final class ScenarioRegistry
         return static::$instance;
     }
 
+    /**
+     * @var array<class-string|string, ScenarioDefinition>
+     */
+    private array $registeredScenarios = [];
+
     private function __construct()
     {
     }
@@ -35,11 +40,6 @@ final class ScenarioRegistry
     private function __clone()
     {
     }
-
-    /**
-     * @var array<class-string|string, ScenarioDefinition>
-     */
-    private array $registeredScenarios = [];
 
     public function register(ScenarioDefinition $definition): void
     {

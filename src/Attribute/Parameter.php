@@ -15,10 +15,13 @@ use Attribute;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterNameErrorException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
 use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\Runtime\Metadata\ParameterTypeRegistry;
 use function array_values;
 use function gettype;
 use function implode;
 use function is_array;
+use function is_string;
 use function preg_match;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -29,9 +32,14 @@ final class Parameter
      */
     public readonly string|int|float|bool|null|array $default;
 
+    public readonly ParameterType|ParameterTypeDefinition $type;
+
+    /**
+     * @param ParameterType|class-string $type
+     */
     public function __construct(
         public readonly string $name,
-        public readonly ParameterType $type,
+        ParameterType|string $type,
         public readonly ?string $description = null,
         public readonly bool $required = false,
         public readonly bool $repeatable = false,
@@ -40,6 +48,10 @@ final class Parameter
         if ($this->isValidName($name) === false) {
             throw new ParameterNameErrorException($name);
         }
+
+        $this->type = (is_string($type) === true)
+            ? ParameterTypeRegistry::getInstance()->resolve($type)
+            : $type;
 
         if ($default !== null) {
             if ($this->repeatable === true) {
@@ -50,18 +62,18 @@ final class Parameter
                 /** @var list<string|int|float|bool|null> $default */
                 $default = array_values($default);
                 foreach ($default as &$value) {
-                    if ($type->valid($value) === false) {
-                        throw new ParameterValueErrorException($name, $type->value, gettype($value), true);
+                    if ($this->type->valid($value) === false) {
+                        throw new ParameterValueErrorException($name, $this->type->value, gettype($value), true);
                     }
 
-                    $value = $type->cast($value);
+                    $value = $this->type->cast($value);
                 }
             } else {
-                if ($type->valid($default) === false) {
-                    throw new ParameterValueErrorException($name, $type->value, gettype($default), true);
+                if ($this->type->valid($default) === false) {
+                    throw new ParameterValueErrorException($name, $this->type->value, gettype($default), true);
                 }
 
-                $default = $type->cast($default);
+                $default = $this->type->cast($default);
             }
         }
 
