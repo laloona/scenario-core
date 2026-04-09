@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterNameErrorException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;

@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Main;
+namespace Stateforge\Suite\Scenario\Main;
 
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Scenario;
 use function is_int;
 use const PHP_EOL;
@@ -29,24 +29,24 @@ use const PHP_EOL;
     type: ParameterType::Integer,
     required: true,
 )]
-#[ApplyScenario('first-scenario')]
+#[ApplyScenario('first-scenario', [ 'myint' => 4 ])]
 final class SecondScenario extends Scenario
 {
     public function up(): void
     {
-        $param = '';
-        if (is_int($this->parameter('param-1'))) {
-            $param = $this->parameter('param-1');
-        }
+        $param = is_int($this->parameter('param-1'))
+            ? $this->parameter('param-1')
+            : '';
+
         echo 'second scenario was applied with up and parameter ' . $param . PHP_EOL;
     }
 
     public function down(): void
     {
-        $param = '';
-        if (is_int($this->parameter('param-1'))) {
-            $param = $this->parameter('param-1');
-        }
+        $param = is_int($this->parameter('param-1'))
+            ? $this->parameter('param-1')
+            : '';
+
         echo 'second scenario was applied with down and parameter ' . $param . PHP_EOL;
     }
 }

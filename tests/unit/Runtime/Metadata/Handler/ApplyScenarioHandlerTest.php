@@ -26,7 +26,7 @@ use Stateforge\Scenario\Core\Runtime\Metadata\AttributeProcessor;
 use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parser\ClassAttributeParser;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parser\MethodAttributeParser;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;

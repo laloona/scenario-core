@@ -59,6 +59,9 @@ final class ConfigurationBuilder
         if ($root->hasAttribute('cacheDirectory') === true) {
             $configuration->setCacheDirectory($root->getAttribute('cacheDirectory'));
         }
+        if ($root->hasAttribute('parameterDirectory') === true) {
+            $configuration->setParameterDirectory($root->getAttribute('parameterDirectory'));
+        }
     }
 
     private function connections(LoadedConfiguration $configuration, DOMDocument $doc): void

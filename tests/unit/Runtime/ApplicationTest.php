@@ -22,6 +22,7 @@ use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
@@ -31,9 +32,12 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
+use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeLoader;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioLoader;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
@@ -50,6 +54,7 @@ use function mkdir;
 #[UsesClass(ApplicationState::class)]
 #[UsesClass(ApplyScenario::class)]
 #[UsesClass(ApplyScenarioHandler::class)]
+#[UsesClass(CacheDirectory::class)]
 #[UsesClass(ClassFinder::class)]
 #[UsesClass(ConfigurationBuilder::class)]
 #[UsesClass(ConfigurationFinder::class)]
@@ -58,6 +63,8 @@ use function mkdir;
 #[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(Parameter::class)]
 #[UsesClass(ParameterType::class)]
+#[UsesClass(ParameterTypeLoader::class)]
+#[UsesClass(ParameterTypeRegistry::class)]
 #[UsesClass(RefreshDatabase::class)]
 #[UsesClass(RefreshDatabaseHandler::class)]
 #[UsesClass(RegistryException::class)]
@@ -114,6 +121,33 @@ final class ApplicationTest extends TestCase
         );
         self::assertInstanceOf(
             ApplyScenarioHandler::class,
+            HandlerRegistry::getInstance()->attributeHandler(ApplyScenario::class),
+        );
+    }
+
+    public function testBootstrapContinuesWhenHandlersAreAlreadyRegistered(): void
+    {
+        $refreshDatabaseHandler = self::createStub(AttributeHandler::class);
+        $refreshDatabaseHandler->method('attributeName')
+            ->willReturn(RefreshDatabase::class);
+        HandlerRegistry::getInstance()->registerHandler($refreshDatabaseHandler);
+
+        $applyScenarioHandler = self::createStub(AttributeHandler::class);
+        $applyScenarioHandler->method('attributeName')
+            ->willReturn(ApplyScenario::class);
+        HandlerRegistry::getInstance()->registerHandler($applyScenarioHandler);
+
+        $this->setConfiguration(new LoadedConfiguration(new DefaultConfiguration()));
+
+        (new Application())->bootstrap();
+
+        self::assertTrue(Application::isBooted());
+        self::assertSame(
+            $refreshDatabaseHandler,
+            HandlerRegistry::getInstance()->attributeHandler(RefreshDatabase::class),
+        );
+        self::assertSame(
+            $applyScenarioHandler,
             HandlerRegistry::getInstance()->attributeHandler(ApplyScenario::class),
         );
     }

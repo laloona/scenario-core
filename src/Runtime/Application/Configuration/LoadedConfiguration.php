@@ -23,6 +23,8 @@ final class LoadedConfiguration implements Configuration
 
     private ?string $cacheKey = null;
 
+    private ?string $parameterDirectory = null;
+
     /**
      * @var array<string, ConnectionValue>
      */
@@ -65,6 +67,16 @@ final class LoadedConfiguration implements Configuration
     public function setCacheKey(string $cacheKey): void
     {
         $this->cacheKey = $cacheKey;
+    }
+
+    public function getParameterDirectory(): string
+    {
+        return $this->parameterDirectory ?? $this->defaultConfiguration->getParameterDirectory();
+    }
+
+    public function setParameterDirectory(string $parameterDirectory): void
+    {
+        $this->parameterDirectory = $parameterDirectory;
     }
 
     /**

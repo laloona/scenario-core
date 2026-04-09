@@ -57,6 +57,7 @@ final class DefaultConfigurationTest extends TestCase
         self::assertSame('', $configuration->getBootstrap());
         self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR .'.scenario.cache', $configuration->getCacheDirectory());
         self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $cacheKey);
+        self::assertSame('parameter' . DIRECTORY_SEPARATOR, $configuration->getParameterDirectory());
 
         $suites = $configuration->getSuites();
         self::assertArrayHasKey('main', $suites);

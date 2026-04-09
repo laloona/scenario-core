@@ -102,6 +102,22 @@ final class LoadedConfigurationTest extends TestCase
         self::assertSame('my-cache-key', $config->getCacheKey());
     }
 
+    public function testUsesDefaultParameterDirectoryWhenNotSet(): void
+    {
+        $default = new DefaultConfiguration();
+        $config = new LoadedConfiguration($default);
+
+        self::assertSame($default->getParameterDirectory(), $config->getParameterDirectory());
+    }
+
+    public function testOverridesParameterDirectory(): void
+    {
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $config->setParameterDirectory('my-parameter-dir');
+
+        self::assertSame('my-parameter-dir', $config->getParameterDirectory());
+    }
+
     public function testUsesDefaultSuitesWhenEmpty(): void
     {
         $default = new DefaultConfiguration();

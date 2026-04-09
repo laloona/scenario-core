@@ -24,6 +24,8 @@ interface Configuration
 
     public function setCacheKey(string $cacheKey): void;
 
+    public function getParameterDirectory(): string;
+
     /**
      * @return array<string, SuiteValue>
      */

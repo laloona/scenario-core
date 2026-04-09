@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Other;
+namespace Stateforge\Suite\Scenario\Other;
 
 use Exception;
 use Stateforge\Scenario\Core\Attribute\AsScenario;

@@ -41,6 +41,11 @@ final class DefaultConfiguration implements Configuration
     {
     }
 
+    public function getParameterDirectory(): string
+    {
+        return 'parameter' . DIRECTORY_SEPARATOR;
+    }
+
     /**
      * @return array<string, SuiteValue>
      */

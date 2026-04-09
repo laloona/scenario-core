@@ -21,9 +21,9 @@ PHPUnit %s by Sebastian Bergmann and contributors.
 Runtime:       PHP %s
 Configuration: %sphpunit.xml
 
-first scenario was applied with up
+first scenario was applied with up and custom parameter 4
 second scenario was applied with up and parameter 5
-first scenario was applied with down
+first scenario was applied with down and custom parameter 4
 second scenario was applied with down and parameter 5
 Time: %s, Memory: %s MB
 

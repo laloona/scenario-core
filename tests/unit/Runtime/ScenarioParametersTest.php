@@ -21,7 +21,7 @@ use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorExcep
 use Stateforge\Scenario\Core\Runtime\Exception\MissingRequiredParametersException;
 use Stateforge\Scenario\Core\Runtime\Exception\NotAllowedParametersException;
 use Stateforge\Scenario\Core\Runtime\Exception\UndefinedParameterException;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;

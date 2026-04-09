@@ -9,25 +9,41 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Main;
+namespace Stateforge\Suite\Scenario\Main;
 
 use Stateforge\Scenario\Core\Attribute\AsScenario;
+use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Scenario;
+use Stateforge\Suite\Scenario\Parameter\IntegerParameterType;
+use function is_int;
 use const PHP_EOL;
 
 #[AsScenario(
     name: 'first-scenario',
     description: 'My first scenario',
 )]
+#[Parameter(
+    name: 'myint',
+    type: IntegerParameterType::class,
+    default: 1,
+)]
 final class FirstScenario extends Scenario
 {
     public function up(): void
     {
-        echo 'first scenario was applied with up' . PHP_EOL;
+        $param = is_int($this->parameter('myint'))
+            ? $this->parameter('myint')
+            : '';
+
+        echo 'first scenario was applied with up and custom parameter ' . $param . PHP_EOL;
     }
 
     public function down(): void
     {
-        echo 'first scenario was applied with down' . PHP_EOL;
+        $param = is_int($this->parameter('myint'))
+            ? $this->parameter('myint')
+            : '';
+
+        echo 'first scenario was applied with down and custom parameter ' . $param . PHP_EOL;
     }
 }

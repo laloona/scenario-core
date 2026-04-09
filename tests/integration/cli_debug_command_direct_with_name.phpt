@@ -16,28 +16,28 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 exit((new Stateforge\Scenario\Core\Console\CliApplication())->run($_SERVER['argv']));
 ?>
 --EXPECT--
-Main Scenario Suite: Stateforge\Scenario\Main\ThirdScenario
------------------------------------------------------------
+Main Scenario Suite: Stateforge\Suite\Scenario\Main\ThirdScenario
+-----------------------------------------------------------------
 
 
   third-scenario   My third scenario  
 
 
-Audits from Stateforge\Scenario\Main\ThirdScenario with execution up
---------------------------------------------------------------------
+Audits from Stateforge\Suite\Scenario\Main\ThirdScenario with execution up
+--------------------------------------------------------------------------
 
 
-Audits from Stateforge\Scenario\Main\ThirdScenario::up with execution up
-------------------------------------------------------------------------
+Audits from Stateforge\Suite\Scenario\Main\ThirdScenario::up with execution up
+------------------------------------------------------------------------------
 
-Stateforge\Scenario\Main\FirstScenario
+Stateforge\Suite\Scenario\Main\FirstScenario{"myint":9}
 
-Audits from Stateforge\Scenario\Main\ThirdScenario with execution down
-----------------------------------------------------------------------
-
-
-Audits from Stateforge\Scenario\Main\ThirdScenario::down with execution down
+Audits from Stateforge\Suite\Scenario\Main\ThirdScenario with execution down
 ----------------------------------------------------------------------------
 
-Stateforge\Scenario\Main\FirstScenario
-Stateforge\Scenario\Main\SecondScenario{"param-1":5}
+
+Audits from Stateforge\Suite\Scenario\Main\ThirdScenario::down with execution down
+----------------------------------------------------------------------------------
+
+Stateforge\Suite\Scenario\Main\FirstScenario{"myint":4}
+Stateforge\Suite\Scenario\Main\SecondScenario{"param-1":5}

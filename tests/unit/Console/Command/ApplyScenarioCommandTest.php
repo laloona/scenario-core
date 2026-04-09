@@ -32,7 +32,7 @@ use Stateforge\Scenario\Core\Runtime\Metadata\AttributeContext;
 use Stateforge\Scenario\Core\Runtime\Metadata\ExecutionType;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
@@ -270,6 +270,57 @@ final class ApplyScenarioCommandTest extends TestCase
             ->method('ask')
             ->with('Please insert value for string parameter "param"')
             ->willReturn('my value');
+        $output->expects(self::once())
+            ->method('success')
+            ->with('Scenario "' . AnotherScenario::class . '::up" was applied successfully.');
+
+        self::assertSame(Command::Success, (new ApplyScenarioCommand())->run($input, $output));
+    }
+
+    public function testReturnsErrorWhenGivenScenarioIsNotRegistered(): void
+    {
+        $handler = $this->createPartialMock(AttributeHandler::class, ['attributeName','execute']);
+        $handler->expects(self::exactly(3))
+            ->method('attributeName')
+            ->willReturn(ApplyScenario::class);
+        HandlerRegistry::getInstance()->registerHandler($handler);
+
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'main',
+                AnotherScenario::class,
+                new AsScenario('my-scenario'),
+                []
+            ),
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['up', null],
+                ['down', null],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['scenario', 'unknown-scenario'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('warn')
+            ->with('Plaese don\'t use these commands on production systems as data will be modified.');
+        $output->expects(self::once())
+            ->method('confirm')
+            ->with('Do you want to continue?')
+            ->willReturn(true);
+        $output->expects(self::once())
+            ->method('error')
+            ->with('Given scenario [unknown-scenario] is not registered.');
+        $output->expects(self::once())
+            ->method('choice')
+            ->with('Which scenario would you like to apply?', self::isArray())
+            ->willReturn('0');
+        $output->expects(self::never())->method('ask');
         $output->expects(self::once())
             ->method('success')
             ->with('Scenario "' . AnotherScenario::class . '::up" was applied successfully.');

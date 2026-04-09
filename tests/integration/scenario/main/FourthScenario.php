@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Main;
+namespace Stateforge\Suite\Scenario\Main;
 
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
@@ -23,7 +23,7 @@ use const PHP_EOL;
 final class FourthScenario extends Scenario
 {
     #[ApplyScenario('third-scenario')]
-    #[ApplyScenario('first-scenario')]
+    #[ApplyScenario('first-scenario', [ 'myint' => 9 ])]
     public function up(): void
     {
         echo 'fourth scenario was applied with up' . PHP_EOL;

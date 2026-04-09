@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;

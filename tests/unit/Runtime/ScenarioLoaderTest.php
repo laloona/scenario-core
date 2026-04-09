@@ -16,18 +16,21 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use Stateforge\Scenario\Core\Runtime\Exception\ScenarioLoaderException;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioLoader;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
@@ -44,7 +47,8 @@ use const DIRECTORY_SEPARATOR;
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(Parameter::class)]
-#[UsesClass(ParameterType::class)]
+#[UsesClass(ParameterTypeRegistry::class)]
+#[UsesClass(UnknownParameterTypeException::class)]
 #[UsesClass(RegistryException::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioLoaderException::class)]
@@ -60,11 +64,14 @@ final class ScenarioLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->createRootDir();
+        $this->resetParameterTypeRegistry();
+        ParameterTypeRegistry::getInstance()->register(IntegerParameterType::class);
     }
 
     protected function tearDown(): void
     {
         $this->resetScenarioRegistry();
+        $this->resetParameterTypeRegistry();
         $this->resetApplication();
         $this->removeRootDir();
     }
@@ -74,7 +81,7 @@ final class ScenarioLoaderTest extends TestCase
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
@@ -91,12 +98,12 @@ final class ScenarioLoaderTest extends TestCase
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
         $definitionFromClass = ScenarioRegistry::getInstance()->resolve($scenario);
 
         $this->resetScenarioRegistry();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
         $definitionFromCache = ScenarioRegistry::getInstance()->resolve($scenario);
 
         self::assertSame('my-scenario', $definitionFromCache->name);
@@ -108,14 +115,14 @@ final class ScenarioLoaderTest extends TestCase
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
         file_put_contents($cacheFile, 'not-json');
 
         ScenarioRegistry::getInstance()->clear();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         $definition = ScenarioRegistry::getInstance()->resolve($scenario);
         self::assertSame('my-scenario', $definition->name);
@@ -128,7 +135,7 @@ final class ScenarioLoaderTest extends TestCase
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
         $payload = [
@@ -163,10 +170,79 @@ final class ScenarioLoaderTest extends TestCase
 
         ScenarioRegistry::getInstance()->clear();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve($scenario)->class);
         self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('from-cache')->class);
+    }
+
+    public function testLoadScenariosSkipsInvalidCachedParameters(): void
+    {
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $payload = [
+            'main' => [
+                [
+                    'class' => $scenario,
+                    'name' => 'from-cache',
+                    'description' => 'cached description',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'type' => IntegerParameterType::class,
+                            'description' => 'valid parameter',
+                            'required' => true,
+                            'repeatable' => false,
+                            'default' => 10,
+                        ],
+                        [
+                            'name' => 'invalid-type',
+                            'type' => 'unknown',
+                            'description' => null,
+                            'required' => true,
+                            'repeatable' => false,
+                            'default' => null,
+                        ],
+                        [
+                            'name' => 'invalid-required',
+                            'type' => IntegerParameterType::class,
+                            'description' => null,
+                            'required' => 'yes',
+                            'repeatable' => false,
+                            'default' => null,
+                        ],
+                        [
+                            'name' => 'invalid-repeatable',
+                            'type' => IntegerParameterType::class,
+                            'description' => null,
+                            'required' => true,
+                            'repeatable' => 'no',
+                            'default' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        file_put_contents($cacheFile, json_encode($payload));
+
+        ScenarioRegistry::getInstance()->clear();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $definition = ScenarioRegistry::getInstance()->resolve('from-cache');
+
+        self::assertSame($scenario, $definition->class);
+        self::assertCount(1, $definition->parameters);
+        self::assertSame('id', $definition->parameters[0]->name);
+        self::assertInstanceOf(IntegerParameterType::class, $definition->parameters[0]->type);
+        self::assertSame('valid parameter', $definition->parameters[0]->description);
+        self::assertTrue($definition->parameters[0]->required);
+        self::assertFalse($definition->parameters[0]->repeatable);
+        self::assertSame(10, $definition->parameters[0]->default);
     }
 
     public function testLoadScenariosRebuildsCacheAndRemovesOldFiles(): void
@@ -174,7 +250,7 @@ final class ScenarioLoaderTest extends TestCase
         $scenario = $this->createScenarioSuite();
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         $cacheDir = $config->getCacheDirectory();
         $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . $config->getCacheKey();
@@ -184,7 +260,7 @@ final class ScenarioLoaderTest extends TestCase
 
         ScenarioRegistry::getInstance()->clear();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         self::assertFalse(is_file($oldFile));
         self::assertTrue(is_file($cacheFile));
@@ -200,7 +276,7 @@ final class ScenarioLoaderTest extends TestCase
 
         $this->expectException(ScenarioLoaderException::class);
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
     }
 
     public function testLoadScenariosCreatesEmptyCacheWhenNoScenarioDefinitionsWereFound(): void
@@ -216,7 +292,7 @@ PHP);
 
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         self::assertSame([], ScenarioRegistry::getInstance()->all());
         self::assertTrue(is_file($config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey()));
@@ -228,7 +304,7 @@ PHP);
 
         $config = $this->getConfiguration();
 
-        (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios($config);
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         self::assertSame('', $config->getCacheKey());
     }
@@ -247,11 +323,11 @@ namespace {$namespace};
 use Stateforge\\Scenario\\Core\\Attribute\\AsScenario;
 use Stateforge\\Scenario\\Core\\Attribute\\Parameter;
 use Stateforge\\Scenario\\Core\\Contract\\ScenarioInterface;
-use Stateforge\\Scenario\\Core\\Runtime\\Metadata\\ParameterType;
+use Stateforge\\Scenario\\Core\\Tests\\Files\\IntegerParameterType;
 use Stateforge\\Scenario\\Core\\Runtime\\ScenarioParameters;
 
 #[AsScenario('my-scenario')]
-#[Parameter('id', ParameterType::Integer, required: true, repeatable: true, default: null)]
+#[Parameter('id', IntegerParameterType::class, required: true, repeatable: true, default: null)]
 final class {$className} implements ScenarioInterface
 {
     public function configure(ScenarioParameters \$parameters): void {}
@@ -284,11 +360,18 @@ PHP;
             self::assertInstanceOf(Parameter::class, $parameter);
             self::assertInstanceOf(Parameter::class, $actual->parameters[$key]);
             self::assertSame($parameter->name, $actual->parameters[$key]->name);
-            self::assertSame($parameter->type, $actual->parameters[$key]->type);
+            self::assertSame($parameter->type::class, $actual->parameters[$key]->type::class);
+            self::assertSame($parameter->type->value, $actual->parameters[$key]->type->value);
             self::assertSame($parameter->description, $actual->parameters[$key]->description);
             self::assertSame($parameter->required, $actual->parameters[$key]->required);
             self::assertSame($parameter->repeatable, $actual->parameters[$key]->repeatable);
             self::assertSame($parameter->default, $actual->parameters[$key]->default);
         }
+    }
+
+    private function resetParameterTypeRegistry(): void
+    {
+        $property = new ReflectionProperty(ParameterTypeRegistry::class, 'instance');
+        $property->setValue(null, null);
     }
 }

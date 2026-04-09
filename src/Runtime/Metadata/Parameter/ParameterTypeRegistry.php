@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterTypeAlreadyRegisteredException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
-use Symfony\Component\DependencyInjection\Exception\InvalidParameterTypeException;
 use function in_array;
 use function is_subclass_of;
 
@@ -62,6 +62,8 @@ final class ParameterTypeRegistry
             throw new UnknownParameterTypeException($class);
         }
 
-        return new $class();
+        /** @var ParameterTypeDefinition $parameterType */
+        $parameterType = new $class();
+        return $parameterType;
     }
 }

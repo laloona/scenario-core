@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Runtime\Metadata;
+namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
-use function class_basename;
+use function get_class;
+use function strrpos;
+use function substr;
 
 abstract class ParameterTypeDefinition
 {
@@ -24,8 +26,11 @@ abstract class ParameterTypeDefinition
 
     final public function __construct()
     {
-        $this->name = class_basename($this);
-        $this->value = $this->getValue();
+        $pos = strrpos(get_class($this), '\\');
+        $this->name = $pos === false
+            ? get_class($this)
+            : substr(get_class($this), $pos + 1);
+        $this->value = get_class($this);
     }
 
     final public function valid(mixed $value): bool
@@ -44,8 +49,6 @@ abstract class ParameterTypeDefinition
     }
 
     abstract public function cast(mixed $value): string|int|float|bool|null;
-
-    abstract protected function getValue(): string;
 
     abstract protected function getValueType(mixed $value): BooleanType|FloatType|IntegerType|StringType;
 }

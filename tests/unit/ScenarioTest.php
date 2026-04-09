@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\ScenarioParameters;
 use Stateforge\Scenario\Core\Scenario;

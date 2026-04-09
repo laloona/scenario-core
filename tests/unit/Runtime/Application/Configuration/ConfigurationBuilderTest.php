@@ -64,7 +64,7 @@ final class ConfigurationBuilderTest extends TestCase
     {
         $xml = <<<XML
 <?xml version="1.0"?>
-<scenario bootstrap="bootstrap.php" cacheDirectory=".cache">
+<scenario bootstrap="bootstrap.php" cacheDirectory=".cache" parameterDirectory="parameter-types">
   <database>
     <connection name="db">config/db.php</connection>
   </database>
@@ -84,6 +84,7 @@ XML;
 
         self::assertSame('bootstrap.php', $config->getBootstrap());
         self::assertSame('.cache', $config->getCacheDirectory());
+        self::assertSame('parameter-types', $config->getParameterDirectory());
 
         $connections = $config->getConnections();
         self::assertArrayHasKey('db', $connections);
@@ -119,6 +120,7 @@ XML;
 
         self::assertSame($default->getBootstrap(), $config->getBootstrap());
         self::assertSame($default->getCacheDirectory(), $config->getCacheDirectory());
+        self::assertSame($default->getParameterDirectory(), $config->getParameterDirectory());
     }
 
     public function testBuildReturnsDefaultConfigurationWhenNoFileExists(): void

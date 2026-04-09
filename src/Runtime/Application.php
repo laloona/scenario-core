@@ -20,6 +20,8 @@ use Stateforge\Scenario\Core\Runtime\Exception\HandlerRegistryException;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeLoader;
+use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Throwable;
 use function array_search;
 use function array_slice;
@@ -45,7 +47,7 @@ final class Application
             'scenario-core' . DIRECTORY_SEPARATOR .
             'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
 
-        if (is_file($vendorPath)) {
+        if (is_file($vendorPath) === true) {
             return $vendorPath;
         }
 
@@ -61,7 +63,11 @@ final class Application
                 new XMLParser($this->getXsd()),
             ))->build();
 
-            (new ScenarioLoader(ScenarioRegistry::getInstance()))->loadScenarios(self::$configuration);
+            (new ParameterTypeLoader(ParameterTypeRegistry::getInstance()))->loadTypes(self::$configuration);
+            (new ScenarioLoader(
+                ScenarioRegistry::getInstance(),
+                ParameterTypeRegistry::getInstance(),
+            ))->loadScenarios(self::$configuration);
         }
     }
 

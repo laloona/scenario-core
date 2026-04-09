@@ -15,6 +15,7 @@
 
         <xsd:attribute name="bootstrap" type="pathType" />
         <xsd:attribute name="cacheDirectory" type="pathType" />
+        <xsd:attribute name="parameterDirectory" type="pathType" />
     </xsd:complexType>
 
     <xsd:complexType name="databaseType">
