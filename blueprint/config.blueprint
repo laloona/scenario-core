@@ -2,6 +2,7 @@
     xsi:noNamespaceSchemaLocation="vendor/stateforge/scenario-core/xsd/scenario.xsd"
     bootstrap="scenario/boostrap.php"
     cacheDirectory=".scenario.cache"
+    parameterDirectory="scenario/parameter"
 >
     <database>
         <connection>migration.php</connection>

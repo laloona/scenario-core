@@ -62,7 +62,7 @@ final class MakeScenarioCommandTest extends TestCase
     public function testDescriptionReturnsExpectedText(): void
     {
         self::assertSame(
-            'Make a scenario or config file.',
+            'Make a scenario, parameter type or config file.',
             (new MakeScenarioCommand())->description(),
         );
     }
@@ -140,6 +140,59 @@ PHP,
         self::assertStringContainsString('final class MyScenario', $fileContent);
     }
 
+    public function testRunGeneratesParameterTypeFile(): void
+    {
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/app/parameters', 0777, true);
+
+        file_put_contents(
+            Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint/parameter.blueprint',
+            <<<'PHP'
+<?php declare(strict_types=1);
+
+namespace Stateforge\Parameter\%nameSpace%;
+
+final class %className%
+{
+}
+PHP,
+        );
+
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $config->setParameterDirectory('app/parameters');
+        $this->setConfiguration($config);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['type', 'parameter type'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('ask')
+            ->with('Please insert a class name for the new parameter type', null, self::isCallable())
+            ->willReturn('MyParameter');
+        $output->expects(self::once())
+            ->method('success')
+            ->with(self::stringContains('MyParameter.php'));
+        $output->expects(self::never())
+            ->method('error');
+
+        $result = (new MakeScenarioCommand())->run($input, $output);
+
+        $parameterFile = Application::getRootDir() . '/app/parameters/MyParameter.php';
+        self::assertSame(Command::Success, $result);
+        self::assertTrue(is_file($parameterFile));
+        $fileContent = (string) file_get_contents($parameterFile);
+        self::assertStringContainsString('namespace Stateforge\Parameter\App\Parameters;', $fileContent);
+        self::assertStringContainsString('final class MyParameter', $fileContent);
+    }
+
     public function testRunGeneratesConfigFileWhenChosenInteractively(): void
     {
         mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
@@ -155,14 +208,13 @@ PHP,
             ]);
         $input->method('argument')
             ->willReturnMap([
-                ['0', null],
             ]);
 
         $output = $this->createMock(CliOutput::class);
         $output->expects(self::once())
             ->method('choice')
-            ->with('Please select the type do would like to make.', ['scenario', 'config'], '0')
-            ->willReturn('1');
+            ->with('Please select the type do would like to make.', ['scenario', 'parameter type', 'config'], '0')
+            ->willReturn('2');
         $output->expects(self::once())
             ->method('success')
             ->with('Config file generated, please modify to your needs.');

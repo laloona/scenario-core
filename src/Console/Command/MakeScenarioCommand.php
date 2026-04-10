@@ -32,9 +32,11 @@ use const DIRECTORY_SEPARATOR;
 
 final class MakeScenarioCommand extends CliCommand
 {
+    private const PATTERN_CLASSNAME = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
+
     public function description(): string
     {
-        return 'Make a scenario or config file.';
+        return 'Make a scenario, parameter type or config file.';
     }
 
     protected function define(CliInput $input): void
@@ -45,7 +47,7 @@ final class MakeScenarioCommand extends CliCommand
     protected function execute(CliInput $input, CliOutput $output): Command
     {
         $type = $input->argument('type') ?? '';
-        $options = ['scenario', 'config'];
+        $options = ['scenario', 'parameter type', 'config'];
         if (in_array($type, $options, true) === false) {
             $type = $options[
                 $output->choice('Please select the type do would like to make.', $options, '0')
@@ -54,6 +56,7 @@ final class MakeScenarioCommand extends CliCommand
 
         return match ($type) {
             'scenario' => $this->scenario($output),
+            'parameter type' => $this->parameter($output),
             'config' => $this->config($output),
         };
     }
@@ -82,7 +85,7 @@ final class MakeScenarioCommand extends CliCommand
             'Please insert a class name for the new scenario',
             null,
             function (string $name): bool {
-                return preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $name) === 1;
+                return preg_match(self::PATTERN_CLASSNAME, $name) === 1;
             },
         );
 
@@ -120,6 +123,61 @@ final class MakeScenarioCommand extends CliCommand
         }
 
         $output->success('Scenario "' . $scenario . '" generated, please modify to your needs.');
+        return Command::Success;
+    }
+
+    private function parameter(CliOutput $output): Command
+    {
+        $file = $this->getBlueprint('parameter');
+
+        if (is_file($file) === false) {
+            $output->error('Parameter type generation failed.');
+            return Command::Error;
+        }
+
+        $directory = Application::config()?->getParameterDirectory() ?? '';
+        $name = $output->ask(
+            'Please insert a class name for the new parameter type',
+            null,
+            function (string $name): bool {
+                return preg_match(self::PATTERN_CLASSNAME, $name) === 1;
+            },
+        );
+
+        if ($name === null) {
+            $output->error('Invalid parameter type name.');
+            return Command::Error;
+        }
+
+        $parameterType = Application::getRootDir() . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . ucfirst($name) . '.php';
+        if (is_file($parameterType) === true) {
+            $output->error('Parameter type already exists.');
+            return Command::Error;
+        }
+
+        file_put_contents(
+            $parameterType,
+            str_replace(
+                [
+                    '%nameSpace%',
+                    '%className%',
+                ],
+                [
+                    implode('\\', array_map(function ($part): string {
+                        return ucfirst($part);
+                    }, explode('/', str_replace('\\', '/', $directory)))),
+                    ucfirst($name),
+                ],
+                (string)file_get_contents($file),
+            ),
+        );
+
+        if (is_file($parameterType) === false) {
+            $output->error('Parameter type generation failed.');
+            return Command::Error;
+        }
+
+        $output->success('Parameter type "' . $parameterType . '" generated, please modify to your needs.');
         return Command::Success;
     }
 

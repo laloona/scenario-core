@@ -290,7 +290,7 @@ final class ApplyScenarioCommandTest extends TestCase
                 'main',
                 AnotherScenario::class,
                 new AsScenario('my-scenario'),
-                []
+                [],
             ),
         );
 

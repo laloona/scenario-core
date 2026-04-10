@@ -22,5 +22,5 @@ available commands
   debug     Debugs a given scenario or Unit test.                                                             
   install   Configure the extension for PHPUnit.                                                              
   list      List all available scenarios, use --suite="name of you suite" if you want to see just one suite.  
-  make      Make a scenario or config file.                                                                   
-  refresh   Executes the database refresh. Use --connection="connection_name" to specify given connection.
+  make      Make a scenario, parameter type or config file.                                                   
+  refresh   Executes the database refresh. Use --connection="connection_name" to specify given connection. 

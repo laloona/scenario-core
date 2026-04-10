@@ -20,7 +20,8 @@ Please select the type do would like to make.
 
 Please select one of the following: default (0)
 (0) scenario
-(1) config
+(1) parameter type
+(2) config
 > 
                                                                                                    
     [ERROR] Scenario generation failed.
