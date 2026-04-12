@@ -13,7 +13,6 @@ namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
-use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use function md5;
@@ -22,6 +21,11 @@ use const DIRECTORY_SEPARATOR;
 
 final class DefaultConfiguration implements Configuration
 {
+    /**
+     * @var list<string>
+     */
+    private array $parameterDirectories = [];
+
     public function getBootstrap(): string
     {
         return '';
@@ -29,7 +33,7 @@ final class DefaultConfiguration implements Configuration
 
     public function getCacheDirectory(): string
     {
-        return Application::getRootDir() . DIRECTORY_SEPARATOR .'.scenario.cache';
+        return '.scenario.cache';
     }
 
     public function getCacheKey(): string
@@ -43,7 +47,20 @@ final class DefaultConfiguration implements Configuration
 
     public function getParameterDirectory(): string
     {
-        return 'parameter' . DIRECTORY_SEPARATOR;
+        return 'scenario' . DIRECTORY_SEPARATOR . 'parameter';
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getParameterDirectories(): array
+    {
+        return [ $this->getParameterDirectory(), ...$this->parameterDirectories ];
+    }
+
+    public function addParameterDirectory(string $parameterDirectory): void
+    {
+        $this->parameterDirectories[] = $parameterDirectory;
     }
 
     /**
@@ -52,7 +69,7 @@ final class DefaultConfiguration implements Configuration
     public function getSuites(): array
     {
         return [
-            'main' => new SuiteValue('main', Application::getRootDir() . DIRECTORY_SEPARATOR .'scenario'),
+            'main' => new SuiteValue('main', 'scenario' . DIRECTORY_SEPARATOR . 'main'),
         ];
     }
 

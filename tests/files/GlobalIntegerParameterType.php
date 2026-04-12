@@ -9,19 +9,14 @@
  * file that was distributed with this source code.
  */
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class GlobalIntegerParameterType extends ParameterTypeDefinition
 {
-    public function cast(mixed $value): int|null
+    public function cast(mixed $value): ?int
     {
-        return (new IntegerType($value))->value;
-    }
-
-    protected function getValue(): string
-    {
-        return 'global-test-parameter';
+        return $this->getValueType($value)->value;
     }
 
     protected function getValueType(mixed $value): IntegerType

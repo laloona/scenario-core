@@ -11,6 +11,10 @@
 
 namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
+use ReflectionClass;
+use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
+use Stateforge\Scenario\Core\ParameterTypeCondition as BaseParameterTypeCondition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterTypeAlreadyRegisteredException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
@@ -51,6 +55,15 @@ final class ParameterTypeRegistry
 
         if (in_array($class, $this->registeredTypes, true) === true) {
             throw new ParameterTypeAlreadyRegisteredException($class);
+        }
+
+        $attributes = (new ReflectionClass($class))->getAttributes(ParameterTypeCondition::class);
+        foreach ($attributes as $attribute) {
+            /** @var BaseParameterTypeCondition $condition */
+            $condition = new ($attribute->newInstance()->condition)();
+            if ($condition->matches() === false) {
+                return;
+            }
         }
 
         $this->registeredTypes[] = $class;

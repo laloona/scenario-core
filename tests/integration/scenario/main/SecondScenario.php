@@ -14,7 +14,7 @@ namespace Stateforge\Suite\Scenario\Main;
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
+use Stateforge\Scenario\Core\ParameterType;
 use Stateforge\Scenario\Core\Scenario;
 use function is_int;
 use const PHP_EOL;

@@ -12,10 +12,10 @@
 namespace Stateforge\Scenario\Core\Attribute;
 
 use Attribute;
+use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterNameErrorException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterValueErrorException;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use function array_values;
 use function gettype;

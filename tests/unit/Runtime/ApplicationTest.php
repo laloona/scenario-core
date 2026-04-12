@@ -20,6 +20,7 @@ use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
 use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
@@ -35,7 +36,6 @@ use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\AttributeHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\RefreshDatabaseHandler;
 use Stateforge\Scenario\Core\Runtime\Metadata\HandlerRegistry;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeLoader;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
@@ -48,6 +48,7 @@ use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
 use function mkdir;
+use function sprintf;
 
 #[CoversClass(Application::class)]
 #[UsesClass(AsScenario::class)]
@@ -104,16 +105,14 @@ final class ApplicationTest extends TestCase
 
     public function testBootstrapRegistersHandlersAndRunsBootstrapFile(): void
     {
+        $this->prepareConfigurationFiles('bootstrap.php');
+
         $bootstrapFile = Application::getRootDir() . '/bootstrap.php';
         file_put_contents($bootstrapFile, '<?php $GLOBALS["app_bootstrap"] = "ok";');
 
-        $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setBootstrap('bootstrap.php');
-        $this->setConfiguration($config);
-
         (new Application())->bootstrap();
 
-        self::assertTrue(Application::isBooted());
+        self::assertTrue((new ApplicationState())->isSuccess());
         self::assertSame('ok', $GLOBALS['app_bootstrap'] ?? null);
         self::assertInstanceOf(
             RefreshDatabaseHandler::class,
@@ -141,7 +140,7 @@ final class ApplicationTest extends TestCase
 
         (new Application())->bootstrap();
 
-        self::assertTrue(Application::isBooted());
+        self::assertTrue((new ApplicationState())->isSuccess());
         self::assertSame(
             $refreshDatabaseHandler,
             HandlerRegistry::getInstance()->attributeHandler(RefreshDatabase::class),
@@ -154,16 +153,13 @@ final class ApplicationTest extends TestCase
 
     public function testBootstrapFailsWhenBootstrapFileThrows(): void
     {
+        $this->prepareConfigurationFiles('bootstrap.php');
+
         $bootstrapFile = Application::getRootDir() . '/bootstrap.php';
         file_put_contents($bootstrapFile, '<?php throw new RuntimeException("something went wrong");');
 
-        $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setBootstrap('bootstrap.php');
-        $this->setConfiguration($config);
-
         (new Application())->bootstrap();
 
-        self::assertFalse(Application::isBooted());
         self::assertTrue((new ApplicationState())->isFailed());
 
         $this->expectException(RegistryException::class);
@@ -178,7 +174,7 @@ final class ApplicationTest extends TestCase
         (new Application())->prepare();
 
         self::assertSame($config, Application::config());
-        self::assertFalse(Application::isBooted());
+        self::assertTrue((new ApplicationState())->isSuccess());
     }
 
     public function testPrepareBuildsConfigurationWhenMissing(): void
@@ -234,5 +230,27 @@ XML);
         $this->resetApplication();
 
         self::assertNull(Application::config());
+    }
+
+    private function prepareConfigurationFiles(?string $bootstrap = null): void
+    {
+        $xsdSource = file_get_contents(__DIR__ . '/../../../xsd/scenario.xsd');
+        self::assertIsString($xsdSource);
+
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/xsd', 0777, true);
+        file_put_contents(Application::getRootDir() . '/vendor/stateforge/scenario-core/xsd/scenario.xsd', $xsdSource);
+        mkdir(Application::getRootDir() . '/scenario/main', 0777, true);
+
+        $bootstrapAttribute = $bootstrap === null ? '' : sprintf(' bootstrap="%s"', $bootstrap);
+        file_put_contents(Application::getRootDir() . '/scenario.xml', <<<XML
+<?xml version="1.0"?>
+<scenario{$bootstrapAttribute}>
+  <suites>
+    <suite name="main">
+      <directory>scenario/main</directory>
+    </suite>
+  </suites>
+</scenario>
+XML);
     }
 }

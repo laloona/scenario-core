@@ -26,6 +26,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteWithoutDirectoryException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\XMLParserException;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function dirname;
@@ -39,6 +40,7 @@ use function file_put_contents;
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
 #[UsesClass(SuiteAlreadyExistsException::class)]
+#[UsesClass(SuiteWithoutDirectoryException::class)]
 #[UsesClass(SuiteValue::class)]
 #[UsesClass(XMLParser::class)]
 #[UsesClass(XMLParserException::class)]
@@ -85,6 +87,7 @@ XML;
         self::assertSame('bootstrap.php', $config->getBootstrap());
         self::assertSame('.cache', $config->getCacheDirectory());
         self::assertSame('parameter-types', $config->getParameterDirectory());
+        self::assertSame(['parameter-types'], $config->getParameterDirectories());
 
         $connections = $config->getConnections();
         self::assertArrayHasKey('db', $connections);
@@ -121,6 +124,7 @@ XML;
         self::assertSame($default->getBootstrap(), $config->getBootstrap());
         self::assertSame($default->getCacheDirectory(), $config->getCacheDirectory());
         self::assertSame($default->getParameterDirectory(), $config->getParameterDirectory());
+        self::assertSame($default->getParameterDirectories(), $config->getParameterDirectories());
     }
 
     public function testBuildReturnsDefaultConfigurationWhenNoFileExists(): void
@@ -159,6 +163,32 @@ XML;
         $this->expectExceptionMessage('suite with name "main" already exists');
 
         $builder->build();
+    }
+
+    public function testBuildThrowsOnDuplicateSuiteNamesWhenEmptyNameCollidesWithMain(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0"?>
+<scenario>
+  <suites>
+    <suite name="">
+      <directory>scenarios</directory>
+    </suite>
+    <suite name="main">
+      <directory>other</directory>
+    </suite>
+  </suites>
+</scenario>
+XML;
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
+
+        $this->expectException(SuiteAlreadyExistsException::class);
+        $this->expectExceptionMessage('suite with name "main" already exists');
+
+        (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
     }
 
     public function testBuildThrowsOnDuplicateConnectionNames(): void
@@ -260,6 +290,38 @@ XML;
         $suites = $config->getSuites();
         self::assertArrayHasKey('main', $suites);
         self::assertSame('scenarios', $suites['main']->directory);
+    }
+
+    public function testBuildMapsMultipleConnectionsAndSuites(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0"?>
+<scenario>
+  <database>
+    <connection name="db">config/db.php</connection>
+    <connection name="reporting">config/reporting.php</connection>
+  </database>
+  <suites>
+    <suite name="main">
+      <directory>scenarios</directory>
+    </suite>
+    <suite name="secondary">
+      <directory>other-scenarios</directory>
+    </suite>
+  </suites>
+</scenario>
+XML;
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
+
+        $config = (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
+
+        self::assertSame('config/db.php', $config->getConnections()['db']->config);
+        self::assertSame('config/reporting.php', $config->getConnections()['reporting']->config);
+        self::assertSame('scenarios', $config->getSuites()['main']->directory);
+        self::assertSame('other-scenarios', $config->getSuites()['secondary']->directory);
     }
 
     private function xsdPath(): string

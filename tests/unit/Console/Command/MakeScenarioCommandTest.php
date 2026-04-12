@@ -140,6 +140,67 @@ PHP,
         self::assertStringContainsString('final class MyScenario', $fileContent);
     }
 
+    public function testRunGeneratesScenarioFileInSelectedSuiteWhenMultipleSuitesExist(): void
+    {
+        mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);
+        mkdir(Application::getRootDir() . '/app/scenarios', 0777, true);
+        mkdir(Application::getRootDir() . '/app/admin-scenarios', 0777, true);
+
+        file_put_contents(
+            Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint/scenario.blueprint',
+            <<<'PHP'
+<?php declare(strict_types=1);
+
+namespace Stateforge\Suite\%nameSpace%;
+
+final class %className%
+{
+}
+PHP,
+        );
+
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $config->setSuites([
+            'main' => new SuiteValue('main', 'app/scenarios'),
+            'admin' => new SuiteValue('admin', 'app/admin-scenarios'),
+        ]);
+        $this->setConfiguration($config);
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['type', 'scenario'],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('choice')
+            ->with('Please select the suite where you want to make a scenario.', ['main', 'admin'])
+            ->willReturn('1');
+        $output->expects(self::once())
+            ->method('ask')
+            ->with('Please insert a class name for the new scenario', null, self::isCallable())
+            ->willReturn('AdminScenario');
+        $output->expects(self::once())
+            ->method('success')
+            ->with(self::stringContains('AdminScenario.php'));
+        $output->expects(self::never())
+            ->method('error');
+
+        $result = (new MakeScenarioCommand())->run($input, $output);
+
+        $scenarioFile = Application::getRootDir() . '/app/admin-scenarios/AdminScenario.php';
+        self::assertSame(Command::Success, $result);
+        self::assertTrue(is_file($scenarioFile));
+        $fileContent = (string) file_get_contents($scenarioFile);
+        self::assertStringContainsString('namespace Stateforge\\Suite\\App\\Admin-scenarios;', $fileContent);
+        self::assertStringContainsString('final class AdminScenario', $fileContent);
+    }
+
     public function testRunGeneratesParameterTypeFile(): void
     {
         mkdir(Application::getRootDir() . '/vendor/stateforge/scenario-core/blueprint', 0777, true);

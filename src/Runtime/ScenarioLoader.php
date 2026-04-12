@@ -14,11 +14,11 @@ namespace Stateforge\Scenario\Core\Runtime;
 use ReflectionClass;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
+use Stateforge\Scenario\Core\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\ScenarioLoaderException;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Throwable;
 use UnexpectedValueException;
@@ -55,7 +55,7 @@ final class ScenarioLoader
         $this->registry->clear();
         $suites = $this->readSuites($configuration);
         $configuration->setCacheKey($this->cacheKey);
-        $cacheFile = $configuration->getCacheDirectory() . DIRECTORY_SEPARATOR;
+        $cacheFile = Application::getRootDir() . DIRECTORY_SEPARATOR . $configuration->getCacheDirectory() . DIRECTORY_SEPARATOR;
 
         // try to load from cache
         try {

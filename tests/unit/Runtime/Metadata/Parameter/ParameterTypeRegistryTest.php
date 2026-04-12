@@ -18,17 +18,46 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use ReflectionProperty;
+use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
+use Stateforge\Scenario\Core\ParameterTypeCondition as BaseParameterTypeCondition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterTypeAlreadyRegisteredException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
 use Stateforge\Scenario\Core\Tests\Files\InvalidParameterType;
+use function is_string;
+
+final class NeverMatchingParameterTypeCondition extends BaseParameterTypeCondition
+{
+    public function matches(): bool
+    {
+        return false;
+    }
+}
+
+#[ParameterTypeCondition(NeverMatchingParameterTypeCondition::class)]
+final class ConditionallyDisabledParameterType extends ParameterTypeDefinition
+{
+    public function cast(mixed $value): ?string
+    {
+        return is_string($value) ? $value : null;
+    }
+
+    protected function getValueType(mixed $value): StringType
+    {
+        return new StringType($value);
+    }
+}
 
 #[CoversClass(ParameterTypeRegistry::class)]
+#[UsesClass(ParameterTypeCondition::class)]
+#[UsesClass(BaseParameterTypeCondition::class)]
 #[UsesClass(IntegerType::class)]
+#[UsesClass(StringType::class)]
 #[UsesClass(InvalidParameterTypeException::class)]
 #[UsesClass(ParameterTypeAlreadyRegisteredException::class)]
 #[UsesClass(ParameterTypeDefinition::class)]
@@ -87,6 +116,19 @@ final class ParameterTypeRegistryTest extends TestCase
         $this->expectExceptionMessage('parameter type ' . IntegerParameterType::class . ' is not registered');
 
         ParameterTypeRegistry::getInstance()->resolve(IntegerParameterType::class);
+    }
+
+    public function testRegisterSkipsParameterTypeWhenConditionDoesNotMatch(): void
+    {
+        $registry = ParameterTypeRegistry::getInstance();
+        $registry->register(ConditionallyDisabledParameterType::class);
+
+        $this->expectException(UnknownParameterTypeException::class);
+        $this->expectExceptionMessage(
+            'parameter type ' . ConditionallyDisabledParameterType::class . ' is not registered',
+        );
+
+        $registry->resolve(ConditionallyDisabledParameterType::class);
     }
 
     public function testConstructMethodIsPrivate(): void

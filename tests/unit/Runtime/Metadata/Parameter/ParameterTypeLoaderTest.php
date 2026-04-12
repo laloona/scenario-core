@@ -17,12 +17,12 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeLoader;
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
@@ -80,7 +80,7 @@ final class ParameterTypeLoaderTest extends TestCase
 <?php declare(strict_types=1);
 namespace Stateforge\Scenario\Core\Tests\Tmp;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class {$className} extends ParameterTypeDefinition
@@ -132,7 +132,7 @@ PHP);
 <?php declare(strict_types=1);
 namespace Stateforge\Scenario\Core\Tests\Tmp;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class {$className} extends ParameterTypeDefinition
@@ -185,7 +185,7 @@ PHP);
 <?php declare(strict_types=1);
 namespace Stateforge\Scenario\Core\Tests\Tmp;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class {$className} extends ParameterTypeDefinition
@@ -239,7 +239,7 @@ PHP);
 <?php declare(strict_types=1);
 namespace Stateforge\Scenario\Core\Tests\Tmp;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class {$className} extends ParameterTypeDefinition
@@ -306,7 +306,7 @@ PHP);
 <?php declare(strict_types=1);
 namespace Stateforge\Scenario\Core\Tests\Tmp;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 abstract class {$abstractClassName} extends ParameterTypeDefinition
@@ -338,6 +338,7 @@ PHP);
     {
         $configuration = self::createStub(Configuration::class);
         $configuration->method('getParameterDirectory')->willReturn($parameterDirectory);
+        $configuration->method('getParameterDirectories')->willReturn([$parameterDirectory]);
         $configuration->method('getCacheDirectory')->willReturn($cacheDirectory);
         $configuration->method('getCacheKey')->willReturn($cacheKey);
 

@@ -27,6 +27,13 @@ interface Configuration
     public function getParameterDirectory(): string;
 
     /**
+     * @return list<string>
+     */
+    public function getParameterDirectories(): array;
+
+    public function addParameterDirectory(string $parameterDirectory): void;
+
+    /**
      * @return array<string, SuiteValue>
      */
     public function getSuites(): array;

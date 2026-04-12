@@ -12,6 +12,7 @@
 namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
 use ReflectionClass;
+use Stateforge\Scenario\Core\ParameterTypeCondition;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
@@ -24,6 +25,7 @@ use function file_put_contents;
 use function is_array;
 use function is_file;
 use function is_string;
+use function is_subclass_of;
 use function json_decode;
 use function json_encode;
 use function realpath;
@@ -109,6 +111,10 @@ final class ParameterTypeLoader
     {
         $cachedTypes = [];
         foreach ($types as $class) {
+            if (is_subclass_of($class, ParameterTypeCondition::class) === true) {
+                continue;
+            }
+
             $reflection = new ReflectionClass($class);
             if ($reflection->isAbstract() === true
                 || $reflection->isInstantiable() === false) {
@@ -128,14 +134,18 @@ final class ParameterTypeLoader
     private function readTypes(Configuration $configuration): array
     {
         $this->cacheKey = '';
-        $path = realpath(Application::getRootDir() . DIRECTORY_SEPARATOR . $configuration->getParameterDirectory());
-        if ($path === false) {
-            return [];
-        }
+        $directoryies = $configuration->getParameterDirectories();
+        $types = [];
+        foreach ($directoryies as $directory) {
+            $path = realpath(Application::getRootDir() . DIRECTORY_SEPARATOR . $directory);
+            if ($path === false) {
+                return [];
+            }
 
-        $classFinder = new ClassFinder();
-        $types = $classFinder->findClassesInDirectory($path);
-        $this->cacheKey = $classFinder->getCacheKey();
+            $classFinder = new ClassFinder();
+            $types = [ ...$types, ...$classFinder->findClassesInDirectory($path) ];
+            $this->cacheKey .= $classFinder->getCacheKey();
+        }
 
         return $types;
     }

@@ -2,8 +2,11 @@
 
 namespace Stateforge\Suite\%nameSpace%;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
 final class %className% extends ParameterTypeDefinition
 {

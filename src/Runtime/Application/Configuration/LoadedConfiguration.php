@@ -26,6 +26,11 @@ final class LoadedConfiguration implements Configuration
     private ?string $parameterDirectory = null;
 
     /**
+     * @var list<string>
+     */
+    private array $parameterDirectories = [];
+
+    /**
      * @var array<string, ConnectionValue>
      */
     private array $connections = [];
@@ -69,14 +74,30 @@ final class LoadedConfiguration implements Configuration
         $this->cacheKey = $cacheKey;
     }
 
+    public function setParameterDirectory(string $parameterDirectory): void
+    {
+        $this->parameterDirectory = $parameterDirectory;
+        $this->addParameterDirectory($parameterDirectory);
+    }
+
     public function getParameterDirectory(): string
     {
         return $this->parameterDirectory ?? $this->defaultConfiguration->getParameterDirectory();
     }
 
-    public function setParameterDirectory(string $parameterDirectory): void
+    /**
+     * @return list<string>
+     */
+    public function getParameterDirectories(): array
     {
-        $this->parameterDirectory = $parameterDirectory;
+        return count($this->parameterDirectories) === 0
+            ? $this->defaultConfiguration->getParameterDirectories()
+            : $this->parameterDirectories;
+    }
+
+    public function addParameterDirectory(string $parameterDirectory): void
+    {
+        $this->parameterDirectories[] = $parameterDirectory;
     }
 
     /**

@@ -53,6 +53,8 @@ use function file_put_contents;
 use function implode;
 use function is_dir;
 use function mkdir;
+use function sort;
+use function sprintf;
 use function uniqid;
 
 #[CoversClass(DebugScenarioCommand::class)]
@@ -257,6 +259,204 @@ final class DebugScenarioCommandTest extends TestCase
         $output->expects(self::exactly(2))
             ->method('headline');
         $output->expects(self::exactly(2))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Success,
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    public function testRunSelectsUnitTestClassWhenMultipleClassesExist(): void
+    {
+        $firstClass = $this->createPhpUnitTestFixtureWithClassAttribute(
+            'FirstSelectableDebugTest',
+            "#[\\Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
+        );
+        $secondClass = $this->createPhpUnitTestFixtureWithClassAttribute(
+            'SecondSelectableDebugTest',
+            "#[\\Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['class', null],
+                ['method', null],
+            ]);
+
+        $orderedClasses = [$firstClass, $secondClass];
+        sort($orderedClasses);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('choice')
+            ->with('Which class would you like to debug?', $orderedClasses)
+            ->willReturn('1');
+        $output->expects(self::exactly(2))
+            ->method('headline');
+        $output->expects(self::exactly(2))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Success,
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    public function testRunSelectsMethodWhenMultipleMethodsExist(): void
+    {
+        $className = $this->createPhpUnitTestFixtureWithMethod(
+            'MultiMethodDebugTest',
+            <<<'PHP'
+#[\Stateforge\Scenario\Core\Attribute\ApplyScenario('my-scenario')]
+    public function testFirst(): void
+    {
+    }
+
+    #[\Stateforge\Scenario\Core\Attribute\ApplyScenario('my-scenario')]
+    public function testSecond(): void
+    {
+    }
+PHP,
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['class', null],
+                ['method', null],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('choice')
+            ->with(
+                sprintf('Which method would you like to debug from %s?', $className),
+                ['testFirst', 'testSecond'],
+            )
+            ->willReturn('testSecond');
+        $output->expects(self::exactly(4))
+            ->method('headline');
+        $output->expects(self::exactly(4))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Success,
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    public function testRunSelectsScenarioWhenScenariosAndTestsExist(): void
+    {
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'main',
+                ValidScenario::class,
+                new AsScenario('debug-scenario', 'test description'),
+                [],
+            ),
+        );
+        $this->createPhpUnitTestFixtureWithClassAttribute(
+            'ScenarioChoiceDebugTest',
+            "#[\\Stateforge\\Scenario\\Core\\Attribute\\ApplyScenario('my-scenario')]",
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['class', null],
+                ['method', null],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::exactly(2))
+            ->method('choice')
+            ->willReturnMap([
+                ['Which kind of class would you like to debug?', ['Scenario', 'Unit Test'], '0'],
+                ['Which scenario would you like to debug?', [ValidScenario::class . ' (main)'], '0'],
+            ]);
+        $output->expects(self::exactly(5))
+            ->method('headline');
+        $output->expects(self::once())
+            ->method('table')
+            ->with(
+                null,
+                [['debug-scenario', 'test description']],
+                null,
+                false,
+            );
+        $output->expects(self::exactly(4))
+            ->method('writeln')
+            ->with([]);
+        $output->expects(self::never())
+            ->method('error');
+
+        self::assertSame(
+            Command::Success,
+            (new DebugScenarioCommand(new ScenarioTestFinder()))->run($input, $output),
+        );
+    }
+
+    public function testRunSelectsScenarioWhenNoUnitTestsExist(): void
+    {
+        ScenarioRegistry::getInstance()->register(
+            new ScenarioDefinition(
+                'main',
+                ValidScenario::class,
+                new AsScenario('debug-scenario', 'test description'),
+                [],
+            ),
+        );
+
+        $input = self::createStub(CliInput::class);
+        $input->method('option')
+            ->willReturnMap([
+                ['quiet', true],
+            ]);
+        $input->method('argument')
+            ->willReturnMap([
+                ['class', null],
+                ['method', null],
+            ]);
+
+        $output = $this->createMock(CliOutput::class);
+        $output->expects(self::once())
+            ->method('choice')
+            ->with('Which scenario would you like to debug?', [ValidScenario::class . ' (main)'])
+            ->willReturn('0');
+        $output->expects(self::exactly(5))
+            ->method('headline');
+        $output->expects(self::once())
+            ->method('table')
+            ->with(
+                null,
+                [['debug-scenario', 'test description']],
+                null,
+                false,
+            );
+        $output->expects(self::exactly(4))
             ->method('writeln')
             ->with([]);
         $output->expects(self::never())

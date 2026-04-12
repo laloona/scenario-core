@@ -15,21 +15,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeException;
+use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeConditionException;
 
-#[CoversClass(InvalidParameterTypeException::class)]
+#[CoversClass(InvalidParameterTypeConditionException::class)]
 #[Group('runtime')]
 #[Small]
-final class InvalidParameterTypeExceptionTest extends TestCase
+final class InvalidParameterTypeConditionExceptionTest extends TestCase
 {
     public function testExceptionContainsMessage(): void
     {
-        $exception = new InvalidParameterTypeException(
-            'array<int>',
+        $exception = new InvalidParameterTypeConditionException(
+            'stdClass',
         );
 
         self::assertSame(
-            'given array<int> is not a valid parameter type, must be extended from Stateforge\Scenario\Core\ParameterType',
+            'given stdClass is not a valid parameter type condition, must be extended from Stateforge\\Scenario\\Core\\ParameterTypeCondition',
             $exception->getMessage(),
         );
     }

@@ -24,6 +24,7 @@ use Stateforge\Scenario\Core\Console\Output\SystemTerminal;
 use Stateforge\Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
 use function define;
 use function defined;
 use function fopen;
@@ -45,11 +46,7 @@ final class CliApplication
         }
 
         (new Application())->bootstrap();
-
-        if (Application::isBooted() === false
-            && defined('SCENARIO_CLI_DISABLED') === false) {
-            define('SCENARIO_CLI_DISABLED', true);
-        }
+        (new ApplicationState())->throw(null);
 
         if (defined('SCENARIO_CLI_DISABLED') === false) {
             define('SCENARIO_CLI_DISABLED', false);

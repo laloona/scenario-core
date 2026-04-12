@@ -55,14 +55,18 @@ final class DefaultConfigurationTest extends TestCase
         $cacheKey = $configuration->getCacheKey();
 
         self::assertSame('', $configuration->getBootstrap());
-        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR .'.scenario.cache', $configuration->getCacheDirectory());
+        self::assertSame('.scenario.cache', $configuration->getCacheDirectory());
         self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $cacheKey);
-        self::assertSame('parameter' . DIRECTORY_SEPARATOR, $configuration->getParameterDirectory());
+        self::assertSame('scenario' . DIRECTORY_SEPARATOR . 'parameter', $configuration->getParameterDirectory());
+        self::assertSame(
+            ['scenario' . DIRECTORY_SEPARATOR . 'parameter'],
+            $configuration->getParameterDirectories(),
+        );
 
         $suites = $configuration->getSuites();
         self::assertArrayHasKey('main', $suites);
         self::assertSame('main', $suites['main']->name);
-        self::assertSame(Application::getRootDir() . DIRECTORY_SEPARATOR . 'scenario', $suites['main']->directory);
+        self::assertSame('scenario' . DIRECTORY_SEPARATOR . 'main', $suites['main']->directory);
 
         self::assertSame([], $configuration->getConnections());
         self::assertSame([
@@ -79,5 +83,22 @@ final class DefaultConfigurationTest extends TestCase
 
         self::assertMatchesRegularExpression('/^[a-f0-9]{32}$/', $configuration->getCacheKey());
         self::assertNotSame('fixed-key', $configuration->getCacheKey());
+    }
+
+    public function testAddParameterDirectoryAppendsAdditionalDirectoriesAfterDefault(): void
+    {
+        $configuration = new DefaultConfiguration();
+
+        $configuration->addParameterDirectory('custom-parameter');
+        $configuration->addParameterDirectory('other-parameter');
+
+        self::assertSame(
+            [
+                'scenario' . DIRECTORY_SEPARATOR . 'parameter',
+                'custom-parameter',
+                'other-parameter',
+            ],
+            $configuration->getParameterDirectories(),
+        );
     }
 }

@@ -13,6 +13,7 @@ namespace Stateforge\Scenario\Core\Console\Command;
 
 use Stateforge\Scenario\Core\Console\Input\Argument;
 use Stateforge\Scenario\Core\Console\Input\InputType;
+use Stateforge\Scenario\Core\Console\Input\Validate\ClassNameValidation;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -25,15 +26,12 @@ use function file_put_contents;
 use function implode;
 use function in_array;
 use function is_file;
-use function preg_match;
 use function str_replace;
 use function ucfirst;
 use const DIRECTORY_SEPARATOR;
 
 final class MakeScenarioCommand extends CliCommand
 {
-    private const PATTERN_CLASSNAME = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
-
     public function description(): string
     {
         return 'Make a scenario, parameter type or config file.';
@@ -76,7 +74,7 @@ final class MakeScenarioCommand extends CliCommand
         if (count($suites) > 1) {
             $suite = $suites[
                 $options[
-                (int)$output->choice('Please select the suite where you want to make a scenario.', $options)
+                    (int)$output->choice('Please select the suite where you want to make a scenario.', $options)
                 ]
             ];
         }
@@ -85,7 +83,7 @@ final class MakeScenarioCommand extends CliCommand
             'Please insert a class name for the new scenario',
             null,
             function (string $name): bool {
-                return preg_match(self::PATTERN_CLASSNAME, $name) === 1;
+                return ClassNameValidation::validate($name);
             },
         );
 
@@ -140,7 +138,7 @@ final class MakeScenarioCommand extends CliCommand
             'Please insert a class name for the new parameter type',
             null,
             function (string $name): bool {
-                return preg_match(self::PATTERN_CLASSNAME, $name) === 1;
+                return ClassNameValidation::validate($name);
             },
         );
 

@@ -93,7 +93,7 @@ Scenarios can define parameters using `#[Parameter]`.
 
 ```php
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\ParameterType;
 
 #[AsScenario('create-user')]
 #[Parameter('email', ParameterType::String, required: true)]
@@ -131,7 +131,7 @@ This is useful when a scenario needs to work with a list of values.
 ### Example
 ```php
 use Stateforge\Scenario\Core\Attribute\Parameter;
-use Stateforge\Scenario\Core\Runtime\Metadata\ParameterType;
+use Stateforge\Scenario\Core\ParameterType;
 
 #[AsScenario('create-users')]
 #[Parameter('email', ParameterType::String, repeatable: true)]

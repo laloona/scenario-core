@@ -33,6 +33,7 @@ use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
+use function class_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function is_file;
@@ -89,7 +90,7 @@ final class ScenarioLoaderTest extends TestCase
         self::assertCount(1, $definition->parameters);
         self::assertSame('id', $definition->parameters[0]->name);
 
-        $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $cacheFile = $this->cacheFile($config);
         self::assertTrue(is_file($cacheFile));
     }
 
@@ -117,7 +118,7 @@ final class ScenarioLoaderTest extends TestCase
 
         (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
-        $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $cacheFile = $this->cacheFile($config);
         file_put_contents($cacheFile, 'not-json');
 
         ScenarioRegistry::getInstance()->clear();
@@ -130,6 +131,40 @@ final class ScenarioLoaderTest extends TestCase
         self::assertNotSame('not-json', file_get_contents($cacheFile));
     }
 
+    public function testLoadScenariosClearsRegistryAndRebuildsWhenLoadingCacheThrows(): void
+    {
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $cacheFile = $this->cacheFile($config);
+        file_put_contents($cacheFile, json_encode([
+            'main' => [
+                [
+                    'class' => $scenario,
+                    'name' => 'from-cache',
+                    'description' => null,
+                    'parameters' => [],
+                ],
+                [
+                    'class' => $scenario,
+                    'name' => 'duplicate-class',
+                    'description' => null,
+                    'parameters' => [],
+                ],
+            ],
+        ]));
+
+        ScenarioRegistry::getInstance()->clear();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        self::assertTrue(is_file($cacheFile));
+        self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve($scenario)->class);
+        self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('my-scenario')->class);
+    }
+
     public function testLoadScenariosSkipsInvalidCacheEntries(): void
     {
         $scenario = $this->createScenarioSuite();
@@ -137,7 +172,7 @@ final class ScenarioLoaderTest extends TestCase
 
         (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
-        $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $cacheFile = $this->cacheFile($config);
         $payload = [
             'main' => [
                 [
@@ -176,6 +211,35 @@ final class ScenarioLoaderTest extends TestCase
         self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('from-cache')->class);
     }
 
+    public function testLoadScenariosSkipsInvalidTopLevelCachedSuiteEntries(): void
+    {
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $cacheFile = $this->cacheFile($config);
+        file_put_contents($cacheFile, json_encode([
+            'main' => 'invalid',
+            0 => [],
+            'valid' => [
+                [
+                    'class' => $scenario,
+                    'name' => 'from-cache',
+                    'description' => null,
+                    'parameters' => [],
+                ],
+            ],
+        ]));
+
+        ScenarioRegistry::getInstance()->clear();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve($scenario)->class);
+        self::assertSame($scenario, ScenarioRegistry::getInstance()->resolve('from-cache')->class);
+    }
+
     public function testLoadScenariosSkipsInvalidCachedParameters(): void
     {
         $scenario = $this->createScenarioSuite();
@@ -183,7 +247,7 @@ final class ScenarioLoaderTest extends TestCase
 
         (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
-        $cacheFile = $config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $cacheFile = $this->cacheFile($config);
         $payload = [
             'main' => [
                 [
@@ -245,6 +309,46 @@ final class ScenarioLoaderTest extends TestCase
         self::assertSame(10, $definition->parameters[0]->default);
     }
 
+    public function testLoadScenariosSkipsCachedParametersWhenKnownClassIsNotRegistered(): void
+    {
+        $scenario = $this->createScenarioSuite();
+        $config = $this->getConfiguration();
+
+        self::assertTrue(class_exists('GlobalIntegerParameterType'));
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $cacheFile = $this->cacheFile($config);
+        file_put_contents($cacheFile, json_encode([
+            'main' => [
+                [
+                    'class' => $scenario,
+                    'name' => 'from-cache',
+                    'description' => 'cached description',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'type' => 'GlobalIntegerParameterType',
+                            'description' => 'should be skipped',
+                            'required' => true,
+                            'repeatable' => false,
+                            'default' => 10,
+                        ],
+                    ],
+                ],
+            ],
+        ]));
+
+        ScenarioRegistry::getInstance()->clear();
+
+        (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
+
+        $definition = ScenarioRegistry::getInstance()->resolve('from-cache');
+
+        self::assertSame($scenario, $definition->class);
+        self::assertCount(0, $definition->parameters);
+    }
+
     public function testLoadScenariosRebuildsCacheAndRemovesOldFiles(): void
     {
         $scenario = $this->createScenarioSuite();
@@ -252,8 +356,8 @@ final class ScenarioLoaderTest extends TestCase
 
         (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
-        $cacheDir = $config->getCacheDirectory();
-        $cacheFile = $cacheDir . DIRECTORY_SEPARATOR . $config->getCacheKey();
+        $cacheDir = Application::getRootDir() . DIRECTORY_SEPARATOR . $config->getCacheDirectory();
+        $cacheFile = $this->cacheFile($config);
         $oldFile = $cacheDir . DIRECTORY_SEPARATOR . 'old.cache';
         file_put_contents($oldFile, 'old');
         file_put_contents($cacheFile, 'not-json');
@@ -295,7 +399,7 @@ PHP);
         (new ScenarioLoader(ScenarioRegistry::getInstance(), ParameterTypeRegistry::getInstance()))->loadScenarios($config);
 
         self::assertSame([], ScenarioRegistry::getInstance()->all());
-        self::assertTrue(is_file($config->getCacheDirectory() . DIRECTORY_SEPARATOR . $config->getCacheKey()));
+        self::assertTrue(is_file($this->cacheFile($config)));
     }
 
     public function testLoadScenariosStoresEmptyCacheKeyWhenSuiteContainsNoPhpClasses(): void
@@ -343,12 +447,21 @@ PHP;
     private function getConfiguration(): LoadedConfiguration
     {
         $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setCacheDirectory(Application::getRootDir() . '/.cache');
+        $config->setCacheDirectory('.cache');
         $config->setSuites([
             'main' => new SuiteValue('main', 'scenarios'),
         ]);
 
         return $config;
+    }
+
+    private function cacheFile(LoadedConfiguration $config): string
+    {
+        return Application::getRootDir()
+            . DIRECTORY_SEPARATOR
+            . $config->getCacheDirectory()
+            . DIRECTORY_SEPARATOR
+            . $config->getCacheKey();
     }
 
     private static function assertSameDefinition(ScenarioDefinition $expected, ScenarioDefinition $actual): void

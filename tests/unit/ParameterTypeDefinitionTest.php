@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata\Parameter;
+namespace Stateforge\Scenario\Core\Tests\Unit;
 
 use GlobalIntegerParameterType;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -17,11 +17,9 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
-use function dirname;
-use function file_exists;
 
 #[CoversClass(ParameterTypeDefinition::class)]
 #[UsesClass(IntegerType::class)]
@@ -37,13 +35,8 @@ final class ParameterTypeDefinitionTest extends TestCase
         self::assertSame(IntegerParameterType::class, $type->value);
     }
 
-    public function testConstructUsesFullClassNameWhenDefinitionHasNoNamespace(): void
+    public function testConstructSetsNameAndValueFromDefinitionWithoutNamespace(): void
     {
-        $fixture = dirname(__DIR__, 4) . '/files/GlobalIntegerParameterType.php';
-        if (file_exists($fixture) === true) {
-            require_once $fixture;
-        }
-
         $type = new GlobalIntegerParameterType();
 
         self::assertSame('GlobalIntegerParameterType', $type->name);

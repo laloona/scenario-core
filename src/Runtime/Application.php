@@ -33,68 +33,15 @@ use const DIRECTORY_SEPARATOR;
 
 final class Application
 {
+    private static ?ApplicationExtension $extension = null;
+
     private static ?string $rootDir = null;
 
     private static ?Configuration $configuration = null;
 
-    private static bool $isBooted = false;
-
-    private function getXsd(): string
+    public static function extend(ApplicationExtension $application): void
     {
-        $vendorPath = self::getRootDir() . DIRECTORY_SEPARATOR .
-            'vendor' . DIRECTORY_SEPARATOR .
-            'stateforge' . DIRECTORY_SEPARATOR .
-            'scenario-core' . DIRECTORY_SEPARATOR .
-            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
-
-        if (is_file($vendorPath) === true) {
-            return $vendorPath;
-        }
-
-        return self::getRootDir() . DIRECTORY_SEPARATOR .
-            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
-    }
-
-    public function prepare(): void
-    {
-        if (self::$configuration === null) {
-            self::$configuration = (new ConfigurationBuilder(
-                new ConfigurationFinder(),
-                new XMLParser($this->getXsd()),
-            ))->build();
-
-            (new ParameterTypeLoader(ParameterTypeRegistry::getInstance()))->loadTypes(self::$configuration);
-            (new ScenarioLoader(
-                ScenarioRegistry::getInstance(),
-                ParameterTypeRegistry::getInstance(),
-            ))->loadScenarios(self::$configuration);
-        }
-    }
-
-    public function bootstrap(): void
-    {
-        $applicationState = new ApplicationState();
-
-        try {
-            $this->prepare();
-
-            if (self::config() !== null
-                && is_file(self::getRootDir() . DIRECTORY_SEPARATOR . self::config()->getBootstrap())) {
-                include(self::getRootDir() . DIRECTORY_SEPARATOR . self::config()->getBootstrap());
-            }
-        } catch (Throwable $throwable) {
-            $applicationState->fail($throwable);
-            return;
-        }
-
-        try {
-            HandlerRegistry::getInstance()->registerHandler(new RefreshDatabaseHandler(new DatabaseRefreshExecutor()));
-            HandlerRegistry::getInstance()->registerHandler(new ApplyScenarioHandler(new ScenarioBuilder()));
-        } catch (HandlerRegistryException $exception) {
-            // default handlers can be overwritten, this exception is ok
-        }
-
-        self::$isBooted = true;
+        self::$extension = $application;
     }
 
     public static function getRootDir(): string
@@ -118,8 +65,68 @@ final class Application
         return self::$configuration;
     }
 
-    public static function isBooted(): bool
+    private function getXsd(): string
     {
-        return self::$isBooted;
+        $vendorPath = self::getRootDir() . DIRECTORY_SEPARATOR .
+            'vendor' . DIRECTORY_SEPARATOR .
+            'stateforge' . DIRECTORY_SEPARATOR .
+            'scenario-core' . DIRECTORY_SEPARATOR .
+            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
+
+        if (is_file($vendorPath) === true) {
+            return $vendorPath;
+        }
+
+        return self::getRootDir() . DIRECTORY_SEPARATOR .
+            'xsd' . DIRECTORY_SEPARATOR . 'scenario.xsd';
+    }
+
+    public function prepare(): void
+    {
+        if (self::$configuration !== null) {
+            return;
+        }
+
+        self::$configuration = (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->getXsd()),
+        ))->build();
+
+        $bootstrapFile = self::getRootDir() . DIRECTORY_SEPARATOR . self::$configuration->getBootstrap();
+        if (is_file($bootstrapFile)) {
+            include($bootstrapFile);
+        }
+
+        if (self::$extension !== null) {
+            self::$extension->prepare();
+        }
+
+        (new ParameterTypeLoader(ParameterTypeRegistry::getInstance()))->loadTypes(self::$configuration);
+        (new ScenarioLoader(
+            ScenarioRegistry::getInstance(),
+            ParameterTypeRegistry::getInstance(),
+        ))->loadScenarios(self::$configuration);
+    }
+
+    public function bootstrap(): void
+    {
+        $applicationState = new ApplicationState();
+
+        try {
+            $this->prepare();
+            if (self::$extension !== null) {
+                self::$extension->boot();
+            }
+        } catch (Throwable $throwable) {
+            $applicationState->fail($throwable);
+            return;
+        }
+
+        try {
+            HandlerRegistry::getInstance()->registerHandler(new RefreshDatabaseHandler(new DatabaseRefreshExecutor()));
+            HandlerRegistry::getInstance()->registerHandler(new ApplyScenarioHandler(new ScenarioBuilder()));
+        } catch (HandlerRegistryException $exception) {
+            // default handlers can be overwritten, this exception is ok
+        }
     }
 }

@@ -11,7 +11,7 @@
 
 namespace Stateforge\Scenario\Core\Tests\Files;
 
-use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeDefinition;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
 final class IntegerParameterType extends ParameterTypeDefinition
