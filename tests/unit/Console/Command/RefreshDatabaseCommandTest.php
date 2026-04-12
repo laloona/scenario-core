@@ -152,7 +152,7 @@ final class RefreshDatabaseCommandTest extends TestCase
                 self::assertSame(ExecutionType::Up, $context->executionType);
                 self::assertFalse($context->dryRun);
                 self::assertInstanceOf(RefreshDatabase::class, $metaData);
-                self::assertSame('default', $metaData->connection);
+                self::assertNull($metaData->connection);
             });
 
         HandlerRegistry::getInstance()->registerHandler($handler);

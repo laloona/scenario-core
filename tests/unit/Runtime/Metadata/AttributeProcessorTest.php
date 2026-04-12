@@ -77,12 +77,12 @@ final class AttributeProcessorTest extends TestCase
             ->method('execute')
             ->willReturnCallback(function (AttributeContext $context, object $metaData): void {
                 self::assertSame(ValidScenario::class, $context->class);
-                self::assertSame('up', $context->method);
-                self::assertSame(ExecutionType::Up, $context->executionType);
+                self::assertNull($context->method);
+                self::assertSame(ExecutionType::Down->value, $context->executionType->value);
                 self::assertFalse($context->dryRun);
                 self::assertInstanceOf(ApplyScenario::class, $metaData);
-                self::assertSame(ValidScenario::class, $metaData->id);
-                self::assertSame([ 'param' => 'my value' ], $metaData->parameters);
+                self::assertSame('my-new-scenario', $metaData->id);
+                self::assertSame([], $metaData->parameters);
             });
 
         HandlerRegistry::getInstance()->registerHandler($handler);
@@ -108,12 +108,12 @@ final class AttributeProcessorTest extends TestCase
             ->method('execute')
             ->willReturnCallback(function (AttributeContext $context, object $metaData): void {
                 self::assertSame(ValidScenario::class, $context->class);
-                self::assertSame('up', $context->method);
+                self::assertNull($context->method);
                 self::assertSame(ExecutionType::Up, $context->executionType);
                 self::assertFalse($context->dryRun);
                 self::assertInstanceOf(ApplyScenario::class, $metaData);
-                self::assertSame(ValidScenario::class, $metaData->id);
-                self::assertSame([ 'param' => 'my value' ], $metaData->parameters);
+                self::assertSame('my-new-scenario', $metaData->id);
+                self::assertSame([], $metaData->parameters);
             });
 
         HandlerRegistry::getInstance()->registerHandler($handler);
