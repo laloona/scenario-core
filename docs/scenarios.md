@@ -110,7 +110,7 @@ final class CreateUserScenario implements ScenarioInterface
 
 #### CLI:
 ```php
-php vendor/bin/scenario apply create-user --email=test@example.com
+php vendor/bin/scenario apply create-user --parameter=email=test@example.com
 ```
 
 #### PHPUnit:
