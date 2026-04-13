@@ -61,6 +61,8 @@ final class ConfigurationBuilder
         }
         if ($root->hasAttribute('parameterDirectory') === true) {
             $configuration->setParameterDirectory($root->getAttribute('parameterDirectory'));
+        } else {
+            $configuration->setParameterDirectory($configuration->getParameterDirectory());
         }
     }
 
