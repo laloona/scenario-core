@@ -11,17 +11,19 @@
 
 namespace Stateforge\Suite\Scenario\Parameter;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 
+#[AsParameterType]
 final class IntegerParameterType extends ParameterTypeDefinition
 {
     public function cast(mixed $value): int|null
     {
-        return $this->getValueType($value)->value;
+        return $this->valueType($value)->value;
     }
 
-    protected function getValueType(mixed $value): IntegerType
+    protected function valueType(mixed $value): IntegerType
     {
         return new IntegerType($value);
     }

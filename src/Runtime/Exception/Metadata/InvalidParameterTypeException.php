@@ -11,7 +11,7 @@
 
 namespace Stateforge\Scenario\Core\Runtime\Exception\Metadata;
 
-use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Exception\Exception;
 use function sprintf;
 
@@ -23,7 +23,7 @@ final class InvalidParameterTypeException extends Exception
             sprintf(
                 'given %s is not a valid parameter type, must be extended from %s',
                 $name,
-                ParameterType::class,
+                ParameterTypeDefinition::class,
             ),
         );
     }

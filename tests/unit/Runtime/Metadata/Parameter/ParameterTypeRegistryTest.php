@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use ReflectionProperty;
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Stateforge\Scenario\Core\ParameterTypeCondition as BaseParameterTypeCondition;
 use Stateforge\Scenario\Core\ParameterTypeDefinition;
@@ -27,33 +28,13 @@ use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeExce
 use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
+use Stateforge\Scenario\Core\Tests\Files\ConditionallyDisabledParameterType;
 use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
 use Stateforge\Scenario\Core\Tests\Files\InvalidParameterType;
-use function is_string;
-
-final class NeverMatchingParameterTypeCondition extends BaseParameterTypeCondition
-{
-    public function matches(): bool
-    {
-        return false;
-    }
-}
-
-#[ParameterTypeCondition(NeverMatchingParameterTypeCondition::class)]
-final class ConditionallyDisabledParameterType extends ParameterTypeDefinition
-{
-    public function cast(mixed $value): ?string
-    {
-        return is_string($value) ? $value : null;
-    }
-
-    protected function getValueType(mixed $value): StringType
-    {
-        return new StringType($value);
-    }
-}
+use function array_map;
 
 #[CoversClass(ParameterTypeRegistry::class)]
+#[UsesClass(AsParameterType::class)]
 #[UsesClass(ParameterTypeCondition::class)]
 #[UsesClass(BaseParameterTypeCondition::class)]
 #[UsesClass(IntegerType::class)]
@@ -83,12 +64,27 @@ final class ParameterTypeRegistryTest extends TestCase
     public function testRegisterAndResolveReturnNewParameterTypeInstance(): void
     {
         $registry = ParameterTypeRegistry::getInstance();
-        $registry->register(IntegerParameterType::class);
+        $registry->register(IntegerParameterType::class, new AsParameterType('integer'));
 
         $resolved = $registry->resolve(IntegerParameterType::class);
 
         self::assertInstanceOf(IntegerParameterType::class, $resolved);
         self::assertSame(IntegerParameterType::class, $resolved->value);
+        self::assertSame('integer', $registry->all()[IntegerParameterType::class]->description);
+    }
+
+    public function testAllReturnsRegisteredParameterTypes(): void
+    {
+        $registry = ParameterTypeRegistry::getInstance();
+        $registry->register(IntegerParameterType::class, new AsParameterType('integer'));
+
+        self::assertSame(
+            [IntegerParameterType::class => 'integer'],
+            array_map(
+                static fn (AsParameterType $asParameterType): ?string => $asParameterType->description,
+                $registry->all(),
+            ),
+        );
     }
 
     public function testRegisterThrowsForInvalidParameterTypeClass(): void
@@ -96,18 +92,18 @@ final class ParameterTypeRegistryTest extends TestCase
         $this->expectException(InvalidParameterTypeException::class);
         $this->expectExceptionMessage('given ' . InvalidParameterType::class . ' is not a valid parameter type');
 
-        ParameterTypeRegistry::getInstance()->register(InvalidParameterType::class);
+        ParameterTypeRegistry::getInstance()->register(InvalidParameterType::class, new AsParameterType());
     }
 
     public function testRegisterThrowsWhenParameterTypeIsAlreadyRegistered(): void
     {
         $registry = ParameterTypeRegistry::getInstance();
-        $registry->register(IntegerParameterType::class);
+        $registry->register(IntegerParameterType::class, new AsParameterType('integer'));
 
         $this->expectException(ParameterTypeAlreadyRegisteredException::class);
         $this->expectExceptionMessage('parameter type "' . IntegerParameterType::class . '" is already registered');
 
-        $registry->register(IntegerParameterType::class);
+        $registry->register(IntegerParameterType::class, new AsParameterType('integer-updated'));
     }
 
     public function testResolveThrowsWhenParameterTypeIsUnknown(): void
@@ -121,7 +117,7 @@ final class ParameterTypeRegistryTest extends TestCase
     public function testRegisterSkipsParameterTypeWhenConditionDoesNotMatch(): void
     {
         $registry = ParameterTypeRegistry::getInstance();
-        $registry->register(ConditionallyDisabledParameterType::class);
+        $registry->register(ConditionallyDisabledParameterType::class, new AsParameterType());
 
         $this->expectException(UnknownParameterTypeException::class);
         $this->expectExceptionMessage(

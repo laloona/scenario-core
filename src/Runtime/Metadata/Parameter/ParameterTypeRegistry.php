@@ -12,13 +12,14 @@
 namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
 use ReflectionClass;
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\ParameterTypeCondition;
 use Stateforge\Scenario\Core\ParameterTypeCondition as BaseParameterTypeCondition;
 use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\InvalidParameterTypeException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\ParameterTypeAlreadyRegisteredException;
 use Stateforge\Scenario\Core\Runtime\Exception\Metadata\UnknownParameterTypeException;
-use function in_array;
+use function array_key_exists;
 use function is_subclass_of;
 
 final class ParameterTypeRegistry
@@ -32,7 +33,7 @@ final class ParameterTypeRegistry
     }
 
     /**
-     * @var list<class-string>
+     * @var array<class-string, AsParameterType>
      */
     private array $registeredTypes = [];
 
@@ -47,13 +48,13 @@ final class ParameterTypeRegistry
     /**
      * @param class-string $class
      */
-    public function register(string $class): void
+    public function register(string $class, AsParameterType $asParameterType): void
     {
         if (is_subclass_of($class, ParameterTypeDefinition::class) === false) {
             throw new InvalidParameterTypeException($class);
         }
 
-        if (in_array($class, $this->registeredTypes, true) === true) {
+        if (array_key_exists($class, $this->registeredTypes) === true) {
             throw new ParameterTypeAlreadyRegisteredException($class);
         }
 
@@ -66,17 +67,25 @@ final class ParameterTypeRegistry
             }
         }
 
-        $this->registeredTypes[] = $class;
+        $this->registeredTypes[$class] = $asParameterType;
     }
 
     public function resolve(string $class): ParameterTypeDefinition
     {
-        if (in_array($class, $this->registeredTypes, true) === false) {
+        if (array_key_exists($class, $this->registeredTypes) === false) {
             throw new UnknownParameterTypeException($class);
         }
 
         /** @var ParameterTypeDefinition $parameterType */
         $parameterType = new $class();
         return $parameterType;
+    }
+
+    /**
+     * @return array<string, AsParameterType>
+     */
+    public function all(): array
+    {
+        return $this->registeredTypes;
     }
 }

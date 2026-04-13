@@ -9,20 +9,22 @@
  * file that was distributed with this source code.
  */
 
+namespace Stateforge\Scenario\Core\Tests\Files;
+
 use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\ParameterTypeDefinition;
-use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
+use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
-#[AsParameterType]
-final class GlobalIntegerParameterType extends ParameterTypeDefinition
+#[AsParameterType('string')]
+final class StringParameterType extends ParameterTypeDefinition
 {
-    public function cast(mixed $value): ?int
+    public function cast(mixed $value): string|null
     {
         return $this->valueType($value)->value;
     }
 
-    protected function valueType(mixed $value): IntegerType
+    protected function valueType(mixed $value): StringType
     {
-        return new IntegerType($value);
+        return new StringType($value);
     }
 }

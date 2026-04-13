@@ -16,6 +16,7 @@ use Stateforge\Scenario\Core\Console\Command\Command;
 use Stateforge\Scenario\Core\Console\Command\DebugScenarioCommand;
 use Stateforge\Scenario\Core\Console\Command\InstallScenarioCommand;
 use Stateforge\Scenario\Core\Console\Command\ListCommands;
+use Stateforge\Scenario\Core\Console\Command\ListParameterTypesCommand;
 use Stateforge\Scenario\Core\Console\Command\ListScenariosCommand;
 use Stateforge\Scenario\Core\Console\Command\MakeScenarioCommand;
 use Stateforge\Scenario\Core\Console\Command\RefreshDatabaseCommand;
@@ -66,6 +67,7 @@ final class CliApplication
             'install' => new InstallScenarioCommand(),
             'list' => new ListScenariosCommand(),
             'make' => new MakeScenarioCommand(),
+            'parameter' => new ListParameterTypesCommand(),
             'refresh' => new RefreshDatabaseCommand(),
         ];
 

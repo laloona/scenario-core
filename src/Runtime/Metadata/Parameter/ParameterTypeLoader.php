@@ -12,12 +12,14 @@
 namespace Stateforge\Scenario\Core\Runtime\Metadata\Parameter;
 
 use ReflectionClass;
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\ParameterTypeCondition;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\CacheDirectory;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Configuration;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use Throwable;
+use function assert;
 use function count;
 use function dirname;
 use function file_get_contents;
@@ -82,30 +84,36 @@ final class ParameterTypeLoader
             return false;
         }
 
-        foreach ($cachedTypes as $definition) {
-            if (is_string($definition) === false) {
+        foreach ($cachedTypes as $class => $description) {
+            if (is_string($class) === false
+                || (is_string($description) === false && $description !== null)) {
                 continue;
             }
 
-            /** @var class-string $definition */
-            $this->registry->register($definition);
+            /** @var class-string $class */
+            $this->registry->register($class, new AsParameterType($description));
         }
 
         return true;
     }
 
     /**
-     * @param list<class-string> $cachesTypes
+     * @param array<class-string, AsParameterType> $types
      */
-    private function buildCache(string $cacheFile, array $cachesTypes): void
+    private function buildCache(string $cacheFile, array $types): void
     {
         (new CacheDirectory())->prepare(dirname($cacheFile));
-        file_put_contents($cacheFile, json_encode($cachesTypes));
+
+        $cachedTypes = [];
+        foreach ($types as $class => $asParameterType) {
+            $cachedTypes[$class] = $asParameterType->description;
+        }
+        file_put_contents($cacheFile, json_encode($cachedTypes));
     }
 
     /**
      * @param list<class-string> $types
-     * @return list<class-string>
+     * @return array<class-string, AsParameterType>
      */
     private function registerTypes(array $types): array
     {
@@ -121,8 +129,14 @@ final class ParameterTypeLoader
                 continue;
             }
 
-            $this->registry->register($class);
-            $cachedTypes[] = $class;
+            $attributes = $reflection->getAttributes(AsParameterType::class);
+            foreach ($attributes as $attribute) {
+                $attributeInstance = $attribute->newInstance();
+                assert($attributeInstance instanceof AsParameterType);
+
+                $this->registry->register($class, $attributeInstance);
+                $cachedTypes[$class] = $attributeInstance;
+            }
         }
 
         return $cachedTypes;

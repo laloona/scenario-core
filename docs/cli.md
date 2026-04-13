@@ -59,7 +59,7 @@ php vendor/bin/scenario
     - verify scenario resolution
     - inspect applied scenarios
     - debug execution flow
-- __make__: Generate a new scenario. This command helps to create new scenarios quickly.
+- __make__: Generate a new scenario or parameter type. This command helps to create new scenarios or parameter types quickly.
 - __refresh__: Execute database or environment refresh logic.<br>
   Available options (optional):
   ```bash

@@ -29,7 +29,7 @@ final class InvalidParameterTypeExceptionTest extends TestCase
         );
 
         self::assertSame(
-            'given array<int> is not a valid parameter type, must be extended from Stateforge\Scenario\Core\ParameterType',
+            'given array<int> is not a valid parameter type, must be extended from Stateforge\Scenario\Core\ParameterTypeDefinition',
             $exception->getMessage(),
         );
     }

@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -66,7 +67,7 @@ final class ScenarioLoaderTest extends TestCase
     {
         $this->createRootDir();
         $this->resetParameterTypeRegistry();
-        ParameterTypeRegistry::getInstance()->register(IntegerParameterType::class);
+        ParameterTypeRegistry::getInstance()->register(IntegerParameterType::class, new AsParameterType('integer'));
     }
 
     protected function tearDown(): void

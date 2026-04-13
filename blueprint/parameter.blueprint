@@ -2,21 +2,23 @@
 
 namespace Stateforge\Suite\%nameSpace%;
 
+use Stateforge\Scenario\Core\Attribute\AsParameterType;
 use Stateforge\Scenario\Core\ParameterTypeDefinition;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\BooleanType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\FloatType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\IntegerType;
 use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 
+#[AsParameterType('some usefull description')]
 final class %className% extends ParameterTypeDefinition
 {
-    public function cast(mixed $value): string|int|float|bool|null;
+    public function cast(mixed $value): string|int|float|bool|null
     {
         // this cast() is auto-generated, please modify it
     }
 
-    protected function getValueType(mixed $value): BooleanType|FloatType|IntegerType|StringType;
+    protected function valueType(mixed $value): BooleanType|FloatType|IntegerType|StringType
     {
-        // this getValueType() is auto-generated, please modify it
+        // this valueType() is auto-generated, please modify it
     }
 }

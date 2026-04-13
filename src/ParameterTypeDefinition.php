@@ -45,10 +45,10 @@ abstract class ParameterTypeDefinition
             return null;
         }
 
-        return $this->getValueType($value)->asString();
+        return $this->valueType($value)->asString();
     }
 
     abstract public function cast(mixed $value): string|int|float|bool|null;
 
-    abstract protected function getValueType(mixed $value): BooleanType|FloatType|IntegerType|StringType;
+    abstract protected function valueType(mixed $value): BooleanType|FloatType|IntegerType|StringType;
 }
