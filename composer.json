@@ -30,11 +30,16 @@
     },
     "classmap": ["tests/files"]
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
     "phpstan/phpstan": "^2.1",
     "friendsofphp/php-cs-fixer": "^3.60",
     "phpstan/phpstan-strict-rules": "^2.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.1-dev"
+    }
   }
 }
