@@ -43,9 +43,9 @@ final class ApplicationExtensionTest extends TestCase
 
     public function testBootstrapRegistersExtensionAtApplication(): void
     {
-        $extension = self::getStubBuilder(ApplicationExtension::class)
-            ->onlyMethods(['prepare', 'boot'])
-            ->getStub();
+        $extension = self::createPartialMock(ApplicationExtension::class, ['prepare', 'boot']);
+        $extension->expects(self::never())->method('prepare');
+        $extension->expects(self::never())->method('boot');
         $extension->bootstrap();
 
         $property = (new ReflectionClass(Application::class))->getProperty('extension');
@@ -54,12 +54,13 @@ final class ApplicationExtensionTest extends TestCase
 
     public function testAvailablePrepareAndBootMethod(): void
     {
-        $extension = self::getStubBuilder(ApplicationExtension::class)
-            ->onlyMethods(['bootstrap'])
-            ->getStub();
-        $extension->prepare();
-        $extension->boot();
+        $extension = new ReflectionClass(ApplicationExtension::class);
 
-        self::expectNotToPerformAssertions();
+        self::assertTrue($extension->getMethod('prepare')->isPublic());
+        self::assertFalse($extension->getMethod('prepare')->isFinal());
+        self::assertTrue($extension->getMethod('boot')->isPublic());
+        self::assertFalse($extension->getMethod('boot')->isFinal());
+        self::assertTrue($extension->getMethod('bootstrap')->isPublic());
+        self::assertTrue($extension->getMethod('bootstrap')->isFinal());
     }
 }
