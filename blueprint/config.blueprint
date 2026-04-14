@@ -1,6 +1,6 @@
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="vendor/stateforge/scenario-core/xsd/scenario.xsd"
-    bootstrap="scenario/boostrap.php"
+    bootstrap="scenario/bootstrap.php"
     cacheDirectory=".scenario.cache"
     parameterDirectory="scenario/parameter"
 >

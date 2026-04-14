@@ -152,6 +152,7 @@ Framework-specific integration layers may be provided separately.
 ## Next Steps
 
 - [Getting Started](docs/getting-started.md)
+- [Configuration](docs/configuration.md)
 - [Scenarios](docs/scenarios.md)
 - [Parameter Types](docs/parameter-types.md)
 - [CLI Usage](docs/cli.md)

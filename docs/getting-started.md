@@ -57,6 +57,7 @@ Use PHPUnit when:
 ---
 
 ## Next Steps
+- [Configuration](configuration.md)
 - [Scenarios](scenarios.md)
 - [Parameter Types](parameter-types.md)
 - [CLI Usage](cli.md)
