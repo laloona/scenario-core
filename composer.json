@@ -2,7 +2,14 @@
   "name": "stateforge/scenario-core",
   "description": "Core library for declarative, attribute-driven scenario orchestration for reproducible test data states in PHP.",
   "type": "library",
-  "keywords": ["testing", "scenario", "state", "framework"],
+  "keywords": [
+    "testing",
+    "phpunit",
+    "fixtures",
+    "scenario",
+    "state",
+    "test-data"
+  ],
   "license": "BSD-3-Clause",
   "authors": [
     {
@@ -11,6 +18,11 @@
       "role": "lead"
     }
   ],
+  "homepage": "https://github.com/laloona/scenario-core",
+  "support": {
+    "issues": "https://github.com/laloona/scenario-core/issues",
+    "source": "https://github.com/laloona/scenario-core"
+  },
   "require": {
     "php": ">=8.2",
     "ext-dom": "*",
@@ -28,10 +40,16 @@
     "psr-4": {
       "Stateforge\\Scenario\\Core\\Tests\\Unit\\": "tests/unit/"
     },
-    "classmap": ["tests/files"]
+    "classmap": [
+      "tests/files"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
   "require-dev": {
     "phpstan/phpstan": "^2.1",
     "friendsofphp/php-cs-fixer": "^3.60",
