@@ -71,7 +71,12 @@ final class ScenarioParameters
             $value = $this->parameters[$parameter->name] ?? null;
             $value = $value === '' ? null : $value;
             if ($parameter->validate($value) === false) {
-                throw new ParameterValueErrorException($parameter->name, $parameter->type->value, gettype($value), false);
+                throw new ParameterValueErrorException(
+                    $parameter->name,
+                    $parameter->type->value . ($parameter->repeatable === true ? '[]' : ''),
+                    gettype($value),
+                    false,
+                );
             }
         }
     }

@@ -56,14 +56,14 @@ final class Parameter
         if ($default !== null) {
             if ($this->repeatable === true) {
                 if (is_array($default) === false) {
-                    throw new ParameterValueErrorException($name, 'array', gettype($default), true);
+                    throw new ParameterValueErrorException($name, $this->type->value . '[]', gettype($default), true);
                 }
 
                 /** @var list<string|int|float|bool|null> $default */
                 $default = array_values($default);
                 foreach ($default as &$value) {
                     if ($this->type->valid($value) === false) {
-                        throw new ParameterValueErrorException($name, $this->type->value, gettype($value), true);
+                        throw new ParameterValueErrorException($name, $this->type->value . '[]', gettype($value), true);
                     }
 
                     $value = $this->type->cast($value);
