@@ -10,6 +10,10 @@
 - Added `parameter` CLI command to list built-in and registered parameter types.
 - Added support for generating custom parameter types via the `make` command.
 
+### Changed
+- Moved `ParameterType` from `Stateforge\Scenario\Core\Metadata\Parameter\ParameterType`
+  to `Stateforge\Scenario\Core\ParameterType`.
+
 ## [1.0.1] - 2026-04-12
 
 ### Added
