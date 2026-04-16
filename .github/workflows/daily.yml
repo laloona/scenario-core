@@ -41,7 +41,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, ctype, json, libxml, mbstring, tokenizer, xml, xmlwriter
+          extensions: dom, json, libxml, mbstring, xml, xmlwriter
           coverage: none
           tools: composer:v2
 
