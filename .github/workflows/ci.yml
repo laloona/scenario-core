@@ -144,6 +144,18 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
+      - name: Clear Composer cache
+        if: matrix.php == '8.2'
+        run: composer clear-cache
+
+      - name: Show available PHPUnit versions
+        if: matrix.php == '8.2'
+        run: composer show phpunit/phpunit --all
+
+      - name: Explain why PHPUnit 11.5.55 is not installable
+        if: matrix.php == '8.2'
+        run: composer why-not phpunit/phpunit 11.5.55 || true
+
       - name: Install dependencies (lowest)
         if: matrix.dependencies == 'lowest'
         run: composer update --prefer-lowest --prefer-stable --no-interaction --prefer-dist
