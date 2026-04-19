@@ -7,7 +7,7 @@ on:
 
 jobs:
   phpunit:
-    name: PHPUnit (PHP ${{ matrix.php }}) (OS ${{ matrix.os }}) (OS ${{ matrix.branch }}) (${{ matrix.dependencies }})
+    name: PHPUnit (PHP ${{ matrix.php }}) (OS ${{ matrix.os }}) (Branch ${{ matrix.branch }}) (${{ matrix.dependencies }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
