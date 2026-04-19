@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0] - 2026-04-xx
+## [1.1.0] - 2026-04-19
 
 ### Added
 - Introduced extensible parameter type system for validating and converting scenario input values.
