@@ -68,7 +68,6 @@ final class MyScenario implements ScenarioInterface
         // remove loaded data
     }
 }
-</code></pre>
 ```
 No manual registry interaction is required.
 
