@@ -34,11 +34,11 @@ It integrates seamlessly with PHPUnit-based test suites and console tooling.
 To enable scenario processing in your test suite, register the PHPUnit
 extension in your ``phpunit.xml``:
 
-<pre><code type="xml">
-&lt;extensions&gt;
-    &lt;bootstrap class="Stateforge\Scenario\Core\PHPUnit\Extension" /&gt;
-&lt;/extensions&gt;
-</code></pre>
+```xml
+<extensions>
+    <bootstrap class="Stateforge\Scenario\Core\PHPUnit\Extension" />
+</extensions>
+```
 
 The extension integrates with the PHPUnit lifecycle and ensures
 that all scenario-related attributes are processed before test
