@@ -13,6 +13,7 @@ namespace Stateforge\Scenario\Core\Tests\Unit\PHPUnit\Subscriber;
 
 use PHPUnit\Event\Code\TestDox;
 use PHPUnit\Event\Code\TestMethod;
+use PHPUnit\Event\Telemetry\CpuTime;
 use PHPUnit\Event\Telemetry\Duration;
 use PHPUnit\Event\Telemetry\GarbageCollectorStatus;
 use PHPUnit\Event\Telemetry\HRTime;
@@ -152,8 +153,12 @@ final class FailureSubscriberTest extends TestCase
      */
     private function finishedEvent(string $className, string $methodName): Finished
     {
-        return new Finished(
-            new Info(
+        if (version_compare(
+            \PHPUnit\Runner\Version::id(),
+            '13.2.0',
+            '<'
+        )) {
+            $info = new Info(
                 new Snapshot(
                     HRTime::fromSecondsAndNanoseconds(1, 0),
                     MemoryUsage::fromBytes(1),
@@ -164,7 +169,32 @@ final class FailureSubscriberTest extends TestCase
                 MemoryUsage::fromBytes(0),
                 Duration::fromSecondsAndNanoseconds(0, 0),
                 MemoryUsage::fromBytes(0),
-            ),
+            );
+        } else {
+            $info = new Info(
+                new Snapshot(
+                    HRTime::fromSecondsAndNanoseconds(1, 0),
+                    MemoryUsage::fromBytes(1),
+                    MemoryUsage::fromBytes(1),
+                    new GarbageCollectorStatus(0, 0, 0, 0, 0, 0, 0, 0, false, false, false, 0),
+                    CpuTime::fromSecondsAndNanoseconds(0, 0),
+                    CpuTime::fromSecondsAndNanoseconds(0, 0),
+                    CpuTime::fromSecondsAndNanoseconds(0, 0)
+                ),
+                Duration::fromSecondsAndNanoseconds(0, 0),
+                MemoryUsage::fromBytes(0),
+                Duration::fromSecondsAndNanoseconds(0, 0),
+                MemoryUsage::fromBytes(0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0),
+                CpuTime::fromSecondsAndNanoseconds(0, 0)
+            );
+        }
+        return new Finished(
+            $info,
             new TestMethod(
                 $className,
                 $methodName,
