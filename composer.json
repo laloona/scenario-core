@@ -51,9 +51,10 @@
     "optimize-autoloader": true
   },
   "require-dev": {
-    "phpstan/phpstan": "^2.1",
     "friendsofphp/php-cs-fixer": "^3.60",
-    "phpstan/phpstan-strict-rules": "^2.0"
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "tomasvotruba/type-coverage": "^2.2"
   },
   "extra": {
     "branch-alias": {

@@ -106,7 +106,7 @@ final class MakeScenarioCommand extends CliCommand
                     '%className%',
                 ],
                 [
-                    implode('\\', array_map(function ($part): string {
+                    implode('\\', array_map(function (string $part): string {
                         return ucfirst($part);
                     }, explode('/', str_replace('\\', '/', $suite->directory)))),
                     ucfirst($name),
@@ -161,7 +161,7 @@ final class MakeScenarioCommand extends CliCommand
                     '%className%',
                 ],
                 [
-                    implode('\\', array_map(function ($part): string {
+                    implode('\\', array_map(function (string $part): string {
                         return ucfirst($part);
                     }, explode('/', str_replace('\\', '/', $directory)))),
                     ucfirst($name),
