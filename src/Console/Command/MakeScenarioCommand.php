@@ -19,6 +19,7 @@ use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
 use function array_keys;
 use function array_map;
+use function assert;
 use function count;
 use function explode;
 use function file_get_contents;
@@ -47,9 +48,9 @@ final class MakeScenarioCommand extends CliCommand
         $type = $input->argument('type') ?? '';
         $options = ['scenario', 'parameter type', 'config'];
         if (in_array($type, $options, true) === false) {
-            $type = $options[
-                $output->choice('Please select the type do would like to make.', $options, '0')
-            ];
+            $choice = (int) $output->choice('Please select the type do would like to make.', $options, '0');
+            assert(isset($options[$choice]));
+            $type = $options[$choice];
         }
 
         return match ($type) {
