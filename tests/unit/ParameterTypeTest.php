@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Stateforge\Scenario\Core\Tests\Unit\Runtime\Metadata\Parameter;
+namespace Stateforge\Scenario\Core\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
