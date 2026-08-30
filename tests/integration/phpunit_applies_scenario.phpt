@@ -4,14 +4,21 @@ PHPUnit will apply an scenario with attributes and configured extension
 <?php declare(strict_types=1);
 
 define('SCENARIO_CLI_DISABLED', false);
-$_SERVER['argv'] = [
-    '--configuration=' . __DIR__ . DIRECTORY_SEPARATOR . 'phpunit.xml',
-    '--no-progress',
-    '--do-not-cache-result',
-    __DIR__ . '/tests/ScenarioTest.php'
-];
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+$_SERVER['argv'] = [
+    '--configuration=' . __DIR__ . DIRECTORY_SEPARATOR . 'phpunit.xml',
+    '--no-progress'
+];
+
+if (version_compare(PHPUnit\Runner\Version::id(), '13.3.0', '>=')) {
+    $_SERVER['argv'][] = '--do-not-record-test-run-history';
+} else {
+    $_SERVER['argv'][] = '--do-not-cache-result';
+}
+
+$_SERVER['argv'][] = __DIR__ . '/tests/ScenarioTest.php';
 
 (new PHPUnit\TextUI\Application)->run($_SERVER['argv']);
 ?>
