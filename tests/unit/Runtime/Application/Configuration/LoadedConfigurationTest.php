@@ -51,22 +51,6 @@ final class LoadedConfigurationTest extends TestCase
         $property->setValue(null, null);
     }
 
-    public function testUsesDefaultBootstrapWhenNotSet(): void
-    {
-        $default = new DefaultConfiguration();
-        $config = new LoadedConfiguration($default);
-
-        self::assertSame($default->getBootstrap(), $config->getBootstrap());
-    }
-
-    public function testOverridesBootstrap(): void
-    {
-        $config = new LoadedConfiguration(new DefaultConfiguration());
-        $config->setBootstrap('bootstrap.php');
-
-        self::assertSame('bootstrap.php', $config->getBootstrap());
-    }
-
     public function testUsesDefaultCacheDirectory(): void
     {
         $default = new DefaultConfiguration();
@@ -133,7 +117,7 @@ final class LoadedConfigurationTest extends TestCase
     {
         $config = new LoadedConfiguration(new DefaultConfiguration());
 
-        $suite = new SuiteValue('other', '/myscenario');
+        $suite = new SuiteValue('other', 'other', '/myscenario');
         $config->setSuites(['other' => $suite]);
 
         self::assertSame(['other' => $suite], $config->getSuites());

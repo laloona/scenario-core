@@ -105,7 +105,7 @@ PHP,
 
         $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setSuites([
-            'main' => new SuiteValue('main', 'app/scenarios'),
+            'main' => new SuiteValue('main', 'main', 'app/scenarios'),
         ]);
         $this->setConfiguration($config);
 
@@ -161,8 +161,8 @@ PHP,
 
         $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setSuites([
-            'main' => new SuiteValue('main', 'app/scenarios'),
-            'admin' => new SuiteValue('admin', 'app/admin-scenarios'),
+            'main' => new SuiteValue('main', 'main', 'app/scenarios'),
+            'admin' => new SuiteValue('admin', 'main', 'app/admin-scenarios'),
         ]);
         $this->setConfiguration($config);
 
@@ -302,7 +302,7 @@ PHP,
 
         $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setSuites([
-            'main' => new SuiteValue('main', 'app/scenarios'),
+            'main' => new SuiteValue('main', 'main', 'app/scenarios'),
         ]);
         $this->setConfiguration($config);
 

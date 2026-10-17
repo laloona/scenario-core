@@ -14,11 +14,17 @@ namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ExtensionAlreadyExistsException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ExtensionWithoutCLassException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteWithoutDirectoryException;
+use Stateforge\Scenario\Core\Runtime\Exception\InvalidExtensionSubClassException;
+use function in_array;
+use function is_subclass_of;
 
 final class ConfigurationBuilder
 {
@@ -42,6 +48,7 @@ final class ConfigurationBuilder
         $this->attributes($configuration, $doc);
         $this->connections($configuration, $doc);
         $this->suites($configuration, $doc);
+        $this->extensions($configuration, $doc);
 
         return $configuration;
     }
@@ -53,9 +60,6 @@ final class ConfigurationBuilder
             return;
         }
 
-        if ($root->hasAttribute('bootstrap') === true) {
-            $configuration->setBootstrap($root->getAttribute('bootstrap'));
-        }
         if ($root->hasAttribute('cacheDirectory') === true) {
             $configuration->setCacheDirectory($root->getAttribute('cacheDirectory'));
         }
@@ -133,9 +137,45 @@ final class ConfigurationBuilder
                 throw new SuiteWithoutDirectoryException($name);
             }
 
-            $suiteObjects[$name] = new SuiteValue($name, $directory);
+            $suiteObjects[$name] = new SuiteValue($name, $suiteNode->getAttribute('description'), $directory);
         }
 
         $configuration->setSuites($suiteObjects);
+    }
+
+    private function extensions(LoadedConfiguration $configuration, DOMDocument $doc): void
+    {
+        /** @var list<Extension> $extensionObjects */
+        $extensionObjects = [];
+        $xpath = new DOMXPath($doc);
+        $extensions = $xpath->query('/scenario/extensions/bootstrap');
+        if ($extensions === false) {
+            $configuration->setExtensions($extensionObjects);
+            return;
+        }
+
+        foreach ($extensions as $extensionNode) {
+            if (!$extensionNode instanceof DOMElement) {
+                continue;
+            }
+
+            $class = $extensionNode->getAttribute('class');
+            if ($class === '') {
+                throw new ExtensionWithoutCLassException();
+            }
+
+            if (in_array($class, $extensionObjects, true) === true) {
+                throw new ExtensionAlreadyExistsException($class);
+            }
+
+            /** @var class-string $class */
+            if (is_subclass_of($class, Extension::class) === false) {
+                throw new InvalidExtensionSubClassException($class);
+            }
+
+            $extensionObjects[] = new $class();
+        }
+
+        $configuration->setExtensions($extensionObjects);
     }
 }

@@ -84,7 +84,6 @@ XML;
             new XMLParser($this->xsdPath()),
         ))->build();
 
-        self::assertSame('bootstrap.php', $config->getBootstrap());
         self::assertSame('.cache', $config->getCacheDirectory());
         self::assertSame('parameter-types', $config->getParameterDirectory());
         self::assertSame(['parameter-types'], $config->getParameterDirectories());
@@ -121,7 +120,6 @@ XML;
         ))->build();
         $default = new DefaultConfiguration();
 
-        self::assertSame($default->getBootstrap(), $config->getBootstrap());
         self::assertSame($default->getCacheDirectory(), $config->getCacheDirectory());
         self::assertSame($default->getParameterDirectory(), $config->getParameterDirectory());
         self::assertSame($default->getParameterDirectories(), $config->getParameterDirectories());

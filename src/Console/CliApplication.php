@@ -12,6 +12,7 @@
 namespace Stateforge\Scenario\Core\Console;
 
 use Stateforge\Scenario\Core\Console\Command\ApplyScenarioCommand;
+use Stateforge\Scenario\Core\Console\Command\CliCommand;
 use Stateforge\Scenario\Core\Console\Command\Command;
 use Stateforge\Scenario\Core\Console\Command\DebugScenarioCommand;
 use Stateforge\Scenario\Core\Console\Command\InstallScenarioCommand;
@@ -23,16 +24,30 @@ use Stateforge\Scenario\Core\Console\Command\RefreshDatabaseCommand;
 use Stateforge\Scenario\Core\Console\Output\NativeTerminalIO;
 use Stateforge\Scenario\Core\Console\Output\SystemTerminal;
 use Stateforge\Scenario\Core\Console\Output\Theme\AnsiStyler;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Exception\InvalidExtensionSubClassException;
 use function define;
 use function defined;
 use function fopen;
+use function get_class;
+use function is_subclass_of;
 use const PHP_EOL;
 
 final class CliApplication
 {
+    /**
+     * @var array<string, CliCommand>
+     */
+    private array $commands = [];
+
+    public function command(string $name, CliCommand $cliCommand): void
+    {
+        $this->command($name, $cliCommand);
+    }
+
     /**
      * @param list<string> $inputArgs
      */
@@ -61,28 +76,41 @@ final class CliApplication
             return Command::Error->value;
         }
 
-        $commands = [
-            'apply' => new ApplyScenarioCommand(),
-            'debug' => new DebugScenarioCommand(new ScenarioTestFinder()),
-            'install' => new InstallScenarioCommand(),
-            'list' => new ListScenariosCommand(),
-            'make' => new MakeScenarioCommand(),
-            'parameter' => new ListParameterTypesCommand(),
-            'refresh' => new RefreshDatabaseCommand(),
-        ];
+        $this->command('apply', new ApplyScenarioCommand());
+        $this->command('debug', new DebugScenarioCommand(new ScenarioTestFinder()));
+        $this->command('install', new InstallScenarioCommand());
+        $this->command('list', new ListScenariosCommand());
+        $this->command('make', new MakeScenarioCommand());
+        $this->command('parameter', new ListParameterTypesCommand());
+        $this->command('refresh', new RefreshDatabaseCommand());
+
+        $config = Application::config();
+        if ($config === null) {
+            return Command::Error->value;
+        }
+
+        foreach ($config->getExtensions() as $extension) {
+            if (is_subclass_of($extension, Extension::class) === false) {
+                throw new InvalidExtensionSubClassException(get_class($extension));
+            }
+
+            if ($extension->cli() !== null) {
+                $extension->cli()->boot();
+            }
+        }
 
         $output = new Output(new AnsiStyler(new SystemTerminal()), new NativeTerminalIO());
 
         if ($input->command() !== null
-            && isset($commands[$input->command()]) === true) {
-            return $commands[$input->command()]
+            && isset($this->commands[$input->command()]) === true) {
+            return $this->commands[$input->command()]
                 ->run(
                     $input,
                     $output,
                 )->value;
         }
 
-        return (new ListCommands($commands))
+        return (new ListCommands($this->commands))
             ->run(
                 $input,
                 $output,

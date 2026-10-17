@@ -11,18 +11,9 @@
 
 namespace Stateforge\Scenario\Core\Runtime;
 
-abstract class ApplicationExtension
+interface ApplicationExtension
 {
-    public function prepare(): void
-    {
-    }
+    public function prepare(): void;
 
-    public function boot(): void
-    {
-    }
-
-    final public function bootstrap(): void
-    {
-        Application::extend($this);
-    }
+    public function boot(): void;
 }

@@ -11,13 +11,12 @@
 
 namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 
 interface Configuration
 {
-    public function getBootstrap(): string;
-
     public function getCacheDirectory(): string;
 
     public function getCacheKey(): ?string;
@@ -42,6 +41,11 @@ interface Configuration
      * @return array<string, ConnectionValue>
      */
     public function getConnections(): array;
+
+    /**
+     * @return list<Extension>
+     */
+    public function getExtensions(): array;
 
     /**
      * @return list<class-string>

@@ -376,7 +376,7 @@ final class ScenarioLoaderTest extends TestCase
     {
         $config = $this->getConfiguration();
         $config->setSuites([
-            'main' => new SuiteValue('main', 'missing-dir'),
+            'main' => new SuiteValue('main', 'main', 'missing-dir'),
         ]);
 
         $this->expectException(ScenarioLoaderException::class);
@@ -450,7 +450,7 @@ PHP;
         $config = new LoadedConfiguration(new DefaultConfiguration());
         $config->setCacheDirectory('.cache');
         $config->setSuites([
-            'main' => new SuiteValue('main', 'scenarios'),
+            'main' => new SuiteValue('main', 'main', 'scenarios'),
         ]);
 
         return $config;

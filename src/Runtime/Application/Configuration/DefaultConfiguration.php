@@ -13,6 +13,7 @@ namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use function md5;
@@ -25,11 +26,6 @@ final class DefaultConfiguration implements Configuration
      * @var list<string>
      */
     private array $parameterDirectories = [];
-
-    public function getBootstrap(): string
-    {
-        return '';
-    }
 
     public function getCacheDirectory(): string
     {
@@ -69,7 +65,7 @@ final class DefaultConfiguration implements Configuration
     public function getSuites(): array
     {
         return [
-            'main' => new SuiteValue('main', 'scenario' . DIRECTORY_SEPARATOR . 'main'),
+            'main' => new SuiteValue('main', 'Main Suite', 'scenario' . DIRECTORY_SEPARATOR . 'main'),
         ];
     }
 
@@ -77,6 +73,14 @@ final class DefaultConfiguration implements Configuration
      * @return array<string, ConnectionValue>
      */
     public function getConnections(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return list<Extension>
+     */
+    public function getExtensions(): array
     {
         return [];
     }

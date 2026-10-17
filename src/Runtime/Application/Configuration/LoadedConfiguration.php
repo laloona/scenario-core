@@ -11,14 +11,13 @@
 
 namespace Stateforge\Scenario\Core\Runtime\Application\Configuration;
 
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use function count;
 
 final class LoadedConfiguration implements Configuration
 {
-    private ?string $bootstrap = null;
-
     private ?string $cacheDirectory = null;
 
     private ?string $cacheKey = null;
@@ -36,22 +35,17 @@ final class LoadedConfiguration implements Configuration
     private array $connections = [];
 
     /**
+     * @var list<Extension>
+     */
+    private array $extensions = [];
+
+    /**
      * @var array<string, SuiteValue>
      */
     private array $suites = [];
 
     public function __construct(private DefaultConfiguration $defaultConfiguration)
     {
-    }
-
-    public function getBootstrap(): string
-    {
-        return $this->bootstrap ?? $this->defaultConfiguration->getBootstrap();
-    }
-
-    public function setBootstrap(string $bootstrap): void
-    {
-        $this->bootstrap = $bootstrap;
     }
 
     public function getCacheDirectory(): string
@@ -134,6 +128,24 @@ final class LoadedConfiguration implements Configuration
     public function setConnections(array $connections): void
     {
         $this->connections = $connections;
+    }
+
+    /**
+     * @return list<Extension>
+     */
+    public function getExtensions(): array
+    {
+        return count($this->extensions) === 0
+            ? $this->defaultConfiguration->getExtensions()
+            : $this->extensions;
+    }
+
+    /**
+     * @param list<Extension> $extensions
+     */
+    public function setExtensions(array $extensions): void
+    {
+        $this->extensions = $extensions;
     }
 
     /**

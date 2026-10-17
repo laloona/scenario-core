@@ -11,9 +11,9 @@
         <xsd:sequence>
             <xsd:element name="database" type="databaseType" minOccurs="0" maxOccurs="1" />
             <xsd:element name="suites" type="suitesType" minOccurs="1" maxOccurs="1" />
+            <xsd:element name="extension" type="extensionType" minOccurs="0" maxOccurs="1" />
         </xsd:sequence>
 
-        <xsd:attribute name="bootstrap" type="pathType" />
         <xsd:attribute name="cacheDirectory" type="pathType" />
         <xsd:attribute name="parameterDirectory" type="pathType" />
     </xsd:complexType>
@@ -51,5 +51,19 @@
             <xsd:pattern value="[^ \t\r\n]+"/>
         </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:complexType name="extensionType">
+        <xsd:sequence>
+            <xsd:element name="bootstrap" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="pathType">
+                            <xsd:attribute name="class" type="xsd:string" />
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
 
 </xsd:schema>
