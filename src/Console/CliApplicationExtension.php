@@ -13,5 +13,5 @@ namespace Stateforge\Scenario\Core\Console;
 
 interface CliApplicationExtension
 {
-    public function boot(): void;
+    public function boot(CliApplication $cli): void;
 }

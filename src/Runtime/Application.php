@@ -89,31 +89,33 @@ final class Application
             return;
         }
 
-        self::$configuration = (new ConfigurationBuilder(
+        $configuration = (new ConfigurationBuilder(
             new ConfigurationFinder(),
             new XMLParser($this->getXsd()),
         ))->build();
 
-        foreach (self::$configuration->getExtensions() as $extension) {
+        self::$configuration = $configuration;
+
+        foreach ($configuration->getExtensions() as $extension) {
             if (is_subclass_of($extension, Extension::class) === false) {
                 throw new InvalidExtensionSubClassException(get_class($extension));
             }
 
-            $applicationExtension = $extension->application($this);
+            $applicationExtension = $extension->application();
             if ($applicationExtension !== null) {
                 $this->extensions[] = $applicationExtension;
             }
         }
 
         foreach ($this->extensions as $extension) {
-            $extension->prepare();
+            $extension->prepare($this);
         }
 
-        (new ParameterTypeLoader(ParameterTypeRegistry::getInstance()))->loadTypes(self::$configuration);
+        (new ParameterTypeLoader(ParameterTypeRegistry::getInstance()))->loadTypes($configuration);
         (new ScenarioLoader(
             ScenarioRegistry::getInstance(),
             ParameterTypeRegistry::getInstance(),
-        ))->loadScenarios(self::$configuration);
+        ))->loadScenarios($configuration);
     }
 
     public function bootstrap(): void
@@ -123,7 +125,7 @@ final class Application
         try {
             $this->prepare();
             foreach ($this->extensions as $extension) {
-                $extension->boot();
+                $extension->boot($this);
             }
         } catch (Throwable $throwable) {
             $applicationState->fail($throwable);

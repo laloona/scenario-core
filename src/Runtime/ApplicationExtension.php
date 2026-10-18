@@ -13,7 +13,7 @@ namespace Stateforge\Scenario\Core\Runtime;
 
 interface ApplicationExtension
 {
-    public function prepare(): void;
+    public function prepare(Application $application): void;
 
-    public function boot(): void;
+    public function boot(Application $application): void;
 }

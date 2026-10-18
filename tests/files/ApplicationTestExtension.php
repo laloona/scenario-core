@@ -12,7 +12,6 @@
 namespace Stateforge\Scenario\Core\Tests\Files;
 
 use RuntimeException;
-use Stateforge\Scenario\Core\Console\CliApplication;
 use Stateforge\Scenario\Core\Console\CliApplicationExtension;
 use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -25,22 +24,22 @@ final class ApplicationTestExtension implements Extension, ApplicationExtension
 
     public static bool $throwOnBoot = false;
 
-    public function application(Application $application): ApplicationExtension
+    public function application(): ApplicationExtension
     {
         return $this;
     }
 
-    public function cli(CliApplication $cli): ?CliApplicationExtension
+    public function cli(): ?CliApplicationExtension
     {
         return null;
     }
 
-    public function prepare(): void
+    public function prepare(Application $application): void
     {
         self::$calls[] = 'prepare';
     }
 
-    public function boot(): void
+    public function boot(Application $application): void
     {
         self::$calls[] = 'boot';
         if (self::$throwOnBoot === true) {
