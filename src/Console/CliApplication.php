@@ -45,7 +45,7 @@ final class CliApplication
 
     public function command(string $name, CliCommand $cliCommand): void
     {
-        $this->command($name, $cliCommand);
+        $this->commands[$name] = $cliCommand;
     }
 
     /**
