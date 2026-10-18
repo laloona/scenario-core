@@ -1,7 +1,7 @@
 # Configuration
 This document explains the shared Scenario configuration file used by Scenario Core and all framework adapters.
 
-The configuration defines how Scenario discovers scenarios, parameter types, bootstrap files, cache directories, and optional database integrations.
+The configuration defines how Scenario discovers scenarios, parameter types, extensions, cache directories, and optional database integrations.
 
 ---
 
@@ -38,7 +38,6 @@ Projects may copy this file to `scenario.xml` for local customization.
 ```xml
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="vendor/stateforge/scenario-core/xsd/scenario.xsd"
-          bootstrap="scenario/bootstrap.php"
           cacheDirectory=".scenario.cache"
           parameterDirectory="scenario/parameter"
 >
@@ -47,10 +46,14 @@ Projects may copy this file to `scenario.xml` for local customization.
     </database>
 
     <suites>
-        <suite name="Main Scenario Suite">
+        <suite name="main" description="Main Scenario Suite">
             <directory>scenario/main</directory>
         </suite>
     </suites>
+
+    <extensions>
+        <bootstrap class="App\Scenario\Extension" />
+    </extensions>
 </scenario>
 ```
 
@@ -62,19 +65,6 @@ Projects may copy this file to `scenario.xml` for local customization.
 This is the root element of the configuration.
 
 #### Attributes
-##### bootstrap
-```xml
-bootstrap="scenario/bootstrap.php"
-```
-The optional file is loaded automatically during application bootstrap.
-
-Use this to register adapters or custom initialization logic.
-
-Example use cases:
-- register framework adapters
-- custom runtime setup
-- service bootstrapping
-
 ##### cacheDirectory
 ```xml
 cacheDirectory=".scenario.cache"
@@ -90,6 +80,32 @@ parameterDirectory="scenario/parameter"
 Directory containing custom parameter type classes.
 
 All compatible parameter types in this directory are discovered automatically.
+
+### Extensions
+The optional `<extensions>` element registers framework adapters and custom initialization logic.
+Place it after `<suites>`:
+
+```xml
+<extensions>
+    <bootstrap class="App\Scenario\Extension" />
+</extensions>
+```
+
+Each `<bootstrap>` element names an autoloadable class implementing
+`Stateforge\Scenario\Core\Extension`. The class is instantiated without constructor arguments.
+The element contains only the `class` attribute and has no text content.
+You may register multiple extensions.
+
+For framework adapters, use the class provided by the installed package:
+
+- Laravel: `Stateforge\Scenario\Laravel\Extension`
+- Symfony: `Stateforge\Scenario\Symfony\Extension`
+
+For custom extensions, `application()` returns an `ApplicationExtension` or `null`.
+Its `prepare(Application $application)` hook runs before parameter types and scenarios are loaded;
+its `boot(Application $application)` hook runs during application bootstrap.
+The `cli()` method returns a `CliApplicationExtension` or `null`.
+Its `boot(CliApplication $cli)` hook can register commands with `$cli->command(...)`.
 
 ### Suites
 Suites organize scenario classes into logical groups.
@@ -143,7 +159,7 @@ This means the project decides how a database is prepared, for example:
 - truncating tables
 - resetting test databases
 
-When using Scenario Core standalone, you are responsible for implementing database setup logic yourself inside the configured bootstrap file.
+When using Scenario Core standalone, register custom database setup behavior through an application extension.
 
 This keeps Scenario Core framework-independent.
 
@@ -158,7 +174,7 @@ Invalid configuration values will fail early during bootstrap.
 - keep the file in project root
 - use descriptive suite names
 - separate scenarios into multiple suites when needed
-- keep bootstrap logic minimal.
+- keep extension initialization logic minimal
 - commit the configuration file to version control
 
 ---
