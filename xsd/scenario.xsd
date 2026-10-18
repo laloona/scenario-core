@@ -11,7 +11,7 @@
         <xsd:sequence>
             <xsd:element name="database" type="databaseType" minOccurs="0" maxOccurs="1" />
             <xsd:element name="suites" type="suitesType" minOccurs="1" maxOccurs="1" />
-            <xsd:element name="extension" type="extensionType" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="extensions" type="extensionType" minOccurs="0" maxOccurs="1" />
         </xsd:sequence>
 
         <xsd:attribute name="cacheDirectory" type="pathType" />

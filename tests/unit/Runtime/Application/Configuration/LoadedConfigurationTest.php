@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
@@ -139,6 +140,48 @@ final class LoadedConfigurationTest extends TestCase
         $config->setConnections(['db' => $connection]);
 
         self::assertSame(['db' => $connection], $config->getConnections());
+    }
+
+    public function testUsesDefaultExtensionsWhenNotSet(): void
+    {
+        $default = new DefaultConfiguration();
+        $config = new LoadedConfiguration($default);
+
+        self::assertSame($default->getExtensions(), $config->getExtensions());
+    }
+
+    public function testOverridesExtensions(): void
+    {
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $first = self::createStub(Extension::class);
+        $second = self::createStub(Extension::class);
+
+        $config->setExtensions([$first, $second]);
+
+        self::assertSame([$first, $second], $config->getExtensions());
+    }
+
+    public function testSetExtensionsReplacesPreviousExtensions(): void
+    {
+        $config = new LoadedConfiguration(new DefaultConfiguration());
+        $first = self::createStub(Extension::class);
+        $second = self::createStub(Extension::class);
+        $config->setExtensions([$first]);
+
+        $config->setExtensions([$second]);
+
+        self::assertSame([$second], $config->getExtensions());
+    }
+
+    public function testUsesDefaultExtensionsAfterClearingExtensions(): void
+    {
+        $default = new DefaultConfiguration();
+        $config = new LoadedConfiguration($default);
+        $config->setExtensions([self::createStub(Extension::class)]);
+
+        $config->setExtensions([]);
+
+        self::assertSame($default->getExtensions(), $config->getExtensions());
     }
 
     public function testUsesDefaultAttributes(): void

@@ -16,10 +16,13 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
+use Stateforge\Scenario\Core\Console\CliApplicationExtension;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
@@ -30,6 +33,7 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfigurat
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
+use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
@@ -48,7 +52,6 @@ use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 use function file_get_contents;
 use function file_put_contents;
 use function mkdir;
-use function sprintf;
 
 #[CoversClass(Application::class)]
 #[UsesClass(AsScenario::class)]
@@ -91,6 +94,8 @@ final class ApplicationTest extends TestCase
         $this->resetScenarioRegistry();
 
         $this->createRootDir();
+        ApplicationTestExtension::$calls = [];
+        ApplicationTestExtension::$throwOnBoot = false;
     }
 
     protected function tearDown(): void
@@ -100,20 +105,19 @@ final class ApplicationTest extends TestCase
         $this->resetHandlerRegistry();
         $this->resetScenarioRegistry();
         $this->removeRootDir();
-        ;
+        ApplicationTestExtension::$calls = [];
+        ApplicationTestExtension::$throwOnBoot = false;
     }
 
-    public function testBootstrapRegistersHandlersAndRunsBootstrapFile(): void
+    public function testBootstrapRegistersHandlersAndBootsExtension(): void
     {
-        $this->prepareConfigurationFiles('bootstrap.php');
-
-        $bootstrapFile = Application::getRootDir() . '/bootstrap.php';
-        file_put_contents($bootstrapFile, '<?php $GLOBALS["app_bootstrap"] = "ok";');
+        $this->prepareConfigurationFiles();
 
         (new Application())->bootstrap();
 
         self::assertTrue((new ApplicationState())->isSuccess());
-        self::assertSame('ok', $GLOBALS['app_bootstrap'] ?? null);
+        self::assertSame(['prepare', 'boot'], ApplicationTestExtension::$calls);
+        self::assertInstanceOf(ApplicationTestExtension::class, Application::config()?->getExtensions()[0]);
         self::assertInstanceOf(
             RefreshDatabaseHandler::class,
             HandlerRegistry::getInstance()->attributeHandler(RefreshDatabase::class),
@@ -151,16 +155,15 @@ final class ApplicationTest extends TestCase
         );
     }
 
-    public function testBootstrapFailsWhenBootstrapFileThrows(): void
+    public function testBootstrapFailsWhenExtensionBootThrows(): void
     {
-        $this->prepareConfigurationFiles('bootstrap.php');
-
-        $bootstrapFile = Application::getRootDir() . '/bootstrap.php';
-        file_put_contents($bootstrapFile, '<?php throw new RuntimeException("something went wrong");');
+        $this->prepareConfigurationFiles();
+        ApplicationTestExtension::$throwOnBoot = true;
 
         (new Application())->bootstrap();
 
         self::assertTrue((new ApplicationState())->isFailed());
+        self::assertSame(['prepare', 'boot'], ApplicationTestExtension::$calls);
 
         $this->expectException(RegistryException::class);
         HandlerRegistry::getInstance()->attributeHandler(ApplyScenario::class);
@@ -232,7 +235,7 @@ XML);
         self::assertNull(Application::config());
     }
 
-    private function prepareConfigurationFiles(?string $bootstrap = null): void
+    private function prepareConfigurationFiles(): void
     {
         $xsdSource = file_get_contents(__DIR__ . '/../../../xsd/scenario.xsd');
         self::assertIsString($xsdSource);
@@ -241,16 +244,50 @@ XML);
         file_put_contents(Application::getRootDir() . '/vendor/stateforge/scenario-core/xsd/scenario.xsd', $xsdSource);
         mkdir(Application::getRootDir() . '/scenario/main', 0777, true);
 
-        $bootstrapAttribute = $bootstrap === null ? '' : sprintf(' bootstrap="%s"', $bootstrap);
+        $extensionClass = ApplicationTestExtension::class;
         file_put_contents(Application::getRootDir() . '/scenario.xml', <<<XML
 <?xml version="1.0"?>
-<scenario{$bootstrapAttribute}>
+<scenario>
   <suites>
     <suite name="main">
       <directory>scenario/main</directory>
     </suite>
   </suites>
+  <extensions>
+    <bootstrap class="{$extensionClass}">{$extensionClass}</bootstrap>
+  </extensions>
 </scenario>
 XML);
+    }
+}
+
+final class ApplicationTestExtension implements Extension, ApplicationExtension
+{
+    /** @var list<string> */
+    public static array $calls = [];
+
+    public static bool $throwOnBoot = false;
+
+    public function application(): ApplicationExtension
+    {
+        return $this;
+    }
+
+    public function cli(): ?CliApplicationExtension
+    {
+        return null;
+    }
+
+    public function prepare(): void
+    {
+        self::$calls[] = 'prepare';
+    }
+
+    public function boot(): void
+    {
+        self::$calls[] = 'boot';
+        if (self::$throwOnBoot === true) {
+            throw new RuntimeException('something went wrong');
+        }
     }
 }

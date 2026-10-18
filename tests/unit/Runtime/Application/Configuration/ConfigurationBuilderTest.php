@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationBuilder;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
@@ -25,9 +26,13 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\ConnectionV
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\ConnectionAlreadyExistsException;
+use Stateforge\Scenario\Core\Runtime\Exception\Application\ExtensionWithoutCLassException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteAlreadyExistsException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\SuiteWithoutDirectoryException;
 use Stateforge\Scenario\Core\Runtime\Exception\Application\XMLParserException;
+use Stateforge\Scenario\Core\Runtime\Exception\InvalidExtensionSubClassException;
+use Stateforge\Scenario\Core\Tests\Files\EmptyExtension;
+use Stateforge\Scenario\Core\Tests\Files\OtherExtension;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use function dirname;
 use function file_put_contents;
@@ -39,6 +44,8 @@ use function file_put_contents;
 #[UsesClass(ConnectionValue::class)]
 #[UsesClass(DefaultConfiguration::class)]
 #[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(ExtensionWithoutCLassException::class)]
+#[UsesClass(InvalidExtensionSubClassException::class)]
 #[UsesClass(SuiteAlreadyExistsException::class)]
 #[UsesClass(SuiteWithoutDirectoryException::class)]
 #[UsesClass(SuiteValue::class)]
@@ -66,7 +73,7 @@ final class ConfigurationBuilderTest extends TestCase
     {
         $xml = <<<XML
 <?xml version="1.0"?>
-<scenario bootstrap="bootstrap.php" cacheDirectory=".cache" parameterDirectory="parameter-types">
+<scenario cacheDirectory=".cache" parameterDirectory="parameter-types">
   <database>
     <connection name="db">config/db.php</connection>
   </database>
@@ -84,6 +91,8 @@ XML;
             new XMLParser($this->xsdPath()),
         ))->build();
 
+        self::assertInstanceOf(LoadedConfiguration::class, $config);
+        self::assertSame([], $config->getExtensions());
         self::assertSame('.cache', $config->getCacheDirectory());
         self::assertSame('parameter-types', $config->getParameterDirectory());
         self::assertSame(['parameter-types'], $config->getParameterDirectories());
@@ -123,6 +132,7 @@ XML;
         self::assertSame($default->getCacheDirectory(), $config->getCacheDirectory());
         self::assertSame($default->getParameterDirectory(), $config->getParameterDirectory());
         self::assertSame($default->getParameterDirectories(), $config->getParameterDirectories());
+        self::assertSame($default->getExtensions(), $config->getExtensions());
     }
 
     public function testBuildReturnsDefaultConfigurationWhenNoFileExists(): void
@@ -133,6 +143,29 @@ XML;
         ))->build();
 
         self::assertInstanceOf(DefaultConfiguration::class, $config);
+    }
+
+    public function testBuildRejectsRemovedBootstrapAttribute(): void
+    {
+        $xml = <<<XML
+<?xml version="1.0"?>
+<scenario bootstrap="bootstrap.php">
+  <suites>
+    <suite name="main">
+      <directory>scenarios</directory>
+    </suite>
+  </suites>
+</scenario>
+XML;
+        file_put_contents(Application::getRootDir() . '/scenario.xml', $xml);
+
+        $this->expectException(XMLParserException::class);
+        $this->expectExceptionMessage('configuration xml does not validate');
+
+        (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
     }
 
     public function testBuildThrowsOnDuplicateSuiteNames(): void
@@ -320,6 +353,67 @@ XML;
         self::assertSame('config/reporting.php', $config->getConnections()['reporting']->config);
         self::assertSame('scenarios', $config->getSuites()['main']->directory);
         self::assertSame('other-scenarios', $config->getSuites()['secondary']->directory);
+    }
+
+    public function testBuildInstantiatesConfiguredExtensionsInOrder(): void
+    {
+        $first = EmptyExtension::class;
+        $second = OtherExtension::class;
+        $this->writeExtensionConfiguration(
+            '<bootstrap class="' . $first . '">' . $first . '</bootstrap>' .
+            '<bootstrap class="' . $second . '">' . $second . '</bootstrap>',
+        );
+
+        $config = (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
+
+        self::assertCount(2, $config->getExtensions());
+        self::assertInstanceOf($first, $config->getExtensions()[0]);
+        self::assertInstanceOf($second, $config->getExtensions()[1]);
+    }
+
+    public function testBuildRejectsExtensionWithoutClass(): void
+    {
+        $this->writeExtensionConfiguration('<bootstrap>extension</bootstrap>');
+
+        $this->expectException(ExtensionWithoutCLassException::class);
+        $this->expectExceptionMessage('extension without class');
+
+        (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
+    }
+
+    public function testBuildRejectsClassThatDoesNotImplementExtension(): void
+    {
+        $class = DefaultConfiguration::class;
+        $this->writeExtensionConfiguration('<bootstrap class="' . $class . '">' . $class . '</bootstrap>');
+
+        $this->expectException(InvalidExtensionSubClassException::class);
+        $this->expectExceptionMessage($class . ' is not a subclass of ' . Extension::class);
+
+        (new ConfigurationBuilder(
+            new ConfigurationFinder(),
+            new XMLParser($this->xsdPath()),
+        ))->build();
+    }
+
+    private function writeExtensionConfiguration(string $bootstraps): void
+    {
+        file_put_contents(Application::getRootDir() . '/scenario.xml', <<<XML
+<?xml version="1.0"?>
+<scenario>
+  <suites>
+    <suite name="main">
+      <directory>scenarios</directory>
+    </suite>
+  </suites>
+  <extensions>{$bootstraps}</extensions>
+</scenario>
+XML);
     }
 
     private function xsdPath(): string

@@ -68,6 +68,7 @@ final class DefaultConfigurationTest extends TestCase
         self::assertSame('scenario' . DIRECTORY_SEPARATOR . 'main', $suites['main']->directory);
 
         self::assertSame([], $configuration->getConnections());
+        self::assertSame([], $configuration->getExtensions());
         self::assertSame([
             ApplyScenario::class,
             RefreshDatabase::class,
