@@ -20,7 +20,7 @@ use Stateforge\Scenario\Core\ParameterTypeCondition;
 use Stateforge\Scenario\Core\Tests\Files\MatchingCondition;
 
 #[CoversClass(ParameterTypeCondition::class)]
-#[Group('runtime')]
+#[Group('scenario')]
 #[Small]
 final class ParameterTypeConditionTest extends TestCase
 {

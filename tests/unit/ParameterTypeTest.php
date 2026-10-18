@@ -27,7 +27,7 @@ use Stateforge\Scenario\Core\Runtime\Metadata\ValueType\StringType;
 #[UsesClass(FloatType::class)]
 #[UsesClass(IntegerType::class)]
 #[UsesClass(StringType::class)]
-#[Group('runtime')]
+#[Group('scenario')]
 #[Small]
 final class ParameterTypeTest extends TestCase
 {

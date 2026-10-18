@@ -23,7 +23,7 @@ use Stateforge\Scenario\Core\Tests\Files\IntegerParameterType;
 
 #[CoversClass(ParameterTypeDefinition::class)]
 #[UsesClass(IntegerType::class)]
-#[Group('runtime')]
+#[Group('scenario')]
 #[Small]
 final class ParameterTypeDefinitionTest extends TestCase
 {
