@@ -99,7 +99,7 @@ final class Application
                 throw new InvalidExtensionSubClassException(get_class($extension));
             }
 
-            $applicationExtension = $extension->application();
+            $applicationExtension = $extension->application($this);
             if ($applicationExtension !== null) {
                 $this->extensions[] = $applicationExtension;
             }

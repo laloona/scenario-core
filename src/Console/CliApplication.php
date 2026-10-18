@@ -94,7 +94,7 @@ final class CliApplication
                 throw new InvalidExtensionSubClassException(get_class($extension));
             }
 
-            $cliApplication = $extension->cli();
+            $cliApplication = $extension->cli($this);
             if ($cliApplication !== null) {
                 $cliApplication->boot();
             }

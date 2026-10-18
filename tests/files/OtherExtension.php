@@ -11,18 +11,20 @@
 
 namespace Stateforge\Scenario\Core\Tests\Files;
 
+use Stateforge\Scenario\Core\Console\CliApplication;
 use Stateforge\Scenario\Core\Console\CliApplicationExtension;
 use Stateforge\Scenario\Core\Extension;
+use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
 
 final class OtherExtension implements Extension
 {
-    public function application(): ?ApplicationExtension
+    public function application(Application $application): ?ApplicationExtension
     {
         return null;
     }
 
-    public function cli(): ?CliApplicationExtension
+    public function cli(CliApplication $cli): ?CliApplicationExtension
     {
         return null;
     }

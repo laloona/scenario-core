@@ -16,13 +16,10 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Stateforge\Scenario\Core\Attribute\ApplyScenario;
 use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\Attribute\RefreshDatabase;
-use Stateforge\Scenario\Core\Console\CliApplicationExtension;
-use Stateforge\Scenario\Core\Extension;
 use Stateforge\Scenario\Core\ParameterType;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
@@ -33,7 +30,6 @@ use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfigurat
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\XMLParser;
-use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
 use Stateforge\Scenario\Core\Runtime\ClassFinder;
 use Stateforge\Scenario\Core\Runtime\Exception\RegistryException;
 use Stateforge\Scenario\Core\Runtime\Metadata\Handler\ApplyScenarioHandler;
@@ -45,6 +41,7 @@ use Stateforge\Scenario\Core\Runtime\Metadata\Parameter\ParameterTypeRegistry;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioLoader;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
+use Stateforge\Scenario\Core\Tests\Files\ApplicationTestExtension;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use Stateforge\Scenario\Core\Tests\Unit\ApplicationStateMock;
 use Stateforge\Scenario\Core\Tests\Unit\HandlerRegistryMock;
@@ -258,36 +255,5 @@ XML);
   </extensions>
 </scenario>
 XML);
-    }
-}
-
-final class ApplicationTestExtension implements Extension, ApplicationExtension
-{
-    /** @var list<string> */
-    public static array $calls = [];
-
-    public static bool $throwOnBoot = false;
-
-    public function application(): ApplicationExtension
-    {
-        return $this;
-    }
-
-    public function cli(): ?CliApplicationExtension
-    {
-        return null;
-    }
-
-    public function prepare(): void
-    {
-        self::$calls[] = 'prepare';
-    }
-
-    public function boot(): void
-    {
-        self::$calls[] = 'boot';
-        if (self::$throwOnBoot === true) {
-            throw new RuntimeException('something went wrong');
-        }
     }
 }

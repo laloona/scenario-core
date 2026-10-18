@@ -11,12 +11,14 @@
 
 namespace Stateforge\Scenario\Core;
 
+use Stateforge\Scenario\Core\Console\CliApplication;
 use Stateforge\Scenario\Core\Console\CliApplicationExtension;
+use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
 
 interface Extension
 {
-    public function application(): ?ApplicationExtension;
+    public function application(Application $application): ?ApplicationExtension;
 
-    public function cli(): ?CliApplicationExtension;
+    public function cli(CliApplication $cli): ?CliApplicationExtension;
 }
