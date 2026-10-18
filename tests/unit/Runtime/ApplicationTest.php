@@ -254,7 +254,7 @@ XML);
     </suite>
   </suites>
   <extensions>
-    <bootstrap class="{$extensionClass}">{$extensionClass}</bootstrap>
+    <bootstrap class="{$extensionClass}" />
   </extensions>
 </scenario>
 XML);

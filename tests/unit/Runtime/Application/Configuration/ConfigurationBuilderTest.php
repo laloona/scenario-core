@@ -360,8 +360,8 @@ XML;
         $first = EmptyExtension::class;
         $second = OtherExtension::class;
         $this->writeExtensionConfiguration(
-            '<bootstrap class="' . $first . '">' . $first . '</bootstrap>' .
-            '<bootstrap class="' . $second . '">' . $second . '</bootstrap>',
+            '<bootstrap class="' . $first . '" />' .
+            '<bootstrap class="' . $second . '" />',
         );
 
         $config = (new ConfigurationBuilder(
@@ -376,7 +376,7 @@ XML;
 
     public function testBuildRejectsExtensionWithoutClass(): void
     {
-        $this->writeExtensionConfiguration('<bootstrap>extension</bootstrap>');
+        $this->writeExtensionConfiguration('<bootstrap />');
 
         $this->expectException(ExtensionWithoutCLassException::class);
         $this->expectExceptionMessage('extension without class');
@@ -390,7 +390,7 @@ XML;
     public function testBuildRejectsClassThatDoesNotImplementExtension(): void
     {
         $class = DefaultConfiguration::class;
-        $this->writeExtensionConfiguration('<bootstrap class="' . $class . '">' . $class . '</bootstrap>');
+        $this->writeExtensionConfiguration('<bootstrap class="' . $class . '" />');
 
         $this->expectException(InvalidExtensionSubClassException::class);
         $this->expectExceptionMessage($class . ' is not a subclass of ' . Extension::class);
