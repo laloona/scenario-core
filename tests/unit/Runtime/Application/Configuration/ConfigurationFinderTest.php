@@ -22,6 +22,7 @@ use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\Configuration\ConfigurationFinder;
 use UnexpectedValueException;
 use function file_put_contents;
+use function is_dir;
 use function mkdir;
 use function rmdir;
 use function scandir;
@@ -52,7 +53,12 @@ final class ConfigurationFinderTest extends TestCase
         foreach (scandir($this->tempDir) as $file) {
             if ($file !== '.'
                 && $file !== '..') {
-                unlink($this->tempDir . '/' . $file);
+                $path = $this->tempDir . '/' . $file;
+                if (is_dir($path) === true) {
+                    rmdir($path);
+                } else {
+                    unlink($path);
+                }
             }
         }
 
@@ -65,14 +71,14 @@ final class ConfigurationFinderTest extends TestCase
 
     public function testReturnsNullWhenNoConfigurationExists(): void
     {
-        self::assertNull((new ConfigurationFinder())->find());
+        self::assertNull((new ConfigurationFinder())->find(['scenario.dist.xml', 'scenario.xml']));
     }
 
     public function testFindsScenarioXml(): void
     {
         file_put_contents($this->tempDir . '/scenario.xml', '<scenario/>');
 
-        $result = (new ConfigurationFinder())->find();
+        $result = (new ConfigurationFinder())->find(['scenario.dist.xml', 'scenario.xml']);
 
         self::assertInstanceOf(SplFileInfo::class, $result);
         self::assertSame('scenario.xml', $result->getFilename());
@@ -82,10 +88,41 @@ final class ConfigurationFinderTest extends TestCase
     {
         file_put_contents($this->tempDir . '/scenario.dist.xml', '<scenario/>');
 
-        $result = (new ConfigurationFinder())->find();
+        $result = (new ConfigurationFinder())->find(['scenario.dist.xml', 'scenario.xml']);
 
         self::assertInstanceOf(SplFileInfo::class, $result);
         self::assertSame('scenario.dist.xml', $result->getFilename());
+    }
+
+    public function testFindsCustomConfigurationFilename(): void
+    {
+        file_put_contents($this->tempDir . '/custom.xml', '<scenario/>');
+
+        $result = (new ConfigurationFinder())->find(['custom.xml']);
+
+        self::assertInstanceOf(SplFileInfo::class, $result);
+        self::assertSame('custom.xml', $result->getFilename());
+    }
+
+    public function testIgnoresConfigurationFilesNotIncludedInList(): void
+    {
+        file_put_contents($this->tempDir . '/scenario.xml', '<scenario/>');
+
+        self::assertNull((new ConfigurationFinder())->find(['custom.xml']));
+    }
+
+    public function testReturnsNullWhenFilenameListIsEmpty(): void
+    {
+        file_put_contents($this->tempDir . '/scenario.xml', '<scenario/>');
+
+        self::assertNull((new ConfigurationFinder())->find([]));
+    }
+
+    public function testIgnoresDirectoryWithMatchingConfigurationName(): void
+    {
+        mkdir($this->tempDir . '/scenario.xml');
+
+        self::assertNull((new ConfigurationFinder())->find(['scenario.xml']));
     }
 
     public function testReturnsNullWhenDirectoryIsInvalid(): void
@@ -95,7 +132,7 @@ final class ConfigurationFinderTest extends TestCase
         $property->setValue(null, $this->tempDir . '/missing');
 
         try {
-            self::assertNull((new ConfigurationFinder())->find());
+            self::assertNull((new ConfigurationFinder())->find(['scenario.dist.xml', 'scenario.xml']));
         } catch (UnexpectedValueException $exception) {
             self::fail('UnexpectedValueException should be handled internally.');
         }

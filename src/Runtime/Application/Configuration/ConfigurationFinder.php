@@ -19,18 +19,21 @@ use function in_array;
 
 final class ConfigurationFinder
 {
-    public function find(): ?SplFileInfo
+    /**
+     * @param list<string> $configFiles
+     */
+    public function find(array $configFiles): ?SplFileInfo
     {
         try {
             $directory = new DirectoryIterator(Application::getRootDir());
             foreach ($directory as $file) {
                 if ($file->isFile()
-                    && in_array($file->getFilename(), [ 'scenario.dist.xml', 'scenario.xml' ], true)) {
+                    && in_array($file->getFilename(), $configFiles, true)) {
                     return $file;
                 }
             }
         } catch (UnexpectedValueException $exception) {
-            // in this case we can use the fallback default configuration
+            // in this case we just return null that no config was found
         }
 
         return null;

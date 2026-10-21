@@ -36,7 +36,7 @@ final class ConfigurationBuilder
 
     public function build(): Configuration
     {
-        $file = $this->finder->find();
+        $file = $this->finder->find([ 'scenario.dist.xml', 'scenario.xml' ]);
 
         if ($file === null) {
             return new DefaultConfiguration();
