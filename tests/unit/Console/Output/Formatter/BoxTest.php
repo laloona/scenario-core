@@ -24,8 +24,8 @@ use Stateforge\Scenario\Core\Console\Output\Theme\FontStyle;
 use Stateforge\Scenario\Core\Console\Output\Theme\ForegroundColor;
 use function count;
 use function preg_replace;
-use function strlen;
 use function str_repeat;
+use function strlen;
 use function trim;
 
 #[CoversClass(Box::class)]
