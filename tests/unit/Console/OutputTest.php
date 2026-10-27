@@ -26,6 +26,7 @@ use Stateforge\Scenario\Core\Console\Output\TerminalEnvironment;
 use Stateforge\Scenario\Core\Console\Output\TerminalIO;
 use Stateforge\Scenario\Core\Console\Output\Theme\AnsiStyler;
 use Stateforge\Scenario\Core\Console\Output\Theme\BoxType;
+use function str_repeat;
 use const PHP_EOL;
 
 #[CoversClass(Output::class)]
@@ -317,6 +318,26 @@ final class OutputTest extends TestCase
 
         (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
             ->question('Need input?');
+    }
+
+    public function testNoteWrapsFormattedBoxWithBlankLines(): void
+    {
+        $terminalIO = $this->createMock(TerminalIO::class);
+
+        $matcher = self::exactly(5);
+        $terminalIO->expects($matcher)
+            ->method('write')
+            ->willReturnCallback(function (string $line) use ($matcher): void {
+                match($matcher->numberOfInvocations()) {
+                    1, 5 => self::assertSame(PHP_EOL, $line),
+                    2, 4 => self::assertSame(str_repeat(' ', 118) . PHP_EOL, $line),
+                    3 => self::assertSame('    Helpful information' . str_repeat(' ', 95) . PHP_EOL, $line),
+                    default => '',
+                };
+            });
+
+        (new Output(new AnsiStyler($this->getTerminalStub()), $terminalIO))
+            ->note('Helpful information');
     }
 
     private function getTerminalStub(): TerminalEnvironment

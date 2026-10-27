@@ -240,4 +240,11 @@ final class Output implements CliOutput
         $this->writeln((new Box($this->ansiStyler))->question($text));
         $this->writeln('');
     }
+
+    public function note(string $text): void
+    {
+        $this->writeln('');
+        $this->writeln((new Box($this->ansiStyler))->note($text));
+        $this->writeln('');
+    }
 }

@@ -34,6 +34,8 @@ interface CliOutput
 
     public function question(string $text): void;
 
+    public function note(string $text): void;
+
     /**
      * @param list<string> $choices
      */
