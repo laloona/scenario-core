@@ -56,6 +56,14 @@ final class Box extends AnsiString
     /**
      * @return list<string>
      */
+    public function note(string $message): array
+    {
+        return $this->generate(BoxType::Note, $message);
+    }
+
+    /**
+     * @return list<string>
+     */
     public function generate(
         BoxType $type,
         string $message,

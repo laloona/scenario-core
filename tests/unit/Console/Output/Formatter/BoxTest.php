@@ -25,6 +25,8 @@ use Stateforge\Scenario\Core\Console\Output\Theme\ForegroundColor;
 use function count;
 use function preg_replace;
 use function strlen;
+use function str_repeat;
+use function trim;
 
 #[CoversClass(Box::class)]
 #[UsesClass(AnsiString::class)]
@@ -46,6 +48,42 @@ final class BoxTest extends AnsiStylerCase
         self::assertSame($lines[0], $lines[count($lines) - 1]);
         self::assertStringContainsString("\033[103;30;1m", $lines[1]);
         self::assertStringContainsString('[WARNING] ', $lines[1]);
+    }
+
+    public function testNoteRendersBoldMessageWithoutPrefixOrColors(): void
+    {
+        $box = new Box($this->styler());
+        $lines = $box->note('Helpful information');
+
+        self::assertCount(3, $lines);
+        self::assertSame(str_repeat(' ', 118), $lines[0]);
+        self::assertSame($lines[0], $lines[2]);
+        self::assertSame(
+            "\033[1m" . '    Helpful information' . str_repeat(' ', 95) . "\033[0m",
+            $lines[1],
+        );
+    }
+
+    public function testNoteWrapsLongMessageAndPreservesContent(): void
+    {
+        $box = new Box($this->styler());
+        $message = str_repeat('x', 250);
+        $lines = $box->note($message);
+
+        self::assertGreaterThan(3, count($lines));
+        self::assertSame(str_repeat(' ', 118), $lines[0]);
+        self::assertSame($lines[0], $lines[count($lines) - 1]);
+
+        $content = '';
+        foreach ($lines as $index => $line) {
+            $plain = preg_replace('/\e\[[\d;]*m/', '', $line) ?? $line;
+            self::assertSame(118, strlen($plain));
+            if ($index > 0 && $index < count($lines) - 1) {
+                self::assertStringStartsWith("\033[1m", $line);
+                $content .= trim($plain);
+            }
+        }
+        self::assertSame($message, $content);
     }
 
     public function testQuestionHasNoPrefixAndRespectsWidthFactor(): void
