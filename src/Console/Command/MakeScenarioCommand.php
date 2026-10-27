@@ -17,14 +17,12 @@ use Stateforge\Scenario\Core\Console\Input\Validate\ClassNameValidation;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\NamespaceResolver;
 use function array_keys;
-use function array_map;
 use function assert;
 use function count;
-use function explode;
 use function file_get_contents;
 use function file_put_contents;
-use function implode;
 use function in_array;
 use function is_file;
 use function str_replace;
@@ -107,9 +105,7 @@ final class MakeScenarioCommand extends CliCommand
                     '%className%',
                 ],
                 [
-                    implode('\\', array_map(function (string $part): string {
-                        return ucfirst($part);
-                    }, explode('/', str_replace('\\', '/', $suite->directory)))),
+                    (new NamespaceResolver())->toNamespace($suite->directory),
                     ucfirst($name),
                 ],
                 (string)file_get_contents($file),
@@ -162,9 +158,7 @@ final class MakeScenarioCommand extends CliCommand
                     '%className%',
                 ],
                 [
-                    implode('\\', array_map(function (string $part): string {
-                        return ucfirst($part);
-                    }, explode('/', str_replace('\\', '/', $directory)))),
+                    (new NamespaceResolver())->toNamespace($directory),
                     ucfirst($name),
                 ],
                 (string)file_get_contents($file),
