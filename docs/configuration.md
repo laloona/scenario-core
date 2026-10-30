@@ -91,21 +91,78 @@ Place it after `<suites>`:
 </extensions>
 ```
 
-Each `<bootstrap>` element names an autoloadable class implementing
-`Stateforge\Scenario\Core\Extension`. The class is instantiated without constructor arguments.
-The element contains only the `class` attribute and has no text content.
-You may register multiple extensions.
+Each `<bootstrap>` element requires a `class` attribute naming an autoloadable class
+that implements `Stateforge\Scenario\Core\Extension`. Scenario instantiates the class
+without constructor arguments. The element has no text content.
 
-For framework adapters, use the class provided by the installed package:
+#### Creating a Custom Extension
+Create the class referenced by the configuration and make it available through Composer autoloading.
+For example, with an `App\` PSR-4 mapping to `src/`, save this as `src/Scenario/Extension.php`:
+
+```php
+<?php declare(strict_types=1);
+
+namespace App\Scenario;
+
+use Stateforge\Scenario\Core\Console\CliApplicationExtension;
+use Stateforge\Scenario\Core\Extension as ExtensionInterface;
+use Stateforge\Scenario\Core\Runtime\Application;
+use Stateforge\Scenario\Core\Runtime\ApplicationExtension;
+
+final class Extension implements ExtensionInterface
+{
+    public function application(): ?ApplicationExtension
+    {
+        return new class implements ApplicationExtension {
+            public function prepare(Application $application): void
+            {
+                // Initialize dependencies needed to discover parameter types and scenarios.
+            }
+
+            public function boot(Application $application): void
+            {
+                // Initialize application services or register custom runtime handlers.
+            }
+        };
+    }
+
+    public function cli(): ?CliApplicationExtension
+    {
+        return null;
+    }
+}
+```
+
+`application()` returns a `Stateforge\Scenario\Core\Runtime\ApplicationExtension` or `null`.
+Its `prepare(Application $application)` hook runs before parameter types and scenarios are loaded;
+its `boot(Application $application)` hook runs during Scenario application bootstrap.
+Return `null` when no application hooks are needed.
+
+`cli()` returns a `Stateforge\Scenario\Core\Console\CliApplicationExtension` or `null`.
+Its `boot(CliApplication $cli)` hook can register commands for `vendor/bin/scenario`
+with `$cli->command('command-name', new CustomCommand())`, where `CustomCommand` extends
+`Stateforge\Scenario\Core\Console\Command\CliCommand`.
+Return `null` when no CLI customization is needed, as in the example above.
+
+#### Combining Extensions and Framework Adapters
+You can register multiple extensions by adding one `<bootstrap>` element per class.
+Keep the framework adapter registered when adding your own extension:
+
+```xml
+<extensions>
+    <bootstrap class="Stateforge\Scenario\Symfony\Extension" />
+    <bootstrap class="App\Scenario\Extension" />
+</extensions>
+```
+
+Use the adapter class provided by the installed package:
 
 - Laravel: `Stateforge\Scenario\Laravel\Extension`
 - Symfony: `Stateforge\Scenario\Symfony\Extension`
 
-For custom extensions, `application()` returns an `ApplicationExtension` or `null`.
-Its `prepare(Application $application)` hook runs before parameter types and scenarios are loaded;
-its `boot(Application $application)` hook runs during application bootstrap.
-The `cli()` method returns a `CliApplicationExtension` or `null`.
-Its `boot(CliApplication $cli)` hook can register commands with `$cli->command(...)`.
+For standalone Scenario Core projects, register your own extensions without a framework adapter.
+Framework console commands are registered through Laravel's or Symfony's own command integration;
+the `cli()` hook customizes Scenario Core's CLI.
 
 ### Suites
 Suites organize scenario classes into logical groups.
