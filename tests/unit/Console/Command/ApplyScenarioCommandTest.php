@@ -23,6 +23,7 @@ use Stateforge\Scenario\Core\Console\Command\ApplyScenarioCommand;
 use Stateforge\Scenario\Core\Console\Command\CliCommand;
 use Stateforge\Scenario\Core\Console\Command\Command;
 use Stateforge\Scenario\Core\Console\Input;
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\ParameterType;
@@ -59,6 +60,7 @@ use function is_array;
 #[UsesClass(ParameterType::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioRegistry::class)]
+#[UsesClass(ScenarioSuiteFilter::class)]
 #[UsesClass(TestClassState::class)]
 #[UsesClass(TestMethodState::class)]
 #[Group('console')]

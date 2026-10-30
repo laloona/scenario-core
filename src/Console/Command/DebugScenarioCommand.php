@@ -13,6 +13,8 @@ namespace Stateforge\Scenario\Core\Console\Command;
 
 use Stateforge\Scenario\Core\Console\Input\Argument;
 use Stateforge\Scenario\Core\Console\Input\InputType;
+use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\PHPUnit\Finder\ScenarioTestFinder;
@@ -46,13 +48,20 @@ final class DebugScenarioCommand extends CliCommand
 
     protected function define(CliInput $input): void
     {
+        $input->defineOption(new Option('suite', InputType::String));
         $input->defineArgument(new Argument('class', InputType::String));
         $input->defineArgument(new Argument('method', InputType::String));
     }
 
     protected function execute(CliInput $input, CliOutput $output): Command
     {
-        $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+        $suite = $input->option('suite');
+        if ($suite !== null
+            && is_string($suite) === false) {
+            $suite = null;
+        }
+
+        $scenarioDefinitions = (new ScenarioSuiteFilter())->filter(ScenarioRegistry::getInstance()->all(), $suite);
         $testClasses = $this->finder->all();
 
         $directDebug = $this->handleInput($input, $output, $scenarioDefinitions, $testClasses);

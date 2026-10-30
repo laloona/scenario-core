@@ -16,6 +16,7 @@ use Stateforge\Scenario\Core\Console\Input\Argument;
 use Stateforge\Scenario\Core\Console\Input\InputType;
 use Stateforge\Scenario\Core\Console\Input\Option;
 use Stateforge\Scenario\Core\Console\Input\ParameterParser;
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application\TestClassState;
@@ -41,6 +42,7 @@ final class ApplyScenarioCommand extends CliCommand
 
     protected function define(CliInput $input): void
     {
+        $input->defineOption(new Option('suite', InputType::String));
         $input->defineArgument(new Argument('scenario', InputType::String));
         $input->defineOption(new Option('audit', InputType::Boolean));
         $input->defineOption(new Option('up', InputType::Boolean));
@@ -58,7 +60,13 @@ final class ApplyScenarioCommand extends CliCommand
             return Command::Error;
         }
 
-        $scenarioDefinitions = ScenarioRegistry::getInstance()->all();
+        $suite = $input->option('suite');
+        if ($suite !== null
+            && is_string($suite) === false) {
+            $suite = null;
+        }
+
+        $scenarioDefinitions = (new ScenarioSuiteFilter())->filter(ScenarioRegistry::getInstance()->all(), $suite);
         if (count($scenarioDefinitions) === 0) {
             if ($input->option('quiet') !== true) {
                 $output->error('No scenarios were found, please create one.');

@@ -25,6 +25,7 @@ use Stateforge\Scenario\Core\Console\Input;
 use Stateforge\Scenario\Core\Console\Input\Option;
 use Stateforge\Scenario\Core\Console\Input\Parser;
 use Stateforge\Scenario\Core\Console\Input\Resolver;
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
@@ -55,6 +56,7 @@ use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 #[UsesClass(Resolver::class)]
 #[UsesClass(ScenarioDefinition::class)]
 #[UsesClass(ScenarioRegistry::class)]
+#[UsesClass(ScenarioSuiteFilter::class)]
 #[Group('console')]
 #[Small]
 final class ListScenariosCommandTest extends TestCase

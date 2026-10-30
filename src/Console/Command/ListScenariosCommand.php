@@ -13,13 +13,14 @@ namespace Stateforge\Scenario\Core\Console\Command;
 
 use Stateforge\Scenario\Core\Console\Input\InputType;
 use Stateforge\Scenario\Core\Console\Input\Option;
+use Stateforge\Scenario\Core\Console\ScenarioSuiteFilter;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
 use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use function array_values;
 use function count;
-use function ksort;
+use function is_string;
 
 final class ListScenariosCommand extends CliCommand
 {
@@ -35,22 +36,16 @@ final class ListScenariosCommand extends CliCommand
 
     protected function execute(CliInput $input, CliOutput $output): Command
     {
-        $scenarios = ScenarioRegistry::getInstance()->all();
+        $suite = $input->option('suite');
+        if ($suite !== null
+            && is_string($suite) === false) {
+            $suite = null;
+        }
+
+        $scenarios = (new ScenarioSuiteFilter())->filter(ScenarioRegistry::getInstance()->all(), $suite);
         if (count($scenarios) === 0) {
             $output->warn('No scenarios found. Please create one.');
         }
-
-        $filtered = [];
-        if ($input->option('suite') !== null) {
-            foreach ($scenarios as $name => $scenario) {
-                if ($scenario->suite === $input->option('suite')) {
-                    $filtered[$name] = $scenario;
-                }
-            }
-            $scenarios = $filtered;
-            unset($filtered);
-        }
-        ksort($scenarios);
 
         $tables = [];
         foreach ($scenarios as $scenario) {
