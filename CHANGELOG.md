@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0] - 2026-11-xx
+
+### Added
+- Introduced descriptions for suites.
+- Added interface `ApplicationExtension` to extend the framework.
+
+### Changed
+- Refectored Extension handling, removed `bootstrap.php` implementation in scenaeio folder.
+
 ## [1.1.0] - 2026-04-19
 
 ### Added

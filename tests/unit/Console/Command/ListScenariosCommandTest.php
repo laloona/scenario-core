@@ -27,15 +27,24 @@ use Stateforge\Scenario\Core\Console\Input\Parser;
 use Stateforge\Scenario\Core\Console\Input\Resolver;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\Application\ApplicationState;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\DefaultConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\LoadedConfiguration;
+use Stateforge\Scenario\Core\Runtime\Application\Configuration\Value\SuiteValue;
 use Stateforge\Scenario\Core\Runtime\ScenarioDefinition;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use Stateforge\Scenario\Core\Tests\Files\AnotherScenario;
 use Stateforge\Scenario\Core\Tests\Files\ValidScenario;
+use Stateforge\Scenario\Core\Tests\Unit\ApplicationMock;
 use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 
 #[CoversClass(ListScenariosCommand::class)]
+#[UsesClass(Application::class)]
 #[UsesClass(ApplicationState::class)]
+#[UsesClass(DefaultConfiguration::class)]
+#[UsesClass(LoadedConfiguration::class)]
+#[UsesClass(SuiteValue::class)]
 #[UsesClass(AsScenario::class)]
 #[UsesClass(CliCommand::class)]
 #[UsesClass(Command::class)]
@@ -50,11 +59,23 @@ use Stateforge\Scenario\Core\Tests\Unit\ScenarioRegistryMock;
 #[Small]
 final class ListScenariosCommandTest extends TestCase
 {
+    use ApplicationMock;
     use ScenarioRegistryMock;
+
+    protected function setUp(): void
+    {
+        $configuration = new LoadedConfiguration(new DefaultConfiguration());
+        $configuration->setSuites([
+            'main' => new SuiteValue('main', '', 'scenarios/main'),
+            'other' => new SuiteValue('other', 'Other Suite', 'scenarios/other'),
+        ]);
+        $this->setConfiguration($configuration);
+    }
 
     protected function tearDown(): void
     {
         $this->resetScenarioRegistry();
+        $this->resetApplication();
     }
 
     public function testDescriptionReturnsExpectedText(): void
@@ -132,7 +153,7 @@ final class ListScenariosCommandTest extends TestCase
             ->method('headline')
             ->willReturnCallback(function (string $suite) use ($matcher): void {
                 match ($matcher->numberOfInvocations()) {
-                    1 => self::assertSame('other', $suite),
+                    1 => self::assertSame('Other Suite(other)', $suite),
                     2 => self::assertSame('main', $suite),
                     default => null,
                 };
@@ -191,7 +212,7 @@ final class ListScenariosCommandTest extends TestCase
         $output = $this->createMock(CliOutput::class);
         $output->expects(self::once())
             ->method('headline')
-            ->with('other');
+            ->with('Other Suite(other)');
         $output->expects(self::once())
             ->method('table')
             ->with(

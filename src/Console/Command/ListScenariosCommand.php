@@ -15,6 +15,7 @@ use Stateforge\Scenario\Core\Console\Input\InputType;
 use Stateforge\Scenario\Core\Console\Input\Option;
 use Stateforge\Scenario\Core\Contract\CliInput;
 use Stateforge\Scenario\Core\Contract\CliOutput;
+use Stateforge\Scenario\Core\Runtime\Application;
 use Stateforge\Scenario\Core\Runtime\ScenarioRegistry;
 use function array_values;
 use function count;
@@ -67,8 +68,13 @@ final class ListScenariosCommand extends CliCommand
             $tables[$suite] = array_values($table);
         }
 
+        $suites = Application::config()?->getSuites() ?? [];
         foreach ($tables as $suite => $definitions) {
-            $output->headline($suite);
+            $definition = $suites[$suite] ?? null;
+            $headline = $definition === null || $definition->description === ''
+                ? $suite
+                : $definition->description . '(' . $definition->name . ')';
+            $output->headline($headline);
             $output->table(
                 ['class', 'name', 'description'],
                 $definitions,
