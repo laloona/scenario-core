@@ -73,7 +73,7 @@ final class ListScenariosCommand extends CliCommand
             $definition = $suites[$suite] ?? null;
             $headline = $definition === null || $definition->description === ''
                 ? $suite
-                : $definition->description . '(' . $definition->name . ')';
+                : $definition->description . ' (' . $definition->name . ')';
             $output->headline($headline);
             $output->table(
                 ['class', 'name', 'description'],

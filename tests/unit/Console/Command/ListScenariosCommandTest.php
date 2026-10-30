@@ -153,7 +153,7 @@ final class ListScenariosCommandTest extends TestCase
             ->method('headline')
             ->willReturnCallback(function (string $suite) use ($matcher): void {
                 match ($matcher->numberOfInvocations()) {
-                    1 => self::assertSame('Other Suite(other)', $suite),
+                    1 => self::assertSame('Other Suite (other)', $suite),
                     2 => self::assertSame('main', $suite),
                     default => null,
                 };
@@ -212,7 +212,7 @@ final class ListScenariosCommandTest extends TestCase
         $output = $this->createMock(CliOutput::class);
         $output->expects(self::once())
             ->method('headline')
-            ->with('Other Suite(other)');
+            ->with('Other Suite (other)');
         $output->expects(self::once())
             ->method('table')
             ->with(
