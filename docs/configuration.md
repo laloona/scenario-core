@@ -170,10 +170,10 @@ Suites organize scenario classes into logical groups.
 Example:
 ```xml
 <suites>
-    <suite name="Main Scenario Suite">
+    <suite name="main" description="Main Scenario Suite">
         <directory>scenario/main</directory>
     </suite>
-    <suite name="Cli for Tests">
+    <suite name="cli" description="Cli for Tests">
         <directory>scenario/cli</directory>
     </suite>
 </suites>
