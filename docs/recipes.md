@@ -15,8 +15,9 @@ Many tests require a user to exist.
 #[Parameter('id', ParameterType::Integer, required: true)]
 final class UserExists implements ScenarioInterface
 {
-    public function up(int $id): void
+    public function up(): void
     {
+        $id = $this->parameter('id');
         // create user with given id
     }
 }
@@ -35,7 +36,8 @@ You need a user with an active subscription.
 Compose scenarios:
 ```php
 #[AsScenario('user-with-subscription')]
-#[ApplyScenario(UserExists::class)]
+#[Parameter('id', ParameterType::Integer, required: true)]
+#[ApplyScenario(UserExists::class, ['id' => 42])]
 final class UserHasSubscription implements ScenarioInterface
 {
     public function up(): void
@@ -53,7 +55,7 @@ Tests require a fully prepared system state.
 ### Solution
 ```php
 #[ApplyScenario(UserExists::class, ['id' => 42])]
-#[ApplyScenario(UserHasSubscription::class)]
+#[ApplyScenario(UserHasSubscription::class, ['id' => 42])]
 final class SubscriptionTest extends TestCase
 {
 }

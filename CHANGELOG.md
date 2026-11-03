@@ -1,15 +1,18 @@
 # Changelog
 
+## [1.2.1] - 2026-11-03
+
+### Fixed
+- Fixed minor documentation issues.
+
 ## [1.2.0] - 2026-10-30
 
 ### Breaking Changes
-
 - Removed the root-level `bootstrap` attribute from the XML configuration.
 - Introduced extension registration through the new `<extensions>` configuration element.
 - Existing projects must migrate their bootstrap configuration to the new extension system.
 
 ### Added
-
 - Introduced descriptions for suites.
 - Added support for loading extensions through the XML configuration.
 - Added interface `ApplicationExtension` to extend the framework.
