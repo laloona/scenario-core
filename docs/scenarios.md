@@ -22,10 +22,10 @@ It is a PHP class that:
 <?php declare(strict_types=1);
 
 use Stateforge\Scenario\Core\Attribute\AsScenario;
-use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Scenario;
 
 #[AsScenario('create-user')]
-final class CreateUserScenario implements ScenarioInterface
+final class CreateUserScenario extends Scenario
 {
     public function up(): void
     {
@@ -70,9 +70,12 @@ You can also reference the class directly:
 ## Scenario Composition
 Scenarios can apply other scenarios.
 ```php
+use Stateforge\Scenario\Core\Attribute\ApplyScenario;
+use Stateforge\Scenario\Core\Scenario;
+
 #[ApplyScenario(UserExists::class)]
 #[ApplyScenario(UserHasSubscription::class)]
-final class UserReadyScenario implements ScenarioInterface
+final class UserReadyScenario extends Scenario
 {
     public function up(): void {}
 }
@@ -92,12 +95,14 @@ Scenarios are executed in the order they are applied.
 Scenarios can define parameters using `#[Parameter]`.
 
 ```php
+use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Core\Scenario;
 
 #[AsScenario('create-user')]
 #[Parameter('email', ParameterType::String, required: true)]
-final class CreateUserScenario implements ScenarioInterface
+final class CreateUserScenario extends Scenario
 {
     public function up(): void
     {
@@ -131,12 +136,14 @@ This is useful when a scenario needs to work with a list of values.
 
 ### Example
 ```php
+use Stateforge\Scenario\Core\Attribute\AsScenario;
 use Stateforge\Scenario\Core\Attribute\Parameter;
 use Stateforge\Scenario\Core\ParameterType;
+use Stateforge\Scenario\Core\Scenario;
 
 #[AsScenario('create-users')]
 #[Parameter('email', ParameterType::String, repeatable: true)]
-final class CreateUsersScenario implements ScenarioInterface
+final class CreateUsersScenario extends Scenario
 {
     /**
      * @param list<string|null> $email

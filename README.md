@@ -53,10 +53,10 @@ Scenarios:
 
 ```php
 use Stateforge\Scenario\Core\Attribute\AsScenario;
-use Stateforge\Scenario\Core\Contract\ScenarioInterface;
+use Stateforge\Scenario\Core\Scenario;
 
 #[AsScenario('my-scenario')]
-final class MyScenario implements ScenarioInterface
+final class MyScenario extends Scenario
 {
     public function up(): void
     {
